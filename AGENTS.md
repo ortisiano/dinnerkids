@@ -1,6 +1,7 @@
 # Directrices para Asistentes de IA — DinnerKids (Arquitectura Edge PWA)
 
 Este documento define la arquitectura, reglas de seguridad y flujo de trabajo de **DinnerKids** en su edición ligera sin servidores (`edge-pwa`).
+👉 **Antes de hacer cambios, lee también [`CONTEXTO.md`](CONTEXTO.md) y [`docs/PASO-A-PASO-CLOUDFLARE-Y-PAGOS.md`](docs/PASO-A-PASO-CLOUDFLARE-Y-PAGOS.md).**
 
 ## 1. Qué es y cómo funciona
 
