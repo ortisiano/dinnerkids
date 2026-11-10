@@ -1,0 +1,16 @@
+{
+  "name": "dinnerkids-edge",
+  "version": "1.0.0",
+  "description": "DinnerKids — Cenas infantiles complementarias al menú escolar (PWA + Cloudflare Worker)",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check": "node --check logic.js && node --check worker.js && node --check sw.js",
+    "gen-code": "node tools/generate-pro-code.js",
+    "serve": "node tools/dev-server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
