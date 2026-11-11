@@ -708,8 +708,8 @@
           <input type="text" id="inpRoutines" placeholder="Ej: viernes pizza, jueves pescado">
         </div>
         <div>
-          <label for="inpPrefs">Gustos o notas familiares (para personalizar con IA)</label>
-          <input type="text" id="inpPrefs" placeholder="Ej: les encanta el pollo en airfryer y el aguacate">
+          <label for="inpPrefs">Gustos (qué les gusta o qué NO comen)</label>
+          <input type="text" id="inpPrefs" placeholder="Ej: les encanta el pollo, no les gusta el brócoli ni el bacalao">
         </div>
       </div>
 
@@ -1070,7 +1070,8 @@
         variante: state.variante,
         excludedAllergens: state.excludedAllergens,
         maxPrepTime: state.maxPrepTime,
-        routinesText: state.routines
+        routinesText: state.routines,
+        preferencesText: state.preferences
       });
       saveState();
     }
@@ -1383,7 +1384,8 @@
       variante: state.variante,
       excludedAllergens: state.excludedAllergens,
       maxPrepTime: state.maxPrepTime,
-      routinesText: state.routines
+      routinesText: state.routines,
+      preferencesText: state.preferences
     });
     saveState();
     renderCalendar();

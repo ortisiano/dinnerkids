@@ -8,6 +8,7 @@ import {
   sanitizeField,
   extractWeeklyRoutines,
   classifyLunchGroups,
+  parseLikesAndDislikes,
   generateLocalMonthlyMenu,
   generateShoppingList,
   encodeSchoolMenuShare,
@@ -57,11 +58,16 @@ test("detectAllergensInText detecta alérgenos oficiales de la UE en textos de c
   assert.ok(detected.includes("Huevo"));
 });
 
-test("generateLocalMonthlyMenu respeta alérgenos excluidos y complementa el almuerzo escolar", () => {
+test("generateLocalMonthlyMenu respeta alérgenos excluidos, no repite lo que comen en el cole, filtra lo que no les gusta y cumple rutinas", () => {
   const schoolMenu = {
     "2026-11-02": { menu: "Lentejas estofadas / Pollo asado" },
     "2026-11-03": { menu: "Macarrones con tomate / Merluza al horno" }
   };
+  const parsedPrefs = parseLikesAndDislikes("Les encanta el pavo y el calabacín, pero no les gusta el bacalao ni el brócoli");
+  assert.ok(parsedPrefs.liked.includes("pavo"));
+  assert.ok(parsedPrefs.disliked.includes("bacalao"));
+  assert.ok(parsedPrefs.disliked.includes("brocoli"));
+
   const menu = generateLocalMonthlyMenu({
     year: 2026,
     month: 11,
@@ -69,15 +75,22 @@ test("generateLocalMonthlyMenu respeta alérgenos excluidos y complementa el alm
     variante: 1,
     excludedAllergens: ["lactosa", "gluten"],
     maxPrepTime: 25,
-    routinesText: "jueves pescado"
+    routinesText: "jueves pescado",
+    preferencesText: "Les encanta el pavo y el calabacín, pero no les gusta el bacalao ni el brócoli"
   });
 
   assert.equal(Object.keys(menu).length, 30);
   assert.notEqual(menu["2026-11-02"].cena, "Libre", "Un día lectivo con cole nunca debe ser Libre");
+  // El lunes 2 comieron lentejas y pollo en el cole -> la cena no debe tener ni lentejas ni pollo
+  assert.ok(!/pollo|lenteja/i.test(menu["2026-11-02"].cena), "La cena del día 2 no debe repetir pollo ni lentejas del cole");
+  // El martes 3 comieron macarrones y merluza en el cole -> la cena no debe tener ni macarrones ni merluza
+  assert.ok(!/macarron|merluza/i.test(menu["2026-11-03"].cena), "La cena del día 3 no debe repetir macarrones ni merluza del cole");
+
   for (const [dateStr, day] of Object.entries(menu)) {
     if (day.cena === "Libre") continue;
     assert.ok(!day.alergenos.includes("lactosa"), `Día ${dateStr} no debe incluir lactosa`);
     assert.ok(!day.alergenos.includes("gluten"), `Día ${dateStr} no debe incluir gluten`);
+    assert.ok(!/bacalao|br[oó]coli/i.test(day.cena), `Día ${dateStr} no debe incluir platos que no les gustan (${day.cena})`);
   }
 });
 

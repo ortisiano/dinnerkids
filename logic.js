@@ -384,19 +384,97 @@ export function extractWeeklyRoutines(raw) {
 /**
  * Clasifica el grupo nutricional principal del almuerzo escolar para no repetirlo en la cena.
  * @param {string} lunchText - Texto del almuerzo del colegio.
- * @returns {string[]} Grupos detectados en el almuerzo ("legumbres", "hidratos", "ave", "carne", "pescado", "huevo").
+ * @returns {string[]} Grupos detectados en el almuerzo ("legumbres", "hidratos", "ave", "carne", "pescado", "huevo", "verdura").
  */
 export function classifyLunchGroups(lunchText) {
   if (!lunchText) return [];
-  const low = String(lunchText).toLowerCase();
+  const low = String(lunchText).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const groups = [];
-  if (/(lenteja|garbanzo|alubia|judion|cocido|fabada)/.test(low)) groups.push("legumbres");
-  if (/(macarron|espagueti|pasta|fideo|arroz|paella|fideua|lasaña|lasana|pizza)/.test(low)) groups.push("hidratos");
-  if (/(pollo|pavo|alita|pechuga|muslo|nugget)/.test(low)) groups.push("ave");
-  if (/(ternera|cerdo|lomo|albondiga|albóndiga|hamburguesa|filete|carne|ragu|boloñesa)/.test(low)) groups.push("carne");
-  if (/(merluza|pescado|salmon|salmón|atun|atún|bacalao|lenguado|dorada|emperador|calamar)/.test(low)) groups.push("pescado");
-  if (/(huevo|tortilla|revuelto)/.test(low)) groups.push("huevo");
+  if (/(lenteja|garbanzo|alubia|judia blanca|judion|cocido|fabada|hummus|potaje)/.test(low)) groups.push("legumbres");
+  if (/(macarron|espagueti|pasta|fideo|arroz|paella|fideua|lasana|canelon|pizza|cuscus|panini|sandwich|bocadillo|quesadilla|tosta)/.test(low)) groups.push("hidratos");
+  if (/(pollo|pavo|alita|pechuga|muslo|contramuslo|nugget|fajita)/.test(low)) groups.push("ave");
+  if (/(ternera|cerdo|lomo|albondiga|hamburguesa|filete|carne|ragu|bolonesa|solomillo|san jacobo|salchicha|escalope|jamon)/.test(low)) groups.push("carne");
+  if (/(merluza|pescado|salmon|atun|bacalao|lenguado|dorada|emperador|calamar|gallo|gamba|camaron|sepia|lubina|almeja|mejillon|boqueron|rape|langostino|pescadilla|varita)/.test(low)) groups.push("pescado");
+  if (/(huevo|tortilla|revuelto|flan salado|poche|crepe)/.test(low)) groups.push("huevo");
+  if (/(crema|pure|sopa|judia verde|guisante|calabacin|berenjena|brocoli|menestra|pisto|zanahoria|espinaca|verdura)/.test(low)) groups.push("verdura");
   return groups;
+}
+
+/**
+ * Extrae las palabras clave de ingredientes o platos del almuerzo escolar para evitar repetir el mismo alimento por la noche.
+ * @param {string} lunchText
+ * @returns {string[]}
+ */
+export function extractLunchKeywords(lunchText) {
+  if (!lunchText) return [];
+  const norm = String(lunchText)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ");
+  const stopWords = new Set([
+    "con", "sin", "para", "por", "los", "las", "del", "una", "uno", "unos", "unas",
+    "estilo", "casero", "casera", "plancha", "horno", "salsa", "suave", "natural",
+    "fresco", "fresca", "cocido", "cocida", "asado", "asada", "frito", "frita",
+    "ensalada", "fruta", "yogur", "pan", "agua", "aceite", "oliva", "sal"
+  ]);
+  return norm
+    .split(/\s+/)
+    .filter((w) => w.length >= 4 && !stopWords.has(w));
+}
+
+/**
+ * Analiza el texto libre de gustos familiares para separar lo que NO les gusta (exclusión) y lo que SÍ les gusta (prioridad).
+ * Ej: "les encanta el pollo y el salmón, no les gusta el brócoli ni el bacalao"
+ * @param {string} preferencesText
+ * @returns {{liked: string[], disliked: string[]}}
+ */
+export function parseLikesAndDislikes(preferencesText) {
+  if (!preferencesText || !String(preferencesText).trim()) {
+    return { liked: [], disliked: [] };
+  }
+  const clean = sanitizePreferences(preferencesText)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  const liked = [];
+  const disliked = [];
+  const stop = new Set([
+    "gusta", "gustan", "encanta", "encantan", "prefiere", "prefieren", "favorito", "favorita",
+    "come", "comen", "bien", "mucho", "poco", "nada", "odia", "odian", "detesta", "evitar",
+    "quiere", "quieren", "nino", "ninos", "peque", "peques", "hijo", "hija", "hijos",
+    "para", "como", "pero", "porque", "cuando", "todo", "toda", "todos", "todas"
+  ]);
+
+  const clauses = clean.split(/[.;,\n]+/);
+  for (const rawClause of clauses) {
+    const clause = rawClause.trim();
+    if (!clause) continue;
+
+    // Detectar si dentro de la misma frase hay un giro con "pero"
+    const subParts = clause.split(/\bpero\b/);
+    for (const part of subParts) {
+      const p = part.trim();
+      if (!p) continue;
+      const isNegative = /\b(no\s+(?:le|les)?\s*(?:gusta|gustan|come|comen|quiere|quieren)|odia|odian|detesta|evitar|sin|nunca|jamas|mal)\b/.test(p);
+      const words = p
+        .replace(/\b(no|le|les|me|nos|se|lo|la|los|las|el|un|una|de|del|al|en|con|por|ni|o|y|que|su|sus|mi|mis)\b/g, " ")
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter((w) => w.length >= 4 && !stop.has(w));
+
+      for (const w of words) {
+        if (isNegative) {
+          if (!disliked.includes(w)) disliked.push(w);
+        } else {
+          if (!liked.includes(w)) liked.push(w);
+        }
+      }
+    }
+  }
+
+  return { liked, disliked };
 }
 
 /**
@@ -441,7 +519,8 @@ export function detectRepetitionWarnings(menuData) {
 
 /**
  * Genera el menú mensual de cenas en el navegador usando el recetario oficial de DinnerKids (0 tokens IA).
- * Complementa el almuerzo escolar del día, evita alérgenos excluidos y respeta rutinas semanales.
+ * Complementa el almuerzo escolar del día (sin repetir plato ni proteína), evita alérgenos excluidos,
+ * filtra lo que NO les gusta, prioriza lo que SÍ les gusta y respeta rutinas semanales.
  */
 export function generateLocalMonthlyMenu({
   year,
@@ -451,17 +530,35 @@ export function generateLocalMonthlyMenu({
   excludedAllergens = [],
   maxPrepTime = 30,
   routinesText = "",
+  preferencesText = "",
   includeWeekends = false
 }) {
   const numDays = new Date(year, month, 0).getDate();
   const excludedSet = new Set(excludedAllergens.map((a) => String(a).toLowerCase().trim()));
   const routines = extractWeeklyRoutines(routinesText);
+  const { liked, disliked } = parseLikesAndDislikes(preferencesText);
 
-  const mains = RECIPES.filter((r) => {
+  const normalizeSearchText = (r) =>
+    `${r.title} ${(r.ingredients || []).join(" ")} ${r.side || ""} ${r.group || ""}`
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+  // 1. Filtrado estricto: jamás vulnerar un alérgeno excluido
+  const allergenSafeMains = RECIPES.filter((r) => {
     if (r.category !== "segundo") return false;
-    if (r.prepTimeMin > maxPrepTime) return false;
     if (r.allergens.some((a) => excludedSet.has(a.toLowerCase()))) return false;
+    return true;
+  });
+
+  // 2. Filtrado por gustos negativos (no les gusta / odia / sin X), tiempo y estilo
+  const mains = allergenSafeMains.filter((r) => {
+    if (r.prepTimeMin > maxPrepTime) return false;
     if (variante === 2 && !r.isHealthy) return false;
+    if (disliked.length > 0) {
+      const fullTxt = normalizeSearchText(r);
+      if (disliked.some((badWord) => fullTxt.includes(badWord))) return false;
+    }
     return true;
   });
 
@@ -471,7 +568,13 @@ export function generateLocalMonthlyMenu({
     return true;
   });
 
-  const pool = mains.length > 0 ? mains : RECIPES.filter((r) => r.category === "segundo");
+  // Si los filtros de tiempo/gustos dejan la lista vacía, mantener siempre el filtro de alérgenos y gustos negativos
+  const fallbackPool = allergenSafeMains.filter((r) => {
+    if (disliked.length === 0) return true;
+    const fullTxt = normalizeSearchText(r);
+    return !disliked.some((badWord) => fullTxt.includes(badWord));
+  });
+  const pool = mains.length > 0 ? mains : (fallbackPool.length > 0 ? fallbackPool : allergenSafeMains);
   const dessertPool = desserts.length > 0 ? desserts : [{ title: "Fruta fresca de temporada" }];
 
   const result = {};
@@ -503,9 +606,10 @@ export function generateLocalMonthlyMenu({
     }
 
     const lunchGroups = classifyLunchGroups(lunchText);
+    const lunchKeywords = extractLunchKeywords(lunchText);
     const weekdayNameLow = WEEKDAY_NAMES_ES[dow].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-    // Comprobar si hay rutina fija para este día de la semana (ej. "viernes pizza", "jueves pescado")
+    // Comprobar si hay rutina fija para este día de la semana (ej. "viernes pizza", "jueves pescado", "miércoles tortilla")
     let routineGroup = null;
     let routineKeyword = null;
     for (const r of routines) {
@@ -513,41 +617,66 @@ export function generateLocalMonthlyMenu({
       if (rLow.includes(weekdayNameLow)) {
         if (rLow.includes("pizza")) routineKeyword = "pizza";
         else if (rLow.includes("hamburguesa")) routineKeyword = "hamburguesa";
-        else if (rLow.includes("pescado")) routineGroup = "pescado";
-        else if (rLow.includes("pasta") || rLow.includes("hidrato") || rLow.includes("arroz")) routineGroup = "hidratos";
-        else if (rLow.includes("huevo") || rLow.includes("tortilla")) routineGroup = "huevo";
-        else if (rLow.includes("legumbre")) routineGroup = "legumbres";
+        else if (rLow.includes("fajita") || rLow.includes("taco") || rLow.includes("quesadilla")) routineKeyword = "fajita";
+        else if (rLow.includes("sandwich") || rLow.includes("bikini") || rLow.includes("bocadillo") || rLow.includes("tosta")) routineKeyword = "sandwich";
+        else if (rLow.includes("tortilla")) routineKeyword = "tortilla";
+        else if (rLow.includes("croqueta")) routineKeyword = "croqueta";
+        else if (rLow.includes("sopa") || rLow.includes("crema") || rLow.includes("pure")) routineGroup = "verdura";
+        else if (rLow.includes("pescado") || rLow.includes("merluza") || rLow.includes("salmon")) routineGroup = "pescado";
+        else if (rLow.includes("pollo") || rLow.includes("pavo") || rLow.includes("ave")) routineGroup = "ave";
+        else if (rLow.includes("carne") || rLow.includes("ternera") || rLow.includes("lomo")) routineGroup = "carne";
+        else if (rLow.includes("pasta") || rLow.includes("macarron") || rLow.includes("espagueti") || rLow.includes("hidrato") || rLow.includes("arroz")) routineGroup = "hidratos";
+        else if (rLow.includes("huevo") || rLow.includes("revuelto")) routineGroup = "huevo";
+        else if (rLow.includes("legumbre") || rLow.includes("hummus") || rLow.includes("garbanzo") || rLow.includes("lenteja")) routineGroup = "legumbres";
+        else if (rLow.includes("verdura")) routineGroup = "verdura";
       }
     }
 
-    // Puntuar cada receta candidata para elegir la más equilibrada frente al almuerzo del cole
+    // Puntuar cada receta candidata para elegir la más equilibrada frente al almuerzo del cole, gustos y rutinas
     let bestRecipe = pool[0];
     let bestScore = -9999;
 
     for (let i = 0; i < pool.length; i++) {
       const candidate = pool[(day * 7 + i) % pool.length];
+      const candText = normalizeSearchText(candidate);
       let score = 100;
 
       const count = usedCounts[candidate.title] || 0;
-      score -= count * 45;
+      score -= count * 55;
 
-      if (candidate.title === lastTitle) score -= 200;
-      if (candidate.group === lastGroup) score -= 25;
+      if (candidate.title === lastTitle) score -= 250;
+      if (candidate.group === lastGroup) score -= 30;
 
-      // Penalizar repetir el mismo grupo nutricional que comió en el colegio al mediodía
+      // 1. NO COINCIDIR CON EL ALMUERZO DEL COLE:
+      // Penalización severa si repite el mismo grupo nutricional principal (ej. comió pasta/arroz o pollo en el cole)
       if (lunchGroups.includes(candidate.group)) {
-        score -= 60;
+        score -= 140;
+      }
+      // Penalización aún mayor si coincide el ingrediente/plato concreto con lo que comió al mediodía (ej. merluza, lentejas, pollo, arroz...)
+      if (lunchKeywords.some((kw) => candText.includes(kw))) {
+        score -= 220;
       }
 
-      // Si en el cole no tomó verdura ni pescado, premiar pescado/huevo/verdura por la noche
-      if (!lunchGroups.includes("pescado") && candidate.group === "pescado") score += 15;
-      if (!lunchGroups.includes("huevo") && candidate.group === "huevo") score += 12;
+      // 2. COMPLEMENTO NUTRICIONAL INTELIGENTE:
+      if (!lunchGroups.includes("pescado") && candidate.group === "pescado") score += 18;
+      if (!lunchGroups.includes("huevo") && candidate.group === "huevo") score += 15;
+      if (!lunchGroups.includes("verdura") && candidate.group === "verdura") score += 12;
 
-      // Cumplir rutina familiar si aplica hoy
-      if (routineKeyword && candidate.title.toLowerCase().includes(routineKeyword)) {
-        score += 150;
+      // 3. GUSTOS FAMILIARES:
+      // Doble defensa por si algún ingrediente rechazado seguía en el pool de respaldo
+      if (disliked.some((badWord) => candText.includes(badWord))) {
+        score -= 500;
+      }
+      // Premiar los platos que contienen ingredientes o preparaciones que les encantan
+      if (liked.length > 0 && liked.some((goodWord) => candText.includes(goodWord))) {
+        score += 45;
+      }
+
+      // 4. RUTINAS FIJAS POR DÍA DE LA SEMANA:
+      if (routineKeyword && candText.includes(routineKeyword)) {
+        score += 240;
       } else if (routineGroup && candidate.group === routineGroup) {
-        score += 120;
+        score += 180;
       }
 
       if (variante === 1 && candidate.isClassic) score += 8;
