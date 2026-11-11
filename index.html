@@ -183,6 +183,28 @@
       align-items: center;
       gap: 0.5rem;
     }
+    .school-day-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .help-popover {
+      background: var(--primary-light);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      margin-top: 0.75rem;
+      font-size: 0.86rem;
+      color: var(--text);
+      display: none;
+    }
+    .help-popover.open {
+      display: block;
+    }
     .panel { display: none; }
     .panel.active { display: block; }
     .card {
@@ -686,14 +708,14 @@
           <input type="text" id="inpRoutines" placeholder="Ej: viernes pizza, jueves pescado">
         </div>
         <div>
-          <label for="inpPrefs">Gustos o notas (solo para Modo IA Pro)</label>
+          <label for="inpPrefs">Gustos o notas familiares (para personalizar con IA)</label>
           <input type="text" id="inpPrefs" placeholder="Ej: les encanta el pollo en airfryer y el aguacate">
         </div>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-primary" id="btnGenLocal">⚡ Generar Cenas (Modo Gratis Instantáneo)</button>
-        <button class="btn btn-secondary" id="btnGenAi">✨ Generar con IA a medida (Modo Pro / AMPA)</button>
+        <button class="btn btn-primary" id="btnGenLocal">⚡ Generar Menú de Cenas</button>
+        <button class="btn btn-secondary" id="btnGenAi">✨ Personalizar con IA (Claude Haiku)</button>
       </div>
     </div>
 
@@ -725,7 +747,7 @@
           <input type="text" id="inpSchoolName" placeholder="Ej: CEIP San Isidro">
         </div>
         <div>
-          <label for="inpOcrFile">📸 Subir foto del menú escolar (Modo IA Pro)</label>
+          <label for="inpOcrFile">📸 O sube una foto del menú escolar (Lectura automática con IA)</label>
           <input type="file" id="inpOcrFile" accept="image/png,image/jpeg,image/webp">
         </div>
       </div>
@@ -736,6 +758,9 @@
         <button class="btn btn-outline" id="btnClearSchool">🗑️ Vaciar menú escolar</button>
       </div>
 
+      <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:0.75rem;">
+        👇 <strong>Selecciona en el desplegable de cada día qué han comido en el cole</strong> (o elige <em>"✏️ Escribir otro plato..."</em> si quieres anotarlo a mano):
+      </p>
       <div id="schoolDaysList" class="grid-form"></div>
     </div>
   </section>
@@ -801,20 +826,36 @@
 
       <div class="grid-form" style="margin-top:1.25rem;">
         <div>
-          <label for="inpProCode">Código Personal de Café (1 usuario) o Código AMPA</label>
+          <label for="inpProCode">Código Personal de Café (1 usuario) o Código de tu AMPA</label>
           <input type="text" id="inpProCode" placeholder="Ej: DK02-202706-A1B2-9F8E7D6C5B">
         </div>
         <div>
-          <label for="inpByokKey">O tu propio Token de IA de Claude (Opcional · BYOK)</label>
+          <label for="inpByokKey" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>O tu propio Token de IA de Claude (Opcional)</span>
+            <button type="button" id="btnToggleHelp" class="btn-icon" style="padding:0.15rem 0.5rem; font-size:0.76rem; font-weight:700;">❓ ¿Cómo se configura?</button>
+          </label>
           <input type="password" id="inpByokKey" placeholder="sk-ant-api03-...">
         </div>
-        <div>
-          <label for="inpWorkerUrl">Servidor IA (Cloudflare Worker)</label>
-          <input type="url" id="inpWorkerUrl" value="https://api.dinnerkids.es">
-        </div>
       </div>
+
+      <!-- CUADRO DE AYUDA PASO A PASO PARA EL USUARIO -->
+      <div id="helpConfigBox" class="help-popover">
+        <strong style="display:block; margin-bottom:0.4rem;">💡 Guía rápida: ¿Cómo activar la Inteligencia Artificial?</strong>
+        <ol style="margin-left:1.2rem; display:flex; flex-direction:column; gap:0.35rem;">
+          <li><strong>Con Código de Café (la forma más sencilla, sin cuentas técnicas):</strong> Haz un donativo de un café (mín. 2 €) en <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" style="color:var(--primary); font-weight:700;">Ko-fi</a>, pega tu código <code>DK02-...</code> en la primera casilla y pulsa <strong>Activar</strong>. Quedará vinculado a tu móvil/ordenador.</li>
+          <li><strong>Con tu propio Token de Claude (si eres usuario técnico):</strong> Entra en <a href="https://console.anthropic.com/" target="_blank" rel="noopener" style="color:var(--primary); font-weight:700;">console.anthropic.com</a> → <em>API Keys</em> → crea una clave que empieza por <code>sk-ant-...</code> y pégala en la segunda casilla.</li>
+        </ol>
+        <details style="margin-top:0.65rem; font-size:0.8rem; color:var(--text-muted);">
+          <summary style="cursor:pointer; font-weight:600;">⚙️ Opciones avanzadas de red (solo para administradores)</summary>
+          <div style="margin-top:0.4rem;">
+            <label for="inpWorkerUrl">URL del proxy Cloudflare Worker (no necesitas tocarlo salvo que alojes tu propio servidor)</label>
+            <input type="url" id="inpWorkerUrl" value="https://api.dinnerkids.es">
+          </div>
+        </details>
+      </div>
+
       <div class="btn-row">
-        <button class="btn btn-secondary" id="btnSavePro">🔑 Activar y Vincular en este Dispositivo</button>
+        <button class="btn btn-secondary" id="btnSavePro">🔑 Activar en este Dispositivo</button>
       </div>
     </div>
 
@@ -966,11 +1007,11 @@
   function updateProBadge() {
     const badge = document.getElementById("proBadge");
     if (state.proCode) {
-      badge.textContent = `⭐ Pro Activo (${state.proCode.split("-")[0]})`;
+      badge.textContent = `☕ IA Activa (${state.proCode.split("-")[0]})`;
     } else if (state.byokKey) {
-      badge.textContent = "🔑 Modo IA Propia (BYOK)";
+      badge.textContent = "🔑 IA Propia Activa";
     } else {
-      badge.textContent = "Modo Gratis · Local";
+      badge.textContent = "100 % Local";
     }
   }
 
@@ -1071,6 +1112,21 @@
     }
   }
 
+  const SCHOOL_LUNCH_PRESETS = [
+    "Lentejas estofadas con verduras / Pollo asado",
+    "Macarrones a la boloñesa / Merluza al horno",
+    "Arroz con tomate / Tortilla española con ensalada",
+    "Cocido tradicional (garbanzos) / Filete de pavo a la plancha",
+    "Crema de calabacín / Albóndigas de ternera en salsa",
+    "Judías blancas estofadas / Filete de merluza a la romana",
+    "Espaguetis con atún / Contramuslo de pollo al horno",
+    "Paella de pollo y verduras / Yogur natural",
+    "Puré de verduras / Tortilla francesa con jamón",
+    "Sopa de fideos / Lomo de cerdo asado con manzana",
+    "Garbanzos con espinacas / Bacalao al horno",
+    "Guisantes con jamón / Hamburguesa de ternera a la plancha"
+  ];
+
   function renderSchoolInputs() {
     const container = document.getElementById("schoolDaysList");
     container.innerHTML = "";
@@ -1086,14 +1142,61 @@
       const val = typeof existing === "object" && existing !== null ? (existing.menu || "") : String(existing || "");
 
       const wrap = document.createElement("div");
+      wrap.className = "school-day-card";
+
       const lbl = document.createElement("label");
-      lbl.textContent = `${WEEKDAY_NAMES_ES[dow]} ${day}/${state.month}`;
-      const inp = document.createElement("input");
-      inp.type = "text";
-      inp.value = val;
-      inp.placeholder = "Ej: Lentejas estofadas / Merluza";
-      inp.addEventListener("change", () => {
-        const clean = inp.value.trim();
+      lbl.textContent = `📅 ${WEEKDAY_NAMES_ES[dow]} ${day}/${state.month}`;
+
+      const sel = document.createElement("select");
+      const emptyOpt = document.createElement("option");
+      emptyOpt.value = "";
+      emptyOpt.textContent = "— Seleccionar menú del cole —";
+      sel.appendChild(emptyOpt);
+
+      let matchedPreset = false;
+      for (const preset of SCHOOL_LUNCH_PRESETS) {
+        const opt = document.createElement("option");
+        opt.value = preset;
+        opt.textContent = `🍽️ ${preset}`;
+        if (val === preset) {
+          opt.selected = true;
+          matchedPreset = true;
+        }
+        sel.appendChild(opt);
+      }
+
+      const customOpt = document.createElement("option");
+      customOpt.value = "__custom__";
+      customOpt.textContent = "✏️ Escribir otro plato a mano...";
+      if (val && !matchedPreset) {
+        customOpt.selected = true;
+      }
+      sel.appendChild(customOpt);
+
+      const customInp = document.createElement("input");
+      customInp.type = "text";
+      customInp.value = val;
+      customInp.placeholder = "Escribe qué comieron hoy (ej: Lentejas y merluza)";
+      customInp.style.display = val && !matchedPreset ? "block" : "none";
+
+      sel.addEventListener("change", () => {
+        if (sel.value === "__custom__") {
+          customInp.style.display = "block";
+          customInp.focus();
+        } else {
+          customInp.style.display = "none";
+          customInp.value = sel.value;
+          if (sel.value) {
+            state.schoolMenu[dateKey] = { menu: sel.value };
+          } else {
+            delete state.schoolMenu[dateKey];
+          }
+          saveState();
+        }
+      });
+
+      customInp.addEventListener("change", () => {
+        const clean = customInp.value.trim();
         if (clean) {
           state.schoolMenu[dateKey] = { menu: clean };
         } else {
@@ -1103,7 +1206,8 @@
       });
 
       wrap.appendChild(lbl);
-      wrap.appendChild(inp);
+      wrap.appendChild(sel);
+      wrap.appendChild(customInp);
       container.appendChild(wrap);
     }
   }
@@ -1355,13 +1459,6 @@
 
   // Cargar ejemplo de comedor escolar
   document.getElementById("btnLoadSampleSchool").addEventListener("click", () => {
-    const samples = [
-      "Lentejas estofadas con verduras / Pollo asado / Manzana",
-      "Macarrones a la boloñesa / Merluza al horno / Yogur",
-      "Arroz con tomate / Tortilla española con ensalada / Plátano",
-      "Cocido madrileño / Filete de pavo a la plancha / Pera",
-      "Crema de calabacín / Albóndigas de ternera en salsa / Mandarina"
-    ];
     const numDays = new Date(state.year, state.month, 0).getDate();
     state.schoolMenu = {};
     for (let day = 1; day <= numDays; day++) {
@@ -1369,7 +1466,7 @@
       const dow = dt.getUTCDay();
       if (dow === 0 || dow === 6) continue;
       const dateKey = `${state.year}-${String(state.month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-      state.schoolMenu[dateKey] = { menu: samples[(day - 1) % samples.length] };
+      state.schoolMenu[dateKey] = { menu: SCHOOL_LUNCH_PRESETS[(day - 1) % SCHOOL_LUNCH_PRESETS.length] };
     }
     if (!state.schoolName) {
       state.schoolName = "CEIP Ejemplo";
@@ -1379,6 +1476,11 @@
     renderSchoolInputs();
     triggerLocalGeneration();
     showToast("🏫 Menú escolar de ejemplo cargado y cenas actualizadas");
+  });
+
+  // Botón de ayuda paso a paso para configurar IA
+  document.getElementById("btnToggleHelp").addEventListener("click", () => {
+    document.getElementById("helpConfigBox").classList.toggle("open");
   });
 
   // Compartir menú escolar por enlace (WhatsApp)
