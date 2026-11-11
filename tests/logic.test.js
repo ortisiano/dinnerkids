@@ -15,8 +15,10 @@ import {
   buildClaudeMenuPrompt
 } from "../logic.js";
 
-test("RECIPES contiene catálogo de platos principales y postres con estructura válida", () => {
-  assert.ok(RECIPES.length >= 40, "Debe haber al menos 40 recetas en el catálogo local");
+test("RECIPES contiene catálogo de 100 platos principales y postres con estructura válida", () => {
+  const mains = RECIPES.filter((r) => r.category === "segundo");
+  assert.equal(mains.length, 100, "Debe haber exactamente las 100 recetas principales en el catálogo local");
+  assert.ok(RECIPES.length >= 108, "Debe incluir las 100 recetas principales más los postres");
   for (const r of RECIPES) {
     assert.ok(r.title && typeof r.title === "string");
     assert.ok(r.category === "segundo" || r.category === "postre");
