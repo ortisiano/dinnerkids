@@ -1,0 +1,28 @@
+# .assetsignore — Exclusiones para Cloudflare Workers Static Assets ([assets] directory = ".").
+# Sintaxis tipo .gitignore. SIN este archivo, `wrangler deploy` desde la carpeta local
+# sube también .git/ (historial completo, refs y logs) y la documentación interna.
+# Seguridad: nunca desplegar el historial ni notas privadas a la CDN pública.
+
+# Control de versiones y CI (CRÍTICO: evita publicar .git/HEAD, .git/config, .git/logs...)
+.git/
+.git/*
+.github/
+
+# Documentación interna y notas privadas de administración
+docs/
+AGENTS.md
+CONTEXTO.md
+README.md
+
+# Código de desarrollo y configuración interna
+tests/
+tools/
+package.json
+wrangler.toml
+
+# Entorno local y dependencias
+node_modules/
+.env
+.env.*
+.dev.vars
+*.local

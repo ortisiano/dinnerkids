@@ -104,3 +104,179 @@ test("Worker responde /api/health y verifica /api/verify-code vinculando disposi
   const verifyRes2 = await worker.fetch(verifyReq2, env);
   assert.equal(verifyRes2.status, 403);
 });
+
+
+// ---------------------------------------------------------------------------
+// Tests de las rutas IA (/api/menu, /api/recipe, /api/ocr) con fetch simulado.
+// Antes de este bloque solo /api/health y /api/verify-code tenían cobertura;
+// estas rutas son las que consumen tokens y presupuesto reales.
+// ---------------------------------------------------------------------------
+
+/** Sustituye globalThis.fetch por un handler controlado y devuelve un controlador con contador y restore. */
+function stubClaudeFetch(handler) {
+  const original = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async (url, opts) => {
+    calls += 1;
+    return handler(url, opts);
+  };
+  return {
+    get calls() { return calls; },
+    restore() { globalThis.fetch = original; }
+  };
+}
+
+/** Respuesta estilo Anthropic Messages API con un JSON de texto embebido. */
+function claudeJsonResponse(payload, status = 200) {
+  return new Response(JSON.stringify({ content: [{ type: "text", text: JSON.stringify(payload) }] }), { status });
+}
+
+function aiEnv(kv) {
+  return { PRO_CODE_SECRET: TEST_SECRET, DK_KV: kv, ANTHROPIC_API_KEY: "sk-ant-api03-clave_de_pruebas" };
+}
+
+function aiRequest(path, code, body, device = "device-test-ia") {
+  return new Request(`https://api.dinnerkids.es${path}`, {
+    method: "POST",
+    headers: {
+      Origin: "https://dinnerkids.es",
+      "Content-Type": "application/json",
+      "X-DK-Code": code,
+      "X-DK-Device": device
+    },
+    body: typeof body === "string" ? body : JSON.stringify(body)
+  });
+}
+
+async function makeAiCode(tierKey = "DK02", expYm = "202812", salt = "TEST") {
+  const code = await makeTestCode(tierKey, expYm, salt);
+  const info = await verifyProCode(code, TEST_SECRET, new Date("2026-11-10T12:00:00Z"));
+  return { code, codeId: info.codeId };
+}
+
+test("Worker /api/menu devuelve menú JSON y sirve la segunda petición idéntica desde caché KV", async (t) => {
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () =>
+    claudeJsonResponse({ "2026-11-02": { cena: "Tortilla francesa", guarnicion: "Tomate", postre: "Fruta", tiempo: "8 min", nota: null } })
+  );
+  t.after(() => stub.restore());
+  const { code } = await makeAiCode("DK02", "202812", "MENU");
+
+  const body = { year: 2026, month: 11, schoolMenu: { "2026-11-02": { menu: "Lentejas / Pollo" } }, preferences: "" };
+  const res1 = await worker.fetch(aiRequest("/api/menu", code, body), aiEnv(kv));
+  assert.equal(res1.status, 200);
+  assert.equal(res1.headers.get("Content-Type").includes("application/json"), true);
+  const data1 = await res1.json();
+  assert.equal(data1.cached, false);
+  assert.equal(data1.menu["2026-11-02"].cena, "Tortilla francesa");
+
+  const res2 = await worker.fetch(aiRequest("/api/menu", code, body), aiEnv(kv));
+  const data2 = await res2.json();
+  assert.equal(data2.cached, true, "La petición idéntica debe venir del caché KV");
+  assert.equal(stub.calls, 1, "La IA solo debe llamarse una vez para dos peticiones idénticas");
+});
+
+test("Worker /api/menu devuelve 502 JSON y reembolsa la cuota cuando la IA falla", async (t) => {
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () => claudeJsonResponse({}, 500));
+  t.after(() => stub.restore());
+  const { code, codeId } = await makeAiCode("DK02", "202812", "FAIL");
+
+  const res = await worker.fetch(aiRequest("/api/menu", code, { year: 2026, month: 11 }), aiEnv(kv));
+  assert.equal(res.status, 502);
+  assert.equal(res.headers.get("Content-Type").includes("application/json"), true);
+  const data = await res.json();
+  assert.match(data.error, /IA no respondió/i);
+  assert.ok(!JSON.stringify(data).includes("sk-ant"), "El error nunca debe filtrar claves ni detalles del proveedor");
+
+  const ym = "2026-11";
+  const usage = await kv.get(`quota:${codeId}:${ym}`, "json");
+  assert.equal(usage.menus, 0, "La cuota consumida debe reembolsarse cuando la IA falla");
+});
+
+test("Worker rechaza un cuerpo JSON malformado con 400 JSON (no con 500 HTML)", async (t) => {
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () => claudeJsonResponse({}));
+  t.after(() => stub.restore());
+  const { code } = await makeAiCode("DK02", "202812", "JSON");
+
+  const res = await worker.fetch(aiRequest("/api/menu", code, "{esto_no_es_json"), aiEnv(kv));
+  assert.equal(res.status, 400);
+  assert.equal(res.headers.get("Content-Type").includes("application/json"), true);
+  const data = await res.json();
+  assert.match(data.error, /malformado/i);
+});
+
+test("Worker /api/recipe valida la entrada, genera y cachea la receta", async (t) => {
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () =>
+    claudeJsonResponse({ titulo: "Merluza", tiempo: "12 min", ingredientes: ["Merluza", "Patata"], pasos: ["Cocinar"], truco_ninos: "Con salsa suave" })
+  );
+  t.after(() => stub.restore());
+  const { code } = await makeAiCode("DK02", "202812", "RCPE");
+  const env = aiEnv(kv);
+
+  const badRes = await worker.fetch(aiRequest("/api/recipe", code, { plato: "" }), env);
+  assert.equal(badRes.status, 400);
+
+  const okRes = await worker.fetch(aiRequest("/api/recipe", code, { plato: "Merluza a la plancha", guarnicion: "Patata", allergens: "" }), env);
+  assert.equal(okRes.status, 200);
+  const data = await okRes.json();
+  assert.equal(data.recipe.titulo, "Merluza");
+
+  const cachedRes = await worker.fetch(aiRequest("/api/recipe", code, { plato: "Merluza a la plancha", guarnicion: "Patata", allergens: "" }), env);
+  assert.equal((await cachedRes.json()).cached, true);
+  assert.equal(stub.calls, 1);
+});
+
+test("Worker /api/ocr normaliza el menú extraído con alérgenos detectados y rechaza imágenes enormes", async (t) => {
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () =>
+    claudeJsonResponse({
+      "2026-11-02": { primero: "Macarrones con queso gratinado", segundo: "Merluza al horno", postre: "Fruta" },
+      "fecha_invalida": { primero: "X" }
+    })
+  );
+  t.after(() => stub.restore());
+  const { code } = await makeAiCode("DK02", "202812", "OCRX");
+  const env = aiEnv(kv);
+
+  const okRes = await worker.fetch(aiRequest("/api/ocr", code, { base64: "aGk=", mimeType: "image/jpeg", year: 2026, month: 11 }), env);
+  assert.equal(okRes.status, 200);
+  const data = await okRes.json();
+  const day = data.schoolMenu["2026-11-02"];
+  assert.ok(day, "Debe normalizar las fechas válidas");
+  assert.ok(Array.isArray(day.alergenos), "Debe incluir la lista de alérgenos detectados");
+  assert.ok(day.alergenos.includes("Gluten"));
+  assert.ok(day.alergenos.includes("Pescado"));
+  assert.equal(data.schoolMenu["fecha_invalida"], undefined, "Debe descartar claves que no sean fechas YYYY-MM-DD");
+
+  const bigRes = await worker.fetch(aiRequest("/api/ocr", code, { base64: "A".repeat(7_000_001), mimeType: "image/jpeg", year: 2026, month: 11 }), env);
+  assert.equal(bigRes.status, 400);
+});
+
+test("Worker aplica rate limit por IP: la petición 21 en un minuto recibe 429", async () => {
+  const kv = createMockKv();
+  const env = { PRO_CODE_SECRET: TEST_SECRET, DK_KV: kv };
+  let lastStatus = 0;
+  for (let i = 0; i < 21; i++) {
+    const res = await worker.fetch(new Request("https://api.dinnerkids.es/api/menu", {
+      method: "POST",
+      headers: { Origin: "https://dinnerkids.es", "Content-Type": "application/json" },
+      body: "{}"
+    }), env);
+    lastStatus = res.status;
+  }
+  assert.equal(lastStatus, 429, "Tras 20 peticiones/minuto desde la misma IP debe bloquear con 429");
+});
+
+test("Worker nunca filtra el secreto ni la clave en errores: /api/menu sin código responde 401 JSON genérico", async () => {
+  const kv = createMockKv();
+  const res = await worker.fetch(aiRequest("/api/menu", "CODIGO-FALSO-0000-ABCDEF1234", { year: 2026, month: 11 }), aiEnv(kv));
+  assert.equal(res.status, 401);
+  const data = await res.json();
+  assert.match(data.error, /Código de Café|token/i);
+  const body = JSON.stringify(data);
+  assert.ok(!body.includes(TEST_SECRET), "Nunca debe filtrar PRO_CODE_SECRET");
+  assert.ok(!body.includes("sk-ant-api03-clave_de_pruebas"), "Nunca debe filtrar ANTHROPIC_API_KEY");
+});

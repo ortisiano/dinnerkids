@@ -228,6 +228,26 @@ async function checkAndConsumeQuota(kv, codeInfo, actionType, nowDate = new Date
 }
 
 /**
+ * Devuelve una unidad de cuota al usuario cuando la llamada a la IA falla después
+ * de haber consumido cuota (para no cobrar menús/recetas/OCR que no se entregaron).
+ * Best-effort: cualquier error de KV se ignora silenciosamente.
+ */
+async function refundQuota(kv, codeInfo, actionType, nowDate = new Date()) {
+  if (!kv || !codeInfo) return;
+  const ym = `${nowDate.getUTCFullYear()}-${String(nowDate.getUTCMonth() + 1).padStart(2, "0")}`;
+  const key = `quota:${codeInfo.codeId}:${ym}`;
+  try {
+    const stored = await kv.get(key, "json");
+    if (stored && typeof stored === "object" && Number(stored[actionType] || 0) > 0) {
+      stored[actionType] = Number(stored[actionType]) - 1;
+      await kv.put(key, JSON.stringify(stored), { expirationTtl: 60 * 60 * 24 * 40 });
+    }
+  } catch {
+    // Reembolso best-effort: no bloquear la respuesta de error si KV falla.
+  }
+}
+
+/**
  * Rate limit por IP real (CF-Connecting-IP) para proteger el Worker frente a abusos.
  */
 async function checkIpRateLimit(kv, ip) {
@@ -261,8 +281,8 @@ async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096
   });
 
   if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Error de proveedor IA (${res.status}): ${errText.slice(0, 200)}`);
+    // No propagar el cuerpo del error del proveedor: puede filtrar detalles internos al cliente.
+    throw new Error(`Error del proveedor IA (HTTP ${res.status})`);
   }
 
   const data = await res.json();
@@ -274,8 +294,7 @@ async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096
   return JSON.parse(raw.trim());
 }
 
-export default {
-  async fetch(request, env) {
+async function handleRequest(request, env) {
     const origin = request.headers.get("Origin") || "https://dinnerkids.es";
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: getCorsHeaders(origin) });
@@ -347,7 +366,12 @@ export default {
 
     // Ruta 2: Generación de menú mensual con IA (con caché KV por hash SHA-256)
     if (url.pathname === "/api/menu" && request.method === "POST") {
-      const body = await request.json();
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ error: "Cuerpo de la petición con JSON malformado." }, 400, origin);
+      }
       const year = Number(body.year) || new Date().getUTCFullYear();
       const month = Number(body.month) || (new Date().getUTCMonth() + 1);
       const variante = Number(body.variante) === 2 ? 2 : 1;
@@ -385,13 +409,19 @@ export default {
         routines
       });
 
-      const menuData = await callClaudeApi({
-        apiKey: activeApiKey,
-        model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userContent }],
-        maxTokens: 4096
-      });
+      let menuData;
+      try {
+        menuData = await callClaudeApi({
+          apiKey: activeApiKey,
+          model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
+          system: systemPrompt,
+          messages: [{ role: "user", content: userContent }],
+          maxTokens: 4096
+        });
+      } catch {
+        await refundQuota(env.DK_KV, codeInfo, "menus");
+        return jsonResponse({ error: "La IA no respondió correctamente. Inténtalo de nuevo en unos segundos." }, 502, origin);
+      }
 
       if (env.DK_KV && menuData && typeof menuData === "object") {
         await env.DK_KV.put(cacheKey, JSON.stringify(menuData), { expirationTtl: 60 * 60 * 24 * 35 });
@@ -402,7 +432,12 @@ export default {
 
     // Ruta 3: Receta detallada con IA para un plato concreto
     if (url.pathname === "/api/recipe" && request.method === "POST") {
-      const body = await request.json();
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ error: "Cuerpo de la petición con JSON malformado." }, 400, origin);
+      }
       const plato = sanitizeField(body.plato || "", 100);
       const guarnicion = sanitizeField(body.guarnicion || "", 100);
       const allergens = sanitizeField(body.allergens || "", 150);
@@ -424,13 +459,19 @@ export default {
       const system = "Eres un chef familiar infantil. Responde SOLO con un JSON válido: {\"titulo\":\"...\",\"tiempo\":\"15 min\",\"ingredientes\":[\"...\"],\"pasos\":[\"...\"],\"truco_ninos\":\"...\"}";
       const user = `<plato_solicitado>Plato: ${plato}. Guarnición: ${guarnicion}. Alérgenos a evitar: ${allergens || "ninguno"}.</plato_solicitado>`;
 
-      const recipe = await callClaudeApi({
-        apiKey: activeApiKey,
-        model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
-        system,
-        messages: [{ role: "user", content: user }],
-        maxTokens: 1024
-      });
+      let recipe;
+      try {
+        recipe = await callClaudeApi({
+          apiKey: activeApiKey,
+          model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
+          system,
+          messages: [{ role: "user", content: user }],
+          maxTokens: 1024
+        });
+      } catch {
+        await refundQuota(env.DK_KV, codeInfo, "recipes");
+        return jsonResponse({ error: "La IA no respondió correctamente. Inténtalo de nuevo en unos segundos." }, 502, origin);
+      }
 
       if (env.DK_KV && recipe) {
         await env.DK_KV.put(cacheKey, JSON.stringify(recipe), { expirationTtl: 60 * 60 * 24 * 60 });
@@ -441,7 +482,12 @@ export default {
 
     // Ruta 4: Extracción OCR del menú escolar con Claude Vision (con caché KV por hash de imagen)
     if (url.pathname === "/api/ocr" && request.method === "POST") {
-      const body = await request.json();
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ error: "Cuerpo de la petición con JSON malformado." }, 400, origin);
+      }
       const base64Data = String(body.base64 || "").trim();
       const mimeType = String(body.mimeType || "image/jpeg").trim();
       const year = Number(body.year) || new Date().getUTCFullYear();
@@ -466,31 +512,37 @@ export default {
       }
 
       const system = "Extrae el menú escolar mensual de la imagen y devuelve ÚNICAMENTE un JSON válido con formato: {\"YYYY-MM-DD\": {\"primero\":\"...\",\"segundo\":\"...\",\"postre\":\"...\",\"menu\":\"...\"}}. No incluyas ningún nombre propio ni dato personal.";
-      const rawExtracted = await callClaudeApi({
-        apiKey: activeApiKey,
-        model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
-        system,
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "image",
-                source: {
-                  type: "base64",
-                  media_type: mimeType,
-                  data: base64Data
+      let rawExtracted;
+      try {
+        rawExtracted = await callClaudeApi({
+          apiKey: activeApiKey,
+          model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
+          system,
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "image",
+                  source: {
+                    type: "base64",
+                    media_type: mimeType,
+                    data: base64Data
+                  }
+                },
+                {
+                  type: "text",
+                  text: `Extrae los almuerzos de los días lectivos del mes ${month}/${year} en JSON.`
                 }
-              },
-              {
-                type: "text",
-                text: `Extrae los almuerzos de los días lectivos del mes ${month}/${year} en JSON.`
-              }
-            ]
-          }
-        ],
-        maxTokens: 4096
-      });
+              ]
+            }
+          ],
+          maxTokens: 4096
+        });
+      } catch {
+        await refundQuota(env.DK_KV, codeInfo, "ocr");
+        return jsonResponse({ error: "La IA no pudo leer la imagen. Inténtalo de nuevo con una foto más nítida." }, 502, origin);
+      }
 
       const normalized = {};
       for (const [dateKey, val] of Object.entries(rawExtracted || {})) {
@@ -511,5 +563,17 @@ export default {
     }
 
     return jsonResponse({ error: "Ruta no encontrada." }, 404, origin);
+}
+
+export default {
+  async fetch(request, env) {
+    try {
+      return await handleRequest(request, env);
+    } catch {
+      // Red de seguridad: cualquier error inesperado (KV, red, parsing interno)
+      // devuelve JSON genérico en lugar de un 500 HTML con detalles internos.
+      const origin = request.headers.get("Origin") || "https://dinnerkids.es";
+      return jsonResponse({ error: "Error interno del servidor. Inténtalo de nuevo en unos segundos." }, 500, origin);
+    }
   }
 };
