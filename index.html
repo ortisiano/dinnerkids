@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>DinnerKids — Cenas infantiles que complementan el menú del cole</title>
-  <meta name="description" content="Planifica las cenas de los peques según lo que comen en el colegio. Recetario infantil, lista de la compra y modo IA opcional. Sin registro, sin anuncios y privado.">
+  <meta name="description"
+    content="Planifica las cenas de los peques según lo que comen en el colegio. Recetario infantil, lista de la compra y modo IA opcional. Sin registro, sin anuncios y privado.">
   <meta name="theme-color" content="#FF6B35">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -29,6 +31,7 @@
       --radius: 14px;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
+
     [data-theme="dark"] {
       --primary-light: #3A221A;
       --secondary-light: #193328;
@@ -40,7 +43,15 @@
       --border: #2E3346;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
@@ -48,6 +59,7 @@
       line-height: 1.5;
       padding-bottom: 4rem;
     }
+
     header {
       position: sticky;
       top: 0;
@@ -62,6 +74,7 @@
       gap: 0.75rem;
       box-shadow: var(--shadow);
     }
+
     .brand {
       display: flex;
       align-items: center;
@@ -71,17 +84,20 @@
       color: var(--primary);
       text-decoration: none;
     }
+
     .brand img {
       width: 34px;
       height: 34px;
       border-radius: 9px;
       object-fit: cover;
     }
+
     .header-actions {
       display: flex;
       align-items: center;
       gap: 0.45rem;
     }
+
     .btn-sponsor {
       background: var(--primary-light);
       color: var(--primary-dark);
@@ -97,9 +113,11 @@
       gap: 0.3rem;
       transition: transform 0.15s;
     }
+
     .btn-sponsor:hover {
       transform: translateY(-1px);
     }
+
     .badge-status {
       font-size: 0.76rem;
       font-weight: 700;
@@ -108,6 +126,7 @@
       background: var(--secondary-light);
       color: var(--secondary);
     }
+
     .btn-icon {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -117,11 +136,13 @@
       cursor: pointer;
       font-size: 0.9rem;
     }
+
     .container {
       max-width: 1080px;
       margin: 0 auto;
       padding: 1.25rem;
     }
+
     .hero-banner {
       background: linear-gradient(135deg, var(--primary-light), var(--card) 60%, var(--secondary-light));
       border: 1px solid var(--border);
@@ -134,15 +155,18 @@
       justify-content: space-between;
       gap: 1rem;
     }
+
     .hero-banner h1 {
       font-size: clamp(1.25rem, 2.5vw, 1.65rem);
       color: var(--dark);
       margin-bottom: 0.25rem;
     }
+
     .hero-banner p {
       font-size: 0.92rem;
       color: var(--text-muted);
     }
+
     .tabs {
       display: flex;
       gap: 0.3rem;
@@ -151,6 +175,7 @@
       border-radius: 12px;
       border: 1px solid var(--border);
     }
+
     .tab-btn {
       padding: 0.45rem 0.85rem;
       border-radius: 9px;
@@ -163,14 +188,17 @@
       transition: all 0.18s;
       white-space: nowrap;
     }
+
     .tab-btn:hover {
       color: var(--text);
     }
+
     .tab-btn.active {
       background: var(--primary);
       color: #fff;
       box-shadow: 0 2px 8px rgba(255, 107, 53, 0.28);
     }
+
     .legal-banner {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -183,6 +211,7 @@
       align-items: center;
       gap: 0.5rem;
     }
+
     .school-day-card {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -192,6 +221,7 @@
       flex-direction: column;
       gap: 0.5rem;
     }
+
     .help-popover {
       background: var(--primary-light);
       border: 1px solid var(--primary);
@@ -202,11 +232,19 @@
       color: var(--text);
       display: none;
     }
+
     .help-popover.open {
       display: block;
     }
-    .panel { display: none; }
-    .panel.active { display: block; }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
     .card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -215,6 +253,7 @@
       margin-bottom: 1.25rem;
       box-shadow: var(--shadow);
     }
+
     .card h2 {
       font-size: 1.15rem;
       color: var(--dark);
@@ -223,12 +262,14 @@
       align-items: center;
       gap: 0.5rem;
     }
+
     .grid-form {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 0.9rem;
       margin-bottom: 1rem;
     }
+
     label {
       display: block;
       font-size: 0.84rem;
@@ -236,7 +277,10 @@
       color: var(--text-muted);
       margin-bottom: 0.3rem;
     }
-    input, select, textarea {
+
+    input,
+    select,
+    textarea {
       width: 100%;
       padding: 0.6rem 0.75rem;
       border-radius: 10px;
@@ -246,12 +290,14 @@
       font-size: 0.92rem;
       font-family: inherit;
     }
+
     .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 0.45rem;
       margin-top: 0.35rem;
     }
+
     .chip {
       padding: 0.35rem 0.75rem;
       border-radius: 99px;
@@ -262,17 +308,20 @@
       cursor: pointer;
       user-select: none;
     }
+
     .chip.selected {
       background: var(--primary);
       color: #fff;
       border-color: var(--primary);
     }
+
     .btn-row {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
       margin-top: 1rem;
     }
+
     .btn {
       display: inline-flex;
       align-items: center;
@@ -287,19 +336,33 @@
       text-decoration: none;
       transition: transform 0.15s, opacity 0.15s;
     }
-    .btn:hover { transform: translateY(-1px); }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-secondary { background: var(--secondary); color: #fff; }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: #fff;
+    }
+
     .btn-outline {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text);
     }
+
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
       gap: 0.85rem;
     }
+
     .day-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -310,7 +373,11 @@
       gap: 0.4rem;
       transition: border-color 0.2s;
     }
-    .day-card:hover { border-color: var(--primary); }
+
+    .day-card:hover {
+      border-color: var(--primary);
+    }
+
     .day-header {
       display: flex;
       justify-content: space-between;
@@ -319,6 +386,7 @@
       font-weight: 700;
       color: var(--text-muted);
     }
+
     .lunch-pill {
       font-size: 0.78rem;
       background: var(--primary-light);
@@ -326,22 +394,26 @@
       padding: 0.3rem 0.55rem;
       border-radius: 8px;
     }
+
     .dinner-title {
       font-size: 1rem;
       font-weight: 700;
       color: var(--dark);
       margin-top: 0.15rem;
     }
+
     .dinner-meta {
       font-size: 0.82rem;
       color: var(--text-muted);
     }
+
     .tier-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
       margin: 1rem 0;
     }
+
     .tier-card {
       border: 2px solid var(--border);
       border-radius: var(--radius);
@@ -352,21 +424,25 @@
       justify-content: space-between;
       gap: 0.75rem;
     }
+
     .tier-card.featured {
       border-color: var(--primary);
       background: var(--primary-light);
     }
+
     .tier-price {
       font-size: 1.6rem;
       font-weight: 800;
       color: var(--primary);
     }
+
     .info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 0.9rem;
       margin-bottom: 1.25rem;
     }
+
     .info-box {
       background: var(--card);
       border: 1px solid var(--border);
@@ -377,6 +453,7 @@
       flex-direction: column;
       gap: 0.35rem;
     }
+
     .info-box h3 {
       font-size: 0.96rem;
       color: var(--dark);
@@ -384,10 +461,12 @@
       align-items: center;
       gap: 0.4rem;
     }
+
     .info-box p {
       font-size: 0.84rem;
       color: var(--text-muted);
     }
+
     .donation-banner {
       background: linear-gradient(135deg, var(--primary-light), var(--card));
       border: 2px solid var(--primary);
@@ -399,12 +478,14 @@
       gap: 1.25rem;
       align-items: center;
     }
+
     .shopping-list {
       list-style: none;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 0.5rem;
     }
+
     .shopping-item {
       display: flex;
       align-items: center;
@@ -415,10 +496,12 @@
       background: var(--bg);
       cursor: pointer;
     }
+
     .shopping-item.done {
       opacity: 0.55;
       text-decoration: line-through;
     }
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -429,7 +512,11 @@
       padding: 1rem;
       z-index: 200;
     }
-    .modal-backdrop.open { display: flex; }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
     .modal {
       background: var(--card);
       border-radius: var(--radius);
@@ -440,6 +527,7 @@
       max-height: 88vh;
       overflow-y: auto;
     }
+
     .toast {
       position: fixed;
       bottom: 1.25rem;
@@ -454,13 +542,18 @@
       z-index: 300;
       box-shadow: var(--shadow);
     }
+
     footer {
       text-align: center;
       padding: 2rem 1rem 1rem;
       font-size: 0.83rem;
       color: var(--text-muted);
     }
-    footer a { color: var(--primary); text-decoration: none; }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
 
     /* Barra de navegación inferior para móvil (estilo App nativa) */
     .bottom-nav {
@@ -471,31 +564,39 @@
       body {
         padding-bottom: calc(5.2rem + env(safe-area-inset-bottom, 0px));
       }
+
       header {
         padding: 0.6rem 0.9rem;
       }
+
       .brand {
         font-size: 1.15rem;
       }
+
       .brand img {
         width: 32px;
         height: 32px;
       }
+
       .badge-status {
         font-size: 0.72rem;
         padding: 0.25rem 0.55rem;
       }
+
       .container {
         padding: 0.85rem;
       }
+
       .hero-banner {
         padding: 1rem;
         flex-direction: column;
         align-items: stretch;
       }
+
       .hero-banner .btn {
         width: 100%;
       }
+
       /* En móvil mantenemos también visible la barra de botones superior de un vistazo */
       .tabs {
         width: 100%;
@@ -504,12 +605,14 @@
         grid-template-columns: repeat(4, 1fr);
         gap: 0.25rem;
       }
+
       .tab-btn {
         min-width: 0;
         padding: 0.45rem 0.25rem;
         font-size: 0.76rem;
         text-align: center;
       }
+
       .bottom-nav {
         position: fixed;
         bottom: 0;
@@ -523,6 +626,7 @@
         grid-template-columns: repeat(4, 1fr);
         padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
       }
+
       .bottom-nav-btn {
         background: transparent;
         border: none;
@@ -538,59 +642,75 @@
         cursor: pointer;
         border-radius: 10px;
       }
+
       .bottom-nav-btn .nav-icon {
         font-size: 1.2rem;
         line-height: 1;
       }
+
       .bottom-nav-btn.active {
         color: var(--primary);
         font-weight: 800;
       }
+
       .card {
         padding: 1rem;
         margin-bottom: 0.9rem;
       }
+
       .info-grid {
         grid-template-columns: 1fr;
         gap: 0.65rem;
       }
+
       .grid-form {
         grid-template-columns: 1fr;
         gap: 0.75rem;
       }
+
       /* 16px mínimo en inputs móviles para evitar el auto-zoom molesto de iOS Safari */
-      input, select, textarea {
+      input,
+      select,
+      textarea {
         font-size: 16px;
         padding: 0.65rem 0.75rem;
       }
+
       .btn-row {
         flex-direction: column;
       }
+
       .btn-row .btn {
         width: 100%;
       }
+
       .calendar-grid {
         grid-template-columns: 1fr;
         gap: 0.65rem;
       }
+
       .shopping-list {
         grid-template-columns: 1fr;
       }
+
       .donation-banner {
         grid-template-columns: 1fr;
         padding: 1rem;
       }
+
       /* Modal estilo Bottom-Sheet deslizable en móvil */
       .modal-backdrop {
         align-items: flex-end;
         padding: 0;
       }
+
       .modal {
         max-width: 100%;
         border-radius: 20px 20px 0 0;
         padding: 1.25rem 1.1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
         max-height: 85vh;
       }
+
       .toast {
         left: 0.85rem;
         right: 0.85rem;
@@ -600,560 +720,601 @@
     }
   </style>
 </head>
+
 <body>
 
-<header>
-  <a href="#" class="brand">
-    <img src="assets/logo.png" alt="Logo DinnerKids" onerror="this.style.display='none'">
-    <span>DinnerKids</span>
-  </a>
-  <nav class="tabs" role="tablist" aria-label="Secciones principales">
-    <button class="tab-btn active" data-tab="tab-menu">📅 Cenas</button>
-    <button class="tab-btn" data-tab="tab-school">🏫 Cole</button>
-    <button class="tab-btn" data-tab="tab-shopping">🛒 Compra</button>
-    <button class="tab-btn" data-tab="tab-pro">✨ IA y Datos</button>
+  <header>
+    <a href="#" class="brand">
+      <img src="assets/logo.png" alt="Logo DinnerKids" onerror="this.style.display='none'">
+      <span>DinnerKids</span>
+    </a>
+    <nav class="tabs" role="tablist" aria-label="Secciones principales">
+      <button class="tab-btn active" data-tab="tab-menu">📅 Cenas</button>
+      <button class="tab-btn" data-tab="tab-school">🏫 Cole</button>
+      <button class="tab-btn" data-tab="tab-shopping">🛒 Compra</button>
+      <button class="tab-btn" data-tab="tab-pro">✨ IA y Datos</button>
+    </nav>
+    <div class="header-actions">
+      <span id="proBadge" class="badge-status">Gratis · Local</span>
+      <button id="headerSponsorBtn" class="btn-sponsor" title="Invitar a un café o configurar IA">❤ Apoyar</button>
+      <button id="themeBtn" class="btn-icon" title="Cambiar tema claro/oscuro">🌓</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero-banner">
+      <div>
+        <h1>🍽️ ¿Qué cenan hoy los peques según el menú del cole?</h1>
+        <p>Proyecto ciudadano gratuito · Sin registro · Sin anuncios · Sin cookies · Tus datos no salen de tu
+          dispositivo.</p>
+      </div>
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+        <button class="btn btn-primary" id="quickGenerateBtn">⚡ Generar Cenas Ahora</button>
+        <a href="#como-funciona" class="btn btn-outline" id="btnGoSupport">✨ Modo IA / Apoyar</a>
+      </div>
+    </section>
+
+    <!-- BLOQUE INFORMATIVO DEL PROYECTO (VISIBLE EN EL FRONTAL) -->
+    <section class="info-grid" aria-label="Cómo funciona DinnerKids">
+      <article class="info-box">
+        <h3>🎁 Libre y Gratis para todos</h3>
+        <p>Planifica el mes entero cruzando lo que comen en el colegio con nuestro recetario infantil equilibrado.
+          Incluye control de alérgenos, recetas paso a paso y lista de la compra semanal a coste 0 €.</p>
+      </article>
+      <article class="info-box">
+        <h3>☕ Invítame a un Ko-fi (mín. 2 €) y usa mi IA</h3>
+        <p>Si el proyecto te ayuda y haces un donativo voluntario de un café (mínimo 2 € para cubrir el gasto de mi IA
+          Claude Haiku), activas la lectura automática de fotos del menú del cole y menús a medida con IA.</p>
+      </article>
+      <article class="info-box">
+        <h3>🔑 O configura tu propio Token de IA</h3>
+        <p>¿Tienes tu propia clave API de Anthropic Claude? Puedes configurarla directamente en <strong>✨ IA y
+            Datos</strong> para usar todas las funciones de IA por tu cuenta sin límites.</p>
+      </article>
+    </section>
+
+    <!-- TAB 1: MENÚ DE CENAS -->
+    <section id="tab-menu" class="panel active">
+      <div class="card">
+        <h2>⚙️ Preferencias de tu familia (guardadas solo en tu navegador)</h2>
+        <div class="grid-form">
+          <div>
+            <label for="selMonth">Mes</label>
+            <select id="selMonth">
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+          </div>
+          <div>
+            <label for="selYear">Año</label>
+            <input type="number" id="selYear" min="2025" max="2032" value="2026">
+          </div>
+          <div>
+            <label for="selVariante">Estilo de menú</label>
+            <select id="selVariante">
+              <option value="1">🍕 Clásico (equilibrado + favoritos)</option>
+              <option value="2">🥦 Saludable (plancha, vapor y horno)</option>
+            </select>
+          </div>
+          <div>
+            <label for="selMaxTime">Tiempo máx. por noche</label>
+            <select id="selMaxTime">
+              <option value="12">⚡ Ultra rápido (máx. 12 min)</option>
+              <option value="18" selected>⏱️ Rápido (máx. 18 min)</option>
+              <option value="30">🍲 Con calma (hasta 30 min)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 0.9rem;">
+          <label>Alérgenos a evitar obligatoriamente (toca para marcar)</label>
+          <div class="chips" id="allergenChips">
+            <span class="chip" data-allergen="gluten">🌾 Sin Gluten</span>
+            <span class="chip" data-allergen="lactosa">🥛 Sin Lactosa</span>
+            <span class="chip" data-allergen="huevo">🥚 Sin Huevo</span>
+            <span class="chip" data-allergen="pescado">🐟 Sin Pescado</span>
+            <span class="chip" data-allergen="sesamo">🌱 Sin Sésamo</span>
+          </div>
+        </div>
+
+        <div class="grid-form">
+          <div>
+            <label for="inpRoutines">Rutinas fijas por día (opcional)</label>
+            <input type="text" id="inpRoutines" placeholder="Ej: viernes pizza, jueves pescado">
+          </div>
+          <div>
+            <label for="inpPrefs">Gustos (qué les gusta o qué NO comen)</label>
+            <input type="text" id="inpPrefs"
+              placeholder="Ej: les encanta el pollo, no les gusta el brócoli ni el bacalao">
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btnGenLocal">⚡ Generar Menú de Cenas</button>
+          <button class="btn btn-secondary" id="btnGenAi">✨ Personalizar con IA (Claude Haiku)</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.85rem;">
+          <h2 id="calendarTitle" style="margin:0;">📅 Propuesta de Cenas del Mes</h2>
+          <span style="font-size:0.82rem; color:var(--text-muted);">Toca cualquier cena para ver la receta paso a
+            paso</span>
+        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
+        <div class="legal-banner">
+          <span>ℹ️</span>
+          <span><strong>Aviso orientativo:</strong> Las sugerencias de cenas y alérgenos se generan de forma automática
+            como ayuda de organización familiar y no sustituyen el consejo pediátrico ni la revisión del etiquetado real
+            de cada producto (<a href="privacidad.html" style="color:var(--primary);">ver aviso legal</a>).</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: MENÚ DEL COLE -->
+    <section id="tab-school" class="panel">
+      <div class="card">
+        <h2>🏫 Menú del Comedor Escolar</h2>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
+          Indica qué comen al mediodía en el colegio para que DinnerKids proponga por la noche una cena que no repita
+          proteína ni grupo nutricional.
+          También puedes compartirlo con el grupo de WhatsApp de tu clase con un enlace.
+        </p>
+
+        <div class="grid-form">
+          <div>
+            <label for="inpSchoolName">Nombre del Colegio / Clase (opcional)</label>
+            <input type="text" id="inpSchoolName" placeholder="Ej: CEIP San Isidro">
+          </div>
+          <div>
+            <label for="inpOcrFile">📸 O sube una foto del menú escolar (Lectura automática con IA)</label>
+            <input type="file" id="inpOcrFile" accept="image/png,image/jpeg,image/webp">
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-bottom:1.25rem;">
+          <button class="btn btn-outline" id="btnLoadSampleSchool">📋 Cargar menú escolar de ejemplo</button>
+          <button class="btn btn-secondary" id="btnShareSchool">📲 Compartir menú de mi cole por WhatsApp</button>
+          <button class="btn btn-outline" id="btnClearSchool">🗑️ Vaciar menú escolar</button>
+        </div>
+
+        <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:0.85rem;">
+          👇 <strong>Toca cualquier día lectivo para abrir la ventana y anotar o editar qué comen hoy en el
+            cole:</strong>
+        </p>
+        <div id="schoolDaysList" class="calendar-grid"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: LISTA DE LA COMPRA -->
+    <section id="tab-shopping" class="panel">
+      <div class="card">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+          <h2 style="margin:0;">🛒 Lista de la Compra</h2>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <select id="selShoppingWeek" style="width:auto;">
+              <option value="1">Semana 1 (días 1 al 7)</option>
+              <option value="2">Semana 2 (días 8 al 14)</option>
+              <option value="3">Semana 3 (días 15 al 21)</option>
+              <option value="4">Semana 4 (días 22 al 28)</option>
+              <option value="5">Semana 5 (días 29 al 31)</option>
+              <option value="0">Mes completo</option>
+            </select>
+            <button class="btn btn-outline" id="btnCopyShopping">📋 Copiar para WhatsApp</button>
+          </div>
+        </div>
+        <ul id="shoppingListContainer" class="shopping-list"></ul>
+      </div>
+    </section>
+
+    <!-- TAB 4: CAFÉ SOLIDARIO (IA), TOKEN PROPIO Y PRIVACIDAD -->
+    <section id="tab-pro" class="panel">
+      <div class="card">
+        <h2>☕ Apoya el proyecto con un Café o usa tu propio Token de IA</h2>
+        <p style="font-size:0.92rem; color:var(--text-muted); margin-bottom:1rem;">
+          <strong>DinnerKids es un proyecto libre y gratuito para todas las familias.</strong>
+          El planificador de cenas, las recetas infantiles, el control de alérgenos y la lista de la compra funcionan
+          100 % gratis en tu navegador.
+          Además, si quieres desbloquear la <strong>Inteligencia Artificial (Claude Haiku)</strong> para leer fotos del
+          menú escolar automáticamente y generar menús y recetas a medida, tienes dos opciones:
+        </p>
+
+        <div class="donation-banner">
+          <div>
+            <span class="badge-status" style="display:inline-block; margin-bottom:0.5rem;">Opción A · Donativo para
+              cubrir el gasto de mi IA</span>
+            <h3 style="font-size:1.25rem; color:var(--dark); margin-bottom:0.35rem;">☕ Invítame a un Ko-fi (mínimo 2 €)
+            </h3>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.75rem;">
+              Con un simple café de <strong>mínimo 2 €</strong> ayudas a mantener el proyecto y cubres el coste de mi
+              servidor de IA (Claude Haiku) para tu familia:
+            </p>
+            <ul style="font-size:0.86rem; margin:0 0 0.85rem 1.2rem; color:var(--text);">
+              <li>✨ <strong>Menús mensuales a medida con IA</strong> adaptados a los gustos de tus peques</li>
+              <li>📸 <strong>Lectura automática de la foto del menú del cole</strong> (OCR con IA Vision)</li>
+              <li>👩‍🍳 <strong>Recetas paso a paso personalizadas</strong> con IA en cualquier plato</li>
+              <li>🔒 <strong>Código personal de uso único (1 usuario/dispositivo):</strong> tu código queda vinculado a
+                tu dispositivo al activarlo para que nadie más consuma tu cuota.</li>
+            </ul>
+            <div style="display:flex; flex-wrap:wrap; gap:0.6rem;">
+              <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" class="btn btn-primary">☕ Invitar a
+                un Ko-fi (mín. 2 €)</a>
+              <a href="https://github.com/sponsors/ortisiano" target="_blank" rel="noopener" class="btn btn-outline">💖
+                GitHub Sponsors</a>
+            </div>
+          </div>
+
+          <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.1rem;">
+            <span class="badge-status"
+              style="display:inline-block; margin-bottom:0.5rem; background:var(--primary-light); color:var(--primary-dark);">Opción
+              B · Tu propia clave (BYOK)</span>
+            <h3 style="font-size:1.05rem; color:var(--dark); margin-bottom:0.35rem;">🔑 Usa tu propio Token de IA</h3>
+            <p style="font-size:0.84rem; color:var(--text-muted);">
+              Si ya tienes cuenta en Anthropic Claude, puedes pegar tu propio token (<code>sk-ant-...</code>) aquí
+              abajo. Tu clave se guarda exclusivamente en la memoria de tu navegador y usa tu propia cuenta sin límites.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-form" style="margin-top:1.25rem;">
+          <div>
+            <label for="inpProCode">Código Personal de Café (1 usuario)</label>
+            <input type="text" id="inpProCode" placeholder="Ej: DK02-202706-A1B2-9F8E7D6C5B">
+          </div>
+          <div>
+            <label for="inpByokKey" style="display:flex; justify-content:space-between; align-items:center;">
+              <span>O tu propio Token de IA de Claude (Opcional)</span>
+              <button type="button" id="btnToggleHelp" class="btn-icon"
+                style="padding:0.15rem 0.5rem; font-size:0.76rem; font-weight:700;">❓ ¿Cómo se configura?</button>
+            </label>
+            <input type="password" id="inpByokKey" placeholder="sk-ant-api03-...">
+          </div>
+        </div>
+
+        <!-- CUADRO DE AYUDA PASO A PASO PARA EL USUARIO -->
+        <div id="helpConfigBox" class="help-popover">
+          <strong style="display:block; margin-bottom:0.4rem;">💡 Guía rápida: ¿Cómo activar la Inteligencia
+            Artificial?</strong>
+          <ol style="margin-left:1.2rem; display:flex; flex-direction:column; gap:0.35rem;">
+            <li><strong>Con Código de Café (la forma más sencilla, sin cuentas técnicas):</strong> Haz un donativo de un
+              café (mín. 2 €) en <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener"
+                style="color:var(--primary); font-weight:700;">Ko-fi</a>, pega tu código <code>DK02-...</code> en la
+              primera casilla y pulsa <strong>Activar</strong>. Quedará vinculado a tu móvil/ordenador.</li>
+            <li><strong>Con tu propio Token de Claude (si eres usuario técnico):</strong> Entra en <a
+                href="https://console.anthropic.com/" target="_blank" rel="noopener"
+                style="color:var(--primary); font-weight:700;">console.anthropic.com</a> → <em>API Keys</em> → crea una
+              clave que empieza por <code>sk-ant-...</code> y pégala en la segunda casilla.</li>
+          </ol>
+          <details style="margin-top:0.65rem; font-size:0.8rem; color:var(--text-muted);">
+            <summary style="cursor:pointer; font-weight:600;">⚙️ Opciones avanzadas de red (solo para administradores)
+            </summary>
+            <div style="margin-top:0.4rem;">
+              <label for="inpWorkerUrl">URL del proxy Cloudflare Worker (no necesitas tocarlo salvo que alojes tu propio
+                servidor)</label>
+              <input type="url" id="inpWorkerUrl" value="https://api.dinnerkids.es">
+            </div>
+          </details>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="btnSavePro">🔑 Activar en este Dispositivo</button>
+        </div>
+
+        <div class="legal-banner" style="margin-top:1.1rem; justify-content:space-between; flex-wrap:wrap;">
+          <div>
+            <strong>🏫 ¿Formas parte del AMPA o dirección de un colegio?</strong><br>
+            <span>Recomienda DinnerKids en tu cole: podemos activar un <strong>código colectivo propio para vuestro
+                centro</strong> gestionado directamente conmigo para que todas las familias suban el menú escolar y usen
+              la IA todo el curso.</span>
+          </div>
+          <a href="mailto:hola@dinnerkids.es?subject=Codigo%20Colectivo%20Colegio%20%2F%20AMPA%20-%20DinnerKids"
+            class="btn btn-outline" style="padding:0.45rem 0.85rem; font-size:0.82rem;">✉️ Solicitar para mi Cole</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🔒 Privacidad desde el Diseño (RGPD · Cero Datos en Servidor)</h2>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:0.85rem;">
+          En DinnerKids no existen cuentas de usuario ni bases de datos con nombres de tus hijos.
+          Tus preferencias, alérgenos y menús se guardan únicamente en la memoria local de tu navegador
+          (<code>localStorage</code>).
+          Cuando usas el Modo IA Pro, un filtro automático (<code>anonymizePII</code> + <code>B-02</code>) elimina
+          cualquier nombre, correo, teléfono o dirección antes de consultar a la IA.
+        </p>
+        <div class="btn-row">
+          <button class="btn btn-outline" id="btnExportData">📥 Descargar copia de mis datos (JSON)</button>
+          <button class="btn btn-outline" id="btnWipeData">🗑️ Borrar todos mis datos de este navegador</button>
+          <a href="https://github.com/ortisiano/dinnerkids" target="_blank" rel="noopener" class="btn btn-outline">💻 Ver Código Abierto en GitHub</a>
+          <a href="privacidad.html" class="btn btn-outline">📄 Política de Privacidad y Aviso Legal</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL DE RECETA -->
+  <div id="recipeModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+        <h3 id="modalTitle" style="font-size:1.2rem; color:var(--primary);">Receta</h3>
+        <button id="modalCloseBtn" class="btn-icon">✕</button>
+      </div>
+      <div id="modalBody" style="font-size:0.92rem;"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <footer>
+    <p style="margin-bottom:0.35rem;">
+      <strong>DinnerKids</strong> · Herramienta abierta de organización familiar · Sin cookies · Sin rastreo · Datos 100
+      % en tu navegador
+    </p>
+    <p>
+      Proyecto independiente sin ánimo comercial directo ·
+      <a href="privacidad.html">Privacidad RGPD y Exención</a> ·
+      <a href="https://github.com/ortisiano/dinnerkids" target="_blank" rel="noopener">💻 Código abierto en GitHub</a> ·
+      <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener">☕ Invitar a un café (Ko-fi)</a>
+    </p>
+  </footer>
+
+  <!-- BARRA DE NAVEGACIÓN INFERIOR MÓVIL (ESTILO APP NATIVA) -->
+  <nav class="bottom-nav" role="tablist" aria-label="Navegación móvil">
+    <button class="bottom-nav-btn active" data-tab="tab-menu">
+      <span class="nav-icon">📅</span>
+      <span>Cenas</span>
+    </button>
+    <button class="bottom-nav-btn" data-tab="tab-school">
+      <span class="nav-icon">🏫</span>
+      <span>Cole</span>
+    </button>
+    <button class="bottom-nav-btn" data-tab="tab-shopping">
+      <span class="nav-icon">🛒</span>
+      <span>Compra</span>
+    </button>
+    <button class="bottom-nav-btn" data-tab="tab-pro">
+      <span class="nav-icon">✨</span>
+      <span>IA y Datos</span>
+    </button>
   </nav>
-  <div class="header-actions">
-    <span id="proBadge" class="badge-status">Gratis · Local</span>
-    <button id="headerSponsorBtn" class="btn-sponsor" title="Invitar a un café o configurar IA">❤ Apoyar</button>
-    <button id="themeBtn" class="btn-icon" title="Cambiar tema claro/oscuro">🌓</button>
-  </div>
-</header>
 
-<main class="container">
-  <section class="hero-banner">
-    <div>
-      <h1>🍽️ ¿Qué cenan hoy los peques según el menú del cole?</h1>
-      <p>Proyecto ciudadano gratuito · Sin registro · Sin anuncios · Sin cookies · Tus datos no salen de tu dispositivo.</p>
-    </div>
-    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-      <button class="btn btn-primary" id="quickGenerateBtn">⚡ Generar Cenas Ahora</button>
-      <a href="#como-funciona" class="btn btn-outline" id="btnGoSupport">✨ Modo IA / Apoyar</a>
-    </div>
-  </section>
+  <script type="module">
+    import {
+      WEEKDAY_NAMES_ES,
+      MONTH_NAMES_ES,
+      RECIPES,
+      generateLocalMonthlyMenu,
+      generateShoppingList,
+      encodeSchoolMenuShare,
+      decodeSchoolMenuShare,
+      searchRecipesByIngredients,
+      sanitizeField
+    } from "./logic.js";
 
-  <!-- BLOQUE INFORMATIVO DEL PROYECTO (VISIBLE EN EL FRONTAL) -->
-  <section class="info-grid" aria-label="Cómo funciona DinnerKids">
-    <article class="info-box">
-      <h3>🎁 Libre y Gratis para todos</h3>
-      <p>Planifica el mes entero cruzando lo que comen en el colegio con nuestro recetario infantil equilibrado. Incluye control de alérgenos, recetas paso a paso y lista de la compra semanal a coste 0 €.</p>
-    </article>
-    <article class="info-box">
-      <h3>☕ Invítame a un Ko-fi (mín. 2 €) y usa mi IA</h3>
-      <p>Si el proyecto te ayuda y haces un donativo voluntario de un café (mínimo 2 € para cubrir el gasto de mi IA Claude Haiku), activas la lectura automática de fotos del menú del cole y menús a medida con IA.</p>
-    </article>
-    <article class="info-box">
-      <h3>🔑 O configura tu propio Token de IA</h3>
-      <p>¿Tienes tu propia clave API de Anthropic Claude? Puedes configurarla directamente en <strong>✨ IA y Datos</strong> para usar todas las funciones de IA por tu cuenta sin límites.</p>
-    </article>
-  </section>
+    const STORAGE_KEY = "dinnerkids_state_v1";
 
-  <!-- TAB 1: MENÚ DE CENAS -->
-  <section id="tab-menu" class="panel active">
-    <div class="card">
-      <h2>⚙️ Preferencias de tu familia (guardadas solo en tu navegador)</h2>
-      <div class="grid-form">
-        <div>
-          <label for="selMonth">Mes</label>
-          <select id="selMonth">
-            <option value="1">Enero</option>
-            <option value="2">Febrero</option>
-            <option value="3">Marzo</option>
-            <option value="4">Abril</option>
-            <option value="5">Mayo</option>
-            <option value="6">Junio</option>
-            <option value="7">Julio</option>
-            <option value="8">Agosto</option>
-            <option value="9">Septiembre</option>
-            <option value="10">Octubre</option>
-            <option value="11">Noviembre</option>
-            <option value="12">Diciembre</option>
-          </select>
-        </div>
-        <div>
-          <label for="selYear">Año</label>
-          <input type="number" id="selYear" min="2025" max="2032" value="2026">
-        </div>
-        <div>
-          <label for="selVariante">Estilo de menú</label>
-          <select id="selVariante">
-            <option value="1">🍕 Clásico (equilibrado + favoritos)</option>
-            <option value="2">🥦 Saludable (plancha, vapor y horno)</option>
-          </select>
-        </div>
-        <div>
-          <label for="selMaxTime">Tiempo máx. por noche</label>
-          <select id="selMaxTime">
-            <option value="12">⚡ Ultra rápido (máx. 12 min)</option>
-            <option value="18" selected>⏱️ Rápido (máx. 18 min)</option>
-            <option value="30">🍲 Con calma (hasta 30 min)</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="margin-bottom: 0.9rem;">
-        <label>Alérgenos a evitar obligatoriamente (toca para marcar)</label>
-        <div class="chips" id="allergenChips">
-          <span class="chip" data-allergen="gluten">🌾 Sin Gluten</span>
-          <span class="chip" data-allergen="lactosa">🥛 Sin Lactosa</span>
-          <span class="chip" data-allergen="huevo">🥚 Sin Huevo</span>
-          <span class="chip" data-allergen="pescado">🐟 Sin Pescado</span>
-          <span class="chip" data-allergen="sesamo">🌱 Sin Sésamo</span>
-        </div>
-      </div>
-
-      <div class="grid-form">
-        <div>
-          <label for="inpRoutines">Rutinas fijas por día (opcional)</label>
-          <input type="text" id="inpRoutines" placeholder="Ej: viernes pizza, jueves pescado">
-        </div>
-        <div>
-          <label for="inpPrefs">Gustos (qué les gusta o qué NO comen)</label>
-          <input type="text" id="inpPrefs" placeholder="Ej: les encanta el pollo, no les gusta el brócoli ni el bacalao">
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" id="btnGenLocal">⚡ Generar Menú de Cenas</button>
-        <button class="btn btn-secondary" id="btnGenAi">✨ Personalizar con IA (Claude Haiku)</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.85rem;">
-        <h2 id="calendarTitle" style="margin:0;">📅 Propuesta de Cenas del Mes</h2>
-        <span style="font-size:0.82rem; color:var(--text-muted);">Toca cualquier cena para ver la receta paso a paso</span>
-      </div>
-      <div id="calendarGrid" class="calendar-grid"></div>
-      <div class="legal-banner">
-        <span>ℹ️</span>
-        <span><strong>Aviso orientativo:</strong> Las sugerencias de cenas y alérgenos se generan de forma automática como ayuda de organización familiar y no sustituyen el consejo pediátrico ni la revisión del etiquetado real de cada producto (<a href="privacidad.html" style="color:var(--primary);">ver aviso legal</a>).</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- TAB 2: MENÚ DEL COLE -->
-  <section id="tab-school" class="panel">
-    <div class="card">
-      <h2>🏫 Menú del Comedor Escolar</h2>
-      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
-        Indica qué comen al mediodía en el colegio para que DinnerKids proponga por la noche una cena que no repita proteína ni grupo nutricional.
-        También puedes compartirlo con el grupo de WhatsApp de tu clase con un enlace.
-      </p>
-
-      <div class="grid-form">
-        <div>
-          <label for="inpSchoolName">Nombre del Colegio / Clase (opcional)</label>
-          <input type="text" id="inpSchoolName" placeholder="Ej: CEIP San Isidro">
-        </div>
-        <div>
-          <label for="inpOcrFile">📸 O sube una foto del menú escolar (Lectura automática con IA)</label>
-          <input type="file" id="inpOcrFile" accept="image/png,image/jpeg,image/webp">
-        </div>
-      </div>
-
-      <div class="btn-row" style="margin-bottom:1.25rem;">
-        <button class="btn btn-outline" id="btnLoadSampleSchool">📋 Cargar menú escolar de ejemplo</button>
-        <button class="btn btn-secondary" id="btnShareSchool">📲 Compartir menú de mi cole por WhatsApp</button>
-        <button class="btn btn-outline" id="btnClearSchool">🗑️ Vaciar menú escolar</button>
-      </div>
-
-      <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:0.85rem;">
-        👇 <strong>Toca cualquier día lectivo para abrir la ventana y anotar o editar qué comen hoy en el cole:</strong>
-      </p>
-      <div id="schoolDaysList" class="calendar-grid"></div>
-    </div>
-  </section>
-
-  <!-- TAB 3: LISTA DE LA COMPRA -->
-  <section id="tab-shopping" class="panel">
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
-        <h2 style="margin:0;">🛒 Lista de la Compra</h2>
-        <div style="display:flex; gap:0.5rem; align-items:center;">
-          <select id="selShoppingWeek" style="width:auto;">
-            <option value="1">Semana 1 (días 1 al 7)</option>
-            <option value="2">Semana 2 (días 8 al 14)</option>
-            <option value="3">Semana 3 (días 15 al 21)</option>
-            <option value="4">Semana 4 (días 22 al 28)</option>
-            <option value="5">Semana 5 (días 29 al 31)</option>
-            <option value="0">Mes completo</option>
-          </select>
-          <button class="btn btn-outline" id="btnCopyShopping">📋 Copiar para WhatsApp</button>
-        </div>
-      </div>
-      <ul id="shoppingListContainer" class="shopping-list"></ul>
-    </div>
-  </section>
-
-  <!-- TAB 4: CAFÉ SOLIDARIO (IA), TOKEN PROPIO Y PRIVACIDAD -->
-  <section id="tab-pro" class="panel">
-    <div class="card">
-      <h2>☕ Apoya el proyecto con un Café (mín. 2 €) o usa tu propio Token de IA</h2>
-      <p style="font-size:0.92rem; color:var(--text-muted); margin-bottom:1rem;">
-        <strong>DinnerKids es un proyecto libre y gratuito para todas las familias.</strong>
-        El planificador de cenas, las recetas infantiles, el control de alérgenos y la lista de la compra funcionan 100 % gratis en tu navegador.
-        Además, si quieres desbloquear la <strong>Inteligencia Artificial (Claude Haiku)</strong> para leer fotos del menú escolar automáticamente y generar menús y recetas a medida, tienes dos opciones:
-      </p>
-
-      <div class="donation-banner">
-        <div>
-          <span class="badge-status" style="display:inline-block; margin-bottom:0.5rem;">Opción A · Donativo para cubrir el gasto de mi IA</span>
-          <h3 style="font-size:1.25rem; color:var(--dark); margin-bottom:0.35rem;">☕ Invítame a un Ko-fi (mínimo 2 €)</h3>
-          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.75rem;">
-            Con un simple café de <strong>mínimo 2 €</strong> ayudas a mantener el proyecto y cubres el coste de mi servidor de IA (Claude Haiku) para tu familia:
-          </p>
-          <ul style="font-size:0.86rem; margin:0 0 0.85rem 1.2rem; color:var(--text);">
-            <li>✨ <strong>Menús mensuales a medida con IA</strong> adaptados a los gustos de tus peques</li>
-            <li>📸 <strong>Lectura automática de la foto del menú del cole</strong> (OCR con IA Vision)</li>
-            <li>👩‍🍳 <strong>Recetas paso a paso personalizadas</strong> con IA en cualquier plato</li>
-            <li>🔒 <strong>Código personal de uso único (1 usuario/dispositivo):</strong> tu código queda vinculado a tu dispositivo al activarlo para que nadie más consuma tu cuota.</li>
-          </ul>
-          <div style="display:flex; flex-wrap:wrap; gap:0.6rem;">
-            <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" class="btn btn-primary">☕ Invitar a un Ko-fi (mín. 2 €)</a>
-            <a href="https://github.com/sponsors/ortisiano" target="_blank" rel="noopener" class="btn btn-outline">💖 GitHub Sponsors</a>
-          </div>
-        </div>
-
-        <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.1rem;">
-          <span class="badge-status" style="display:inline-block; margin-bottom:0.5rem; background:var(--primary-light); color:var(--primary-dark);">Opción B · Tu propia clave (BYOK)</span>
-          <h3 style="font-size:1.05rem; color:var(--dark); margin-bottom:0.35rem;">🔑 Usa tu propio Token de IA</h3>
-          <p style="font-size:0.84rem; color:var(--text-muted);">
-            Si ya tienes cuenta en Anthropic Claude, puedes pegar tu propio token (<code>sk-ant-...</code>) aquí abajo. Tu clave se guarda exclusivamente en la memoria de tu navegador y usa tu propia cuenta sin límites.
-          </p>
-        </div>
-      </div>
-
-      <div class="grid-form" style="margin-top:1.25rem;">
-        <div>
-          <label for="inpProCode">Código Personal de Café (1 usuario)</label>
-          <input type="text" id="inpProCode" placeholder="Ej: DK02-202706-A1B2-9F8E7D6C5B">
-        </div>
-        <div>
-          <label for="inpByokKey" style="display:flex; justify-content:space-between; align-items:center;">
-            <span>O tu propio Token de IA de Claude (Opcional)</span>
-            <button type="button" id="btnToggleHelp" class="btn-icon" style="padding:0.15rem 0.5rem; font-size:0.76rem; font-weight:700;">❓ ¿Cómo se configura?</button>
-          </label>
-          <input type="password" id="inpByokKey" placeholder="sk-ant-api03-...">
-        </div>
-      </div>
-
-      <!-- CUADRO DE AYUDA PASO A PASO PARA EL USUARIO -->
-      <div id="helpConfigBox" class="help-popover">
-        <strong style="display:block; margin-bottom:0.4rem;">💡 Guía rápida: ¿Cómo activar la Inteligencia Artificial?</strong>
-        <ol style="margin-left:1.2rem; display:flex; flex-direction:column; gap:0.35rem;">
-          <li><strong>Con Código de Café (la forma más sencilla, sin cuentas técnicas):</strong> Haz un donativo de un café (mín. 2 €) en <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" style="color:var(--primary); font-weight:700;">Ko-fi</a>, pega tu código <code>DK02-...</code> en la primera casilla y pulsa <strong>Activar</strong>. Quedará vinculado a tu móvil/ordenador.</li>
-          <li><strong>Con tu propio Token de Claude (si eres usuario técnico):</strong> Entra en <a href="https://console.anthropic.com/" target="_blank" rel="noopener" style="color:var(--primary); font-weight:700;">console.anthropic.com</a> → <em>API Keys</em> → crea una clave que empieza por <code>sk-ant-...</code> y pégala en la segunda casilla.</li>
-        </ol>
-        <details style="margin-top:0.65rem; font-size:0.8rem; color:var(--text-muted);">
-          <summary style="cursor:pointer; font-weight:600;">⚙️ Opciones avanzadas de red (solo para administradores)</summary>
-          <div style="margin-top:0.4rem;">
-            <label for="inpWorkerUrl">URL del proxy Cloudflare Worker (no necesitas tocarlo salvo que alojes tu propio servidor)</label>
-            <input type="url" id="inpWorkerUrl" value="https://api.dinnerkids.es">
-          </div>
-        </details>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-secondary" id="btnSavePro">🔑 Activar en este Dispositivo</button>
-      </div>
-
-      <div class="legal-banner" style="margin-top:1.1rem; justify-content:space-between; flex-wrap:wrap;">
-        <div>
-          <strong>🏫 ¿Formas parte del AMPA o dirección de un colegio?</strong><br>
-          <span>Recomienda DinnerKids en tu cole: podemos activar un <strong>código colectivo propio para vuestro centro</strong> gestionado directamente conmigo para que todas las familias suban el menú escolar y usen la IA todo el curso.</span>
-        </div>
-        <a href="mailto:hola@dinnerkids.es?subject=Codigo%20Colectivo%20Colegio%20%2F%20AMPA%20-%20DinnerKids" class="btn btn-outline" style="padding:0.45rem 0.85rem; font-size:0.82rem;">✉️ Solicitar para mi Cole</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>🔒 Privacidad desde el Diseño (RGPD · Cero Datos en Servidor)</h2>
-      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:0.85rem;">
-        En DinnerKids no existen cuentas de usuario ni bases de datos con nombres de tus hijos.
-        Tus preferencias, alérgenos y menús se guardan únicamente en la memoria local de tu navegador (<code>localStorage</code>).
-        Cuando usas el Modo IA Pro, un filtro automático (<code>anonymizePII</code> + <code>B-02</code>) elimina cualquier nombre, correo, teléfono o dirección antes de consultar a la IA.
-      </p>
-      <div class="btn-row">
-        <button class="btn btn-outline" id="btnExportData">📥 Descargar copia de mis datos (JSON)</button>
-        <button class="btn btn-outline" id="btnWipeData">🗑️ Borrar todos mis datos de este navegador</button>
-        <a href="privacidad.html" class="btn btn-outline">📄 Leer Política de Privacidad y Aviso Legal</a>
-      </div>
-    </div>
-  </section>
-</main>
-
-<!-- MODAL DE RECETA -->
-<div id="recipeModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
-  <div class="modal">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-      <h3 id="modalTitle" style="font-size:1.2rem; color:var(--primary);">Receta</h3>
-      <button id="modalCloseBtn" class="btn-icon">✕</button>
-    </div>
-    <div id="modalBody" style="font-size:0.92rem;"></div>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
-
-<footer>
-  <p style="margin-bottom:0.35rem;">
-    <strong>DinnerKids</strong> · Herramienta abierta de organización familiar · Sin cookies · Sin rastreo · Datos 100 % en tu navegador
-  </p>
-  <p>
-    Proyecto independiente sin ánimo comercial directo ·
-    <a href="privacidad.html">Privacidad RGPD y Exención de Responsabilidad</a> ·
-    <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener">❤ Invitar a un café (Ko-fi)</a> ·
-    <a href="https://github.com/sponsors/ortisiano" target="_blank" rel="noopener">GitHub Sponsors</a>
-  </p>
-</footer>
-
-<!-- BARRA DE NAVEGACIÓN INFERIOR MÓVIL (ESTILO APP NATIVA) -->
-<nav class="bottom-nav" role="tablist" aria-label="Navegación móvil">
-  <button class="bottom-nav-btn active" data-tab="tab-menu">
-    <span class="nav-icon">📅</span>
-    <span>Cenas</span>
-  </button>
-  <button class="bottom-nav-btn" data-tab="tab-school">
-    <span class="nav-icon">🏫</span>
-    <span>Cole</span>
-  </button>
-  <button class="bottom-nav-btn" data-tab="tab-shopping">
-    <span class="nav-icon">🛒</span>
-    <span>Compra</span>
-  </button>
-  <button class="bottom-nav-btn" data-tab="tab-pro">
-    <span class="nav-icon">✨</span>
-    <span>IA y Datos</span>
-  </button>
-</nav>
-
-<script type="module">
-  import {
-    WEEKDAY_NAMES_ES,
-    MONTH_NAMES_ES,
-    RECIPES,
-    generateLocalMonthlyMenu,
-    generateShoppingList,
-    encodeSchoolMenuShare,
-    decodeSchoolMenuShare,
-    searchRecipesByIngredients,
-    sanitizeField
-  } from "./logic.js";
-
-  const STORAGE_KEY = "dinnerkids_state_v1";
-
-  function generateDeviceId() {
-    if (crypto && crypto.randomUUID) return crypto.randomUUID();
-    return "dkdev-" + Math.random().toString(36).slice(2, 12) + Date.now().toString(36);
-  }
-
-  const now = new Date();
-  const state = {
-    year: now.getFullYear(),
-    month: now.getMonth() + 1,
-    variante: 1,
-    maxPrepTime: 18,
-    excludedAllergens: [],
-    routines: "",
-    preferences: "",
-    schoolName: "",
-    schoolMenu: {},
-    generatedMenu: {},
-    checkedShopping: {},
-    proCode: "",
-    deviceId: generateDeviceId(),
-    byokKey: "",
-    workerUrl: "https://api.dinnerkids.es",
-    theme: localStorage.getItem("dk_theme") || "light"
-  };
-
-  function showToast(msg) {
-    const el = document.getElementById("toast");
-    el.textContent = msg;
-    el.style.display = "block";
-    clearTimeout(showToast._t);
-    showToast._t = setTimeout(() => { el.style.display = "none"; }, 3200);
-  }
-
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        Object.assign(state, parsed);
-      }
-      if (!state.deviceId) {
-        state.deviceId = generateDeviceId();
-      }
-    } catch {
-      // Ignorar almacenamiento corrupto
+    function generateDeviceId() {
+      if (crypto && crypto.randomUUID) return crypto.randomUUID();
+      return "dkdev-" + Math.random().toString(36).slice(2, 12) + Date.now().toString(36);
     }
-    // Comprobar si viene un menú de colegio compartido en el hash (#cole=...)
-    if (location.hash.startsWith("#cole=")) {
-      const encoded = location.hash.slice(6);
-      const shared = decodeSchoolMenuShare(encoded);
-      if (shared) {
-        state.schoolName = shared.schoolName;
-        state.year = shared.year;
-        state.month = shared.month;
-        state.schoolMenu = shared.schoolMenu;
-        history.replaceState(null, "", location.pathname);
-        showToast(`🏫 Menú cargado: ${shared.schoolName} (${MONTH_NAMES_ES[shared.month]})`);
+
+    const now = new Date();
+    const state = {
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+      variante: 1,
+      maxPrepTime: 18,
+      excludedAllergens: [],
+      routines: "",
+      preferences: "",
+      schoolName: "",
+      schoolMenu: {},
+      generatedMenu: {},
+      checkedShopping: {},
+      proCode: "",
+      deviceId: generateDeviceId(),
+      byokKey: "",
+      workerUrl: "https://api.dinnerkids.es",
+      theme: localStorage.getItem("dk_theme") || "light"
+    };
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.style.display = "block";
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => { el.style.display = "none"; }, 3200);
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          Object.assign(state, parsed);
+        }
+        if (!state.deviceId) {
+          state.deviceId = generateDeviceId();
+        }
+      } catch {
+        // Ignorar almacenamiento corrupto
+      }
+      // Comprobar si viene un menú de colegio compartido en el hash (#cole=...)
+      if (location.hash.startsWith("#cole=")) {
+        const encoded = location.hash.slice(6);
+        const shared = decodeSchoolMenuShare(encoded);
+        if (shared) {
+          state.schoolName = shared.schoolName;
+          state.year = shared.year;
+          state.month = shared.month;
+          state.schoolMenu = shared.schoolMenu;
+          history.replaceState(null, "", location.pathname);
+          showToast(`🏫 Menú cargado: ${shared.schoolName} (${MONTH_NAMES_ES[shared.month]})`);
+        }
       }
     }
-  }
 
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch {
-      // Ignorar si modo incógnito bloquea localStorage
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch {
+        // Ignorar si modo incógnito bloquea localStorage
+      }
+      updateProBadge();
     }
-    updateProBadge();
-  }
 
-  function updateProBadge() {
-    const badge = document.getElementById("proBadge");
-    if (state.proCode) {
-      badge.textContent = `☕ IA Activa (${state.proCode.split("-")[0]})`;
-    } else if (state.byokKey) {
-      badge.textContent = "🔑 IA Propia Activa";
-    } else {
-      badge.textContent = "100 % Local";
+    function updateProBadge() {
+      const badge = document.getElementById("proBadge");
+      if (state.proCode) {
+        badge.textContent = `☕ IA Activa (${state.proCode.split("-")[0]})`;
+      } else if (state.byokKey) {
+        badge.textContent = "🔑 IA Propia Activa";
+      } else {
+        badge.textContent = "100 % Local";
+      }
     }
-  }
 
-  function syncFormFromState() {
-    document.documentElement.setAttribute("data-theme", state.theme);
-    document.getElementById("selMonth").value = String(state.month);
-    document.getElementById("selYear").value = String(state.year);
-    document.getElementById("selVariante").value = String(state.variante);
-    document.getElementById("selMaxTime").value = String(state.maxPrepTime);
-    document.getElementById("inpRoutines").value = state.routines || "";
-    document.getElementById("inpPrefs").value = state.preferences || "";
-    document.getElementById("inpSchoolName").value = state.schoolName || "";
-    document.getElementById("inpProCode").value = state.proCode || "";
-    document.getElementById("inpByokKey").value = state.byokKey || "";
-    document.getElementById("inpWorkerUrl").value = state.workerUrl || "https://api.dinnerkids.es";
+    function syncFormFromState() {
+      document.documentElement.setAttribute("data-theme", state.theme);
+      document.getElementById("selMonth").value = String(state.month);
+      document.getElementById("selYear").value = String(state.year);
+      document.getElementById("selVariante").value = String(state.variante);
+      document.getElementById("selMaxTime").value = String(state.maxPrepTime);
+      document.getElementById("inpRoutines").value = state.routines || "";
+      document.getElementById("inpPrefs").value = state.preferences || "";
+      document.getElementById("inpSchoolName").value = state.schoolName || "";
+      document.getElementById("inpProCode").value = state.proCode || "";
+      document.getElementById("inpByokKey").value = state.byokKey || "";
+      document.getElementById("inpWorkerUrl").value = state.workerUrl || "https://api.dinnerkids.es";
 
-    document.querySelectorAll("#allergenChips .chip").forEach((chip) => {
-      const al = chip.getAttribute("data-allergen");
-      chip.classList.toggle("selected", state.excludedAllergens.includes(al));
-    });
-    updateProBadge();
-  }
-
-  function readFormIntoState() {
-    state.month = Number(document.getElementById("selMonth").value) || state.month;
-    state.year = Number(document.getElementById("selYear").value) || state.year;
-    state.variante = Number(document.getElementById("selVariante").value) || 1;
-    state.maxPrepTime = Number(document.getElementById("selMaxTime").value) || 18;
-    state.routines = document.getElementById("inpRoutines").value.trim();
-    state.preferences = document.getElementById("inpPrefs").value.trim();
-    state.schoolName = document.getElementById("inpSchoolName").value.trim();
-    saveState();
-  }
-
-  function renderCalendar() {
-    const grid = document.getElementById("calendarGrid");
-    const title = document.getElementById("calendarTitle");
-    const schoolLabel = state.schoolName ? ` · ${state.schoolName}` : "";
-    title.textContent = `📅 Cenas de ${MONTH_NAMES_ES[state.month]} ${state.year}${schoolLabel}`;
-    grid.innerHTML = "";
-
-    const dates = Object.keys(state.generatedMenu || {}).sort();
-    if (dates.length === 0) {
-      state.generatedMenu = generateLocalMonthlyMenu({
-        year: state.year,
-        month: state.month,
-        schoolMenu: state.schoolMenu,
-        variante: state.variante,
-        excludedAllergens: state.excludedAllergens,
-        maxPrepTime: state.maxPrepTime,
-        routinesText: state.routines,
-        preferencesText: state.preferences
+      document.querySelectorAll("#allergenChips .chip").forEach((chip) => {
+        const al = chip.getAttribute("data-allergen");
+        chip.classList.toggle("selected", state.excludedAllergens.includes(al));
       });
+      updateProBadge();
+    }
+
+    function readFormIntoState() {
+      state.month = Number(document.getElementById("selMonth").value) || state.month;
+      state.year = Number(document.getElementById("selYear").value) || state.year;
+      state.variante = Number(document.getElementById("selVariante").value) || 1;
+      state.maxPrepTime = Number(document.getElementById("selMaxTime").value) || 18;
+      state.routines = document.getElementById("inpRoutines").value.trim();
+      state.preferences = document.getElementById("inpPrefs").value.trim();
+      state.schoolName = document.getElementById("inpSchoolName").value.trim();
       saveState();
     }
 
-    for (const dateKey of Object.keys(state.generatedMenu).sort()) {
-      const item = state.generatedMenu[dateKey];
-      const [y, m, d] = dateKey.split("-").map(Number);
-      const dt = new Date(Date.UTC(y, m - 1, d));
-      const wName = WEEKDAY_NAMES_ES[dt.getUTCDay()];
+    function renderCalendar() {
+      const grid = document.getElementById("calendarGrid");
+      const title = document.getElementById("calendarTitle");
+      const schoolLabel = state.schoolName ? ` · ${state.schoolName}` : "";
+      title.textContent = `📅 Cenas de ${MONTH_NAMES_ES[state.month]} ${state.year}${schoolLabel}`;
+      grid.innerHTML = "";
 
-      const card = document.createElement("article");
-      card.className = "day-card";
-      card.style.cursor = item.cena !== "Libre" ? "pointer" : "default";
-
-      const hdr = document.createElement("div");
-      hdr.className = "day-header";
-      hdr.innerHTML = `<span>${wName} ${d}</span><span>⏱️ ${ sanitizeField(item.tiempo || "15 min", 20) }</span>`;
-      card.appendChild(hdr);
-
-      const schoolEntry = state.schoolMenu[dateKey];
-      const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
-        ? (schoolEntry.menu || schoolEntry.primero || "")
-        : String(schoolEntry || item.almuerzoCole || "");
-
-      if (lunchTxt) {
-        const pill = document.createElement("div");
-        pill.className = "lunch-pill";
-        pill.textContent = `🏫 Cole: ${lunchTxt}`;
-        card.appendChild(pill);
+      const dates = Object.keys(state.generatedMenu || {}).sort();
+      if (dates.length === 0) {
+        state.generatedMenu = generateLocalMonthlyMenu({
+          year: state.year,
+          month: state.month,
+          schoolMenu: state.schoolMenu,
+          variante: state.variante,
+          excludedAllergens: state.excludedAllergens,
+          maxPrepTime: state.maxPrepTime,
+          routinesText: state.routines,
+          preferencesText: state.preferences
+        });
+        saveState();
       }
 
-      const dTitle = document.createElement("div");
-      dTitle.className = "dinner-title";
-      dTitle.textContent = `🌙 ${item.cena}`;
-      card.appendChild(dTitle);
+      for (const dateKey of Object.keys(state.generatedMenu).sort()) {
+        const item = state.generatedMenu[dateKey];
+        const [y, m, d] = dateKey.split("-").map(Number);
+        const dt = new Date(Date.UTC(y, m - 1, d));
+        const wName = WEEKDAY_NAMES_ES[dt.getUTCDay()];
 
-      const meta = document.createElement("div");
-      meta.className = "dinner-meta";
-      meta.textContent = `🥗 ${item.guarnicion || "Ensalada"} · 🍎 ${item.postre || "Fruta"}`;
-      card.appendChild(meta);
+        const card = document.createElement("article");
+        card.className = "day-card";
+        card.style.cursor = item.cena !== "Libre" ? "pointer" : "default";
 
-      if (item.cena !== "Libre") {
-        card.addEventListener("click", () => openRecipeModal(dateKey, item));
+        const hdr = document.createElement("div");
+        hdr.className = "day-header";
+        hdr.innerHTML = `<span>${wName} ${d}</span><span>⏱️ ${sanitizeField(item.tiempo || "15 min", 20)}</span>`;
+        card.appendChild(hdr);
+
+        const schoolEntry = state.schoolMenu[dateKey];
+        const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
+          ? (schoolEntry.menu || schoolEntry.primero || "")
+          : String(schoolEntry || item.almuerzoCole || "");
+
+        if (lunchTxt) {
+          const pill = document.createElement("div");
+          pill.className = "lunch-pill";
+          pill.textContent = `🏫 Cole: ${lunchTxt}`;
+          card.appendChild(pill);
+        }
+
+        const dTitle = document.createElement("div");
+        dTitle.className = "dinner-title";
+        dTitle.textContent = `🌙 ${item.cena}`;
+        card.appendChild(dTitle);
+
+        const meta = document.createElement("div");
+        meta.className = "dinner-meta";
+        meta.textContent = `🥗 ${item.guarnicion || "Ensalada"} · 🍎 ${item.postre || "Fruta"}`;
+        card.appendChild(meta);
+
+        if (item.cena !== "Libre") {
+          card.addEventListener("click", () => openRecipeModal(dateKey, item));
+        }
+
+        grid.appendChild(card);
       }
-
-      grid.appendChild(card);
     }
-  }
 
-  const SCHOOL_LUNCH_PRESETS = [
-    "Lentejas estofadas con verduras / Pollo asado",
-    "Macarrones a la boloñesa / Merluza al horno",
-    "Arroz con tomate / Tortilla española con ensalada",
-    "Cocido tradicional (garbanzos) / Filete de pavo a la plancha",
-    "Crema de calabacín / Albóndigas de ternera en salsa",
-    "Judías blancas estofadas / Filete de merluza a la romana",
-    "Espaguetis con atún / Contramuslo de pollo al horno",
-    "Paella de pollo y verduras / Yogur natural",
-    "Puré de verduras / Tortilla francesa con jamón",
-    "Sopa de fideos / Lomo de cerdo asado con manzana",
-    "Garbanzos con espinacas / Bacalao al horno",
-    "Guisantes con jamón / Hamburguesa de ternera a la plancha"
-  ];
+    const SCHOOL_LUNCH_PRESETS = [
+      "Lentejas estofadas con verduras / Pollo asado",
+      "Macarrones a la boloñesa / Merluza al horno",
+      "Arroz con tomate / Tortilla española con ensalada",
+      "Cocido tradicional (garbanzos) / Filete de pavo a la plancha",
+      "Crema de calabacín / Albóndigas de ternera en salsa",
+      "Judías blancas estofadas / Filete de merluza a la romana",
+      "Espaguetis con atún / Contramuslo de pollo al horno",
+      "Paella de pollo y verduras / Yogur natural",
+      "Puré de verduras / Tortilla francesa con jamón",
+      "Sopa de fideos / Lomo de cerdo asado con manzana",
+      "Garbanzos con espinacas / Bacalao al horno",
+      "Guisantes con jamón / Hamburguesa de ternera a la plancha"
+    ];
 
-  function openSchoolDayModal(dateKey, dayLabel) {
-    const backdrop = document.getElementById("recipeModalBackdrop");
-    const title = document.getElementById("modalTitle");
-    const body = document.getElementById("modalBody");
+    function openSchoolDayModal(dateKey, dayLabel) {
+      const backdrop = document.getElementById("recipeModalBackdrop");
+      const title = document.getElementById("modalTitle");
+      const body = document.getElementById("modalBody");
 
-    const existing = state.schoolMenu[dateKey];
-    const currentVal = typeof existing === "object" && existing !== null
-      ? (existing.menu || [existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / "))
-      : String(existing || "");
+      const existing = state.schoolMenu[dateKey];
+      const currentVal = typeof existing === "object" && existing !== null
+        ? (existing.menu || [existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / "))
+        : String(existing || "");
 
-    title.textContent = `🏫 Menú del Cole · ${dayLabel}`;
+      title.textContent = `🏫 Menú del Cole · ${dayLabel}`;
 
-    const presetsHtml = SCHOOL_LUNCH_PRESETS
-      .map((p) => `<span class="chip school-preset-chip" data-preset="${sanitizeField(p, 120)}">🍽️ ${sanitizeField(p, 120)}</span>`)
-      .join("");
+      const presetsHtml = SCHOOL_LUNCH_PRESETS
+        .map((p) => `<span class="chip school-preset-chip" data-preset="${sanitizeField(p, 120)}">🍽️ ${sanitizeField(p, 120)}</span>`)
+        .join("");
 
-    body.innerHTML = `
+      body.innerHTML = `
       <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:0.65rem;">
         Escribe qué han comido al mediodía en el colegio (o toca una sugerencia rápida de abajo para rellenarlo y editarlo):
       </p>
@@ -1171,133 +1332,133 @@
       </div>
     `;
 
-    const inp = document.getElementById("inpModalSchoolLunch");
-    setTimeout(() => inp.focus(), 50);
+      const inp = document.getElementById("inpModalSchoolLunch");
+      setTimeout(() => inp.focus(), 50);
 
-    body.querySelectorAll(".school-preset-chip").forEach((chip) => {
-      chip.addEventListener("click", () => {
-        inp.value = chip.getAttribute("data-preset") || "";
-        inp.focus();
+      body.querySelectorAll(".school-preset-chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          inp.value = chip.getAttribute("data-preset") || "";
+          inp.focus();
+        });
       });
-    });
 
-    document.getElementById("btnSaveSchoolModal").addEventListener("click", () => {
-      const clean = inp.value.trim();
-      if (clean) {
-        state.schoolMenu[dateKey] = { menu: clean };
-      } else {
-        delete state.schoolMenu[dateKey];
-      }
-      saveState();
-      renderSchoolInputs();
-      triggerLocalGeneration();
-      backdrop.classList.remove("open");
-      showToast(`🏫 Menú del ${dayLabel} guardado y cena actualizada`);
-    });
-
-    document.getElementById("btnClearSchoolModal").addEventListener("click", () => {
-      delete state.schoolMenu[dateKey];
-      saveState();
-      renderSchoolInputs();
-      triggerLocalGeneration();
-      backdrop.classList.remove("open");
-      showToast(`🗑️ Menú del ${dayLabel} vaciado`);
-    });
-
-    backdrop.classList.add("open");
-  }
-
-  function renderSchoolInputs() {
-    const container = document.getElementById("schoolDaysList");
-    container.innerHTML = "";
-    const numDays = new Date(state.year, state.month, 0).getDate();
-
-    for (let day = 1; day <= numDays; day++) {
-      const dt = new Date(Date.UTC(state.year, state.month - 1, day));
-      const dow = dt.getUTCDay();
-      if (dow === 0 || dow === 6) continue; // Solo días lectivos L-V
-
-      const dateKey = `${state.year}-${String(state.month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-      const existing = state.schoolMenu[dateKey];
-      const val = typeof existing === "object" && existing !== null
-        ? (existing.menu || [existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / "))
-        : String(existing || "");
-      const dayLabel = `${WEEKDAY_NAMES_ES[dow]} ${day}/${state.month}`;
-
-      const card = document.createElement("article");
-      card.className = "day-card";
-      card.style.cursor = "pointer";
-
-      const hdr = document.createElement("div");
-      hdr.className = "day-header";
-      hdr.innerHTML = `<span>📅 ${dayLabel}</span><span style="color:var(--primary);">✏️ Editar</span>`;
-      card.appendChild(hdr);
-
-      const content = document.createElement("div");
-      if (val) {
-        content.className = "dinner-title";
-        content.style.fontSize = "0.94rem";
-        content.textContent = `🍽️ ${val}`;
-      } else {
-        content.className = "dinner-meta";
-        content.textContent = "Sin plato anotado · Toca para añadir qué comen hoy";
-      }
-      card.appendChild(content);
-
-      card.addEventListener("click", () => openSchoolDayModal(dateKey, dayLabel));
-      container.appendChild(card);
-    }
-  }
-
-  function renderShoppingList() {
-    const week = Number(document.getElementById("selShoppingWeek").value) || 0;
-    const list = generateShoppingList(state.generatedMenu, week);
-    const ul = document.getElementById("shoppingListContainer");
-    ul.innerHTML = "";
-
-    for (const entry of list) {
-      const li = document.createElement("li");
-      const key = `${week}:${entry.item}`;
-      const isDone = Boolean(state.checkedShopping[key]);
-      li.className = `shopping-item${isDone ? " done" : ""}`;
-      li.innerHTML = `<span>${isDone ? "✅" : "⬜"}</span><div><strong>${sanitizeField(entry.item, 80)}</strong><div style="font-size:0.76rem;color:var(--text-muted);">Días: ${entry.days.join(", ")}</div></div>`;
-      li.addEventListener("click", () => {
-        state.checkedShopping[key] = !state.checkedShopping[key];
+      document.getElementById("btnSaveSchoolModal").addEventListener("click", () => {
+        const clean = inp.value.trim();
+        if (clean) {
+          state.schoolMenu[dateKey] = { menu: clean };
+        } else {
+          delete state.schoolMenu[dateKey];
+        }
         saveState();
-        renderShoppingList();
+        renderSchoolInputs();
+        triggerLocalGeneration();
+        backdrop.classList.remove("open");
+        showToast(`🏫 Menú del ${dayLabel} guardado y cena actualizada`);
       });
-      ul.appendChild(li);
+
+      document.getElementById("btnClearSchoolModal").addEventListener("click", () => {
+        delete state.schoolMenu[dateKey];
+        saveState();
+        renderSchoolInputs();
+        triggerLocalGeneration();
+        backdrop.classList.remove("open");
+        showToast(`🗑️ Menú del ${dayLabel} vaciado`);
+      });
+
+      backdrop.classList.add("open");
     }
-  }
 
-  function getAiHeaders() {
-    return {
-      "Content-Type": "application/json",
-      "X-DK-Code": state.proCode || "",
-      "X-DK-Device": state.deviceId || "",
-      "X-BYOK-Key": state.byokKey || ""
-    };
-  }
+    function renderSchoolInputs() {
+      const container = document.getElementById("schoolDaysList");
+      container.innerHTML = "";
+      const numDays = new Date(state.year, state.month, 0).getDate();
 
-  function openRecipeModal(dateKey, item) {
-    const backdrop = document.getElementById("recipeModalBackdrop");
-    const title = document.getElementById("modalTitle");
-    const body = document.getElementById("modalBody");
+      for (let day = 1; day <= numDays; day++) {
+        const dt = new Date(Date.UTC(state.year, state.month - 1, day));
+        const dow = dt.getUTCDay();
+        if (dow === 0 || dow === 6) continue; // Solo días lectivos L-V
 
-    const localRecipe = RECIPES.find((r) => r.title.toLowerCase() === String(item.cena).toLowerCase());
-    title.textContent = item.cena;
+        const dateKey = `${state.year}-${String(state.month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const existing = state.schoolMenu[dateKey];
+        const val = typeof existing === "object" && existing !== null
+          ? (existing.menu || [existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / "))
+          : String(existing || "");
+        const dayLabel = `${WEEKDAY_NAMES_ES[dow]} ${day}/${state.month}`;
 
-    const ingHtml = (item.ingredientes || localRecipe?.ingredients || [item.cena, item.guarnicion])
-      .map((i) => `<li>${sanitizeField(i, 80)}</li>`)
-      .join("");
+        const card = document.createElement("article");
+        card.className = "day-card";
+        card.style.cursor = "pointer";
 
-    const instructions = item.instrucciones || localRecipe?.instructions || "Cocinar a fuego medio con aceite de oliva virgen extra.";
-    const schoolEntry = state.schoolMenu[dateKey];
-    const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
-      ? (schoolEntry.menu || schoolEntry.primero || "")
-      : String(schoolEntry || item.almuerzoCole || "");
+        const hdr = document.createElement("div");
+        hdr.className = "day-header";
+        hdr.innerHTML = `<span>📅 ${dayLabel}</span><span style="color:var(--primary);">✏️ Editar</span>`;
+        card.appendChild(hdr);
 
-    body.innerHTML = `
+        const content = document.createElement("div");
+        if (val) {
+          content.className = "dinner-title";
+          content.style.fontSize = "0.94rem";
+          content.textContent = `🍽️ ${val}`;
+        } else {
+          content.className = "dinner-meta";
+          content.textContent = "Sin plato anotado · Toca para añadir qué comen hoy";
+        }
+        card.appendChild(content);
+
+        card.addEventListener("click", () => openSchoolDayModal(dateKey, dayLabel));
+        container.appendChild(card);
+      }
+    }
+
+    function renderShoppingList() {
+      const week = Number(document.getElementById("selShoppingWeek").value) || 0;
+      const list = generateShoppingList(state.generatedMenu, week);
+      const ul = document.getElementById("shoppingListContainer");
+      ul.innerHTML = "";
+
+      for (const entry of list) {
+        const li = document.createElement("li");
+        const key = `${week}:${entry.item}`;
+        const isDone = Boolean(state.checkedShopping[key]);
+        li.className = `shopping-item${isDone ? " done" : ""}`;
+        li.innerHTML = `<span>${isDone ? "✅" : "⬜"}</span><div><strong>${sanitizeField(entry.item, 80)}</strong><div style="font-size:0.76rem;color:var(--text-muted);">Días: ${entry.days.join(", ")}</div></div>`;
+        li.addEventListener("click", () => {
+          state.checkedShopping[key] = !state.checkedShopping[key];
+          saveState();
+          renderShoppingList();
+        });
+        ul.appendChild(li);
+      }
+    }
+
+    function getAiHeaders() {
+      return {
+        "Content-Type": "application/json",
+        "X-DK-Code": state.proCode || "",
+        "X-DK-Device": state.deviceId || "",
+        "X-BYOK-Key": state.byokKey || ""
+      };
+    }
+
+    function openRecipeModal(dateKey, item) {
+      const backdrop = document.getElementById("recipeModalBackdrop");
+      const title = document.getElementById("modalTitle");
+      const body = document.getElementById("modalBody");
+
+      const localRecipe = RECIPES.find((r) => r.title.toLowerCase() === String(item.cena).toLowerCase());
+      title.textContent = item.cena;
+
+      const ingHtml = (item.ingredientes || localRecipe?.ingredients || [item.cena, item.guarnicion])
+        .map((i) => `<li>${sanitizeField(i, 80)}</li>`)
+        .join("");
+
+      const instructions = item.instrucciones || localRecipe?.instructions || "Cocinar a fuego medio con aceite de oliva virgen extra.";
+      const schoolEntry = state.schoolMenu[dateKey];
+      const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
+        ? (schoolEntry.menu || schoolEntry.primero || "")
+        : String(schoolEntry || item.almuerzoCole || "");
+
+      body.innerHTML = `
       <p style="margin-bottom:0.6rem;"><strong>⏱️ Tiempo estimado:</strong> ${sanitizeField(item.tiempo || "15 min", 25)}</p>
       <p style="margin-bottom:0.6rem;"><strong>🥗 Guarnición:</strong> ${sanitizeField(item.guarnicion || "", 80)} · <strong>🍎 Postre:</strong> ${sanitizeField(item.postre || "", 60)}</p>
       ${lunchTxt ? `<p style="margin-bottom:0.6rem; font-size:0.84rem; color:var(--primary-dark);"><strong>🏫 Comieron en el cole:</strong> ${sanitizeField(lunchTxt, 120)}</p>` : ""}
@@ -1319,384 +1480,385 @@
       <button class="btn btn-secondary" id="btnAiRecipeModal" style="width:100%;">✨ Detallar receta paso a paso con IA (Modo Café / Token)</button>
     `;
 
-    function renderFridgeSuggestions(queryText) {
-      const box = document.getElementById("fridgeResultsBox");
-      const matches = searchRecipesByIngredients({
-        query: queryText,
-        excludedAllergens: state.excludedAllergens,
-        preferencesText: state.preferences,
-        lunchText: lunchTxt,
-        currentDish: item.cena,
-        limit: 5
-      });
+      function renderFridgeSuggestions(queryText) {
+        const box = document.getElementById("fridgeResultsBox");
+        const matches = searchRecipesByIngredients({
+          query: queryText,
+          excludedAllergens: state.excludedAllergens,
+          preferencesText: state.preferences,
+          lunchText: lunchTxt,
+          currentDish: item.cena,
+          limit: 5
+        });
 
-      if (matches.length === 0) {
-        box.innerHTML = `<span style="font-size:0.8rem; color:var(--text-muted);">No hay recetas con esos ingredientes que cumplan tus filtros de alérgenos.</span>`;
-        return;
+        if (matches.length === 0) {
+          box.innerHTML = `<span style="font-size:0.8rem; color:var(--text-muted);">No hay recetas con esos ingredientes que cumplan tus filtros de alérgenos.</span>`;
+          return;
+        }
+
+        box.innerHTML = matches
+          .map((r) => `<span class="chip fridge-match-chip" data-title="${sanitizeField(r.title, 90)}" title="Toca para cambiar la cena de este día por ${sanitizeField(r.title, 90)}">🔄 ${sanitizeField(r.title, 90)} (${r.prepTimeMin}m)</span>`)
+          .join("");
+
+        box.querySelectorAll(".fridge-match-chip").forEach((chip) => {
+          chip.addEventListener("click", () => {
+            const chosenTitle = chip.getAttribute("data-title");
+            const chosen = RECIPES.find((r) => r.title === chosenTitle);
+            if (!chosen) return;
+            state.generatedMenu[dateKey] = {
+              ...state.generatedMenu[dateKey],
+              cena: chosen.title,
+              guarnicion: chosen.side || "Ensalada suave",
+              tiempo: `${chosen.prepTimeMin} min`,
+              instrucciones: chosen.instructions,
+              ingredientes: chosen.ingredients || [],
+              alergenos: chosen.allergens || []
+            };
+            saveState();
+            renderCalendar();
+            renderShoppingList();
+            openRecipeModal(dateKey, state.generatedMenu[dateKey]);
+            showToast(`✅ Cena cambiada a: ${chosen.title}`);
+          });
+        });
       }
 
-      box.innerHTML = matches
-        .map((r) => `<span class="chip fridge-match-chip" data-title="${sanitizeField(r.title, 90)}" title="Toca para cambiar la cena de este día por ${sanitizeField(r.title, 90)}">🔄 ${sanitizeField(r.title, 90)} (${r.prepTimeMin}m)</span>`)
-        .join("");
+      // Mostrar por defecto 5 alternativas compatibles con el colegio y alérgenos
+      renderFridgeSuggestions("");
 
-      box.querySelectorAll(".fridge-match-chip").forEach((chip) => {
-        chip.addEventListener("click", () => {
-          const chosenTitle = chip.getAttribute("data-title");
-          const chosen = RECIPES.find((r) => r.title === chosenTitle);
-          if (!chosen) return;
-          state.generatedMenu[dateKey] = {
-            ...state.generatedMenu[dateKey],
-            cena: chosen.title,
-            guarnicion: chosen.side || "Ensalada suave",
-            tiempo: `${chosen.prepTimeMin} min`,
-            instrucciones: chosen.instructions,
-            ingredientes: chosen.ingredients || [],
-            alergenos: chosen.allergens || []
-          };
-          saveState();
-          renderCalendar();
-          renderShoppingList();
-          openRecipeModal(dateKey, state.generatedMenu[dateKey]);
-          showToast(`✅ Cena cambiada a: ${chosen.title}`);
-        });
+      const inpFridge = document.getElementById("inpFridgeSearch");
+      document.getElementById("btnFridgeSearch").addEventListener("click", () => {
+        renderFridgeSuggestions(inpFridge.value.trim());
       });
+      inpFridge.addEventListener("input", () => {
+        renderFridgeSuggestions(inpFridge.value.trim());
+      });
+
+      document.getElementById("btnAiRecipeModal").addEventListener("click", async () => {
+        if (!state.proCode && !state.byokKey) {
+          backdrop.classList.remove("open");
+          switchTab("tab-pro");
+          showToast("☕ Activa tu Código de Café (desde 2 €) o tu propio Token en la pestaña 4");
+          return;
+        }
+        const btn = document.getElementById("btnAiRecipeModal");
+        btn.textContent = "⏳ Consultando al chef IA...";
+        btn.disabled = true;
+        try {
+          const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/recipe`, {
+            method: "POST",
+            headers: getAiHeaders(),
+            body: JSON.stringify({
+              plato: item.cena,
+              guarnicion: item.guarnicion || "",
+              allergens: state.excludedAllergens.join(", ")
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "No se pudo obtener la receta con IA.");
+          const r = data.recipe || {};
+          if (Array.isArray(r.ingredientes) && r.ingredientes.length > 0) {
+            document.getElementById("modalIngList").innerHTML = r.ingredientes.map((i) => `<li>${sanitizeField(i, 100)}</li>`).join("");
+          }
+          if (Array.isArray(r.pasos) && r.pasos.length > 0) {
+            const stepsHtml = r.pasos.map((p, idx) => `<div style="margin-bottom:0.35rem;"><strong>${idx + 1}.</strong> ${sanitizeField(p, 220)}</div>`).join("");
+            const tipHtml = r.truco_ninos ? `<div style="margin-top:0.5rem; color:var(--secondary); font-weight:600;">💡 Truco peques: ${sanitizeField(r.truco_ninos, 200)}</div>` : "";
+            document.getElementById("modalStepsBox").innerHTML = stepsHtml + tipHtml;
+          }
+          btn.textContent = "✅ Receta ampliada con IA";
+        } catch (err) {
+          showToast(`⚠️ ${err.message}`);
+          btn.textContent = "✨ Detallar receta paso a paso con IA (Modo Café / Token)";
+          btn.disabled = false;
+        }
+      });
+
+      backdrop.classList.add("open");
     }
 
-    // Mostrar por defecto 5 alternativas compatibles con el colegio y alérgenos
-    renderFridgeSuggestions("");
+    // Eventos de pestañas (sincroniza pestañas de escritorio y barra inferior móvil)
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn, .bottom-nav-btn").forEach((b) => {
+        b.classList.toggle("active", b.getAttribute("data-tab") === tabId);
+      });
+      document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add("active");
+      if (tabId === "tab-school") renderSchoolInputs();
+      if (tabId === "tab-shopping") renderShoppingList();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-    const inpFridge = document.getElementById("inpFridgeSearch");
-    document.getElementById("btnFridgeSearch").addEventListener("click", () => {
-      renderFridgeSuggestions(inpFridge.value.trim());
-    });
-    inpFridge.addEventListener("input", () => {
-      renderFridgeSuggestions(inpFridge.value.trim());
+    document.querySelectorAll(".tab-btn, .bottom-nav-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        switchTab(btn.getAttribute("data-tab"));
+      });
     });
 
-    document.getElementById("btnAiRecipeModal").addEventListener("click", async () => {
+    // Chips de alérgenos
+    document.querySelectorAll("#allergenChips .chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const al = chip.getAttribute("data-allergen");
+        const idx = state.excludedAllergens.indexOf(al);
+        if (idx >= 0) state.excludedAllergens.splice(idx, 1);
+        else state.excludedAllergens.push(al);
+        chip.classList.toggle("selected", state.excludedAllergens.includes(al));
+        saveState();
+      });
+    });
+
+    function triggerLocalGeneration() {
+      readFormIntoState();
+      state.generatedMenu = generateLocalMonthlyMenu({
+        year: state.year,
+        month: state.month,
+        schoolMenu: state.schoolMenu,
+        variante: state.variante,
+        excludedAllergens: state.excludedAllergens,
+        maxPrepTime: state.maxPrepTime,
+        routinesText: state.routines,
+        preferencesText: state.preferences
+      });
+      saveState();
+      renderCalendar();
+      renderShoppingList();
+      showToast("✅ Menú mensual generado al instante en tu dispositivo");
+    }
+
+    document.getElementById("btnGenLocal").addEventListener("click", triggerLocalGeneration);
+    document.getElementById("quickGenerateBtn").addEventListener("click", triggerLocalGeneration);
+    document.getElementById("btnGoSupport").addEventListener("click", (e) => {
+      e.preventDefault();
+      switchTab("tab-pro");
+    });
+    document.getElementById("headerSponsorBtn").addEventListener("click", () => {
+      switchTab("tab-pro");
+    });
+
+    // Generación con IA (Modo Café / AMPA / BYOK)
+    document.getElementById("btnGenAi").addEventListener("click", async () => {
+      readFormIntoState();
       if (!state.proCode && !state.byokKey) {
-        backdrop.classList.remove("open");
         switchTab("tab-pro");
-        showToast("☕ Activa tu Código de Café (desde 2 €) o tu propio Token en la pestaña 4");
+        showToast("☕ Invita a un Ko-fi (mín. 2 €) o configura tu Token de IA en la pestaña 4");
         return;
       }
-      const btn = document.getElementById("btnAiRecipeModal");
-      btn.textContent = "⏳ Consultando al chef IA...";
+      const btn = document.getElementById("btnGenAi");
+      const oldTxt = btn.textContent;
+      btn.textContent = "⏳ Generando con IA...";
       btn.disabled = true;
       try {
-        const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/recipe`, {
+        const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/menu`, {
           method: "POST",
           headers: getAiHeaders(),
           body: JSON.stringify({
-            plato: item.cena,
-            guarnicion: item.guarnicion || "",
-            allergens: state.excludedAllergens.join(", ")
+            year: state.year,
+            month: state.month,
+            variante: state.variante,
+            schoolMenu: state.schoolMenu,
+            preferences: state.preferences,
+            allergens: state.excludedAllergens.join(", "),
+            routines: state.routines
           })
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "No se pudo obtener la receta con IA.");
-        const r = data.recipe || {};
-        if (Array.isArray(r.ingredientes) && r.ingredientes.length > 0) {
-          document.getElementById("modalIngList").innerHTML = r.ingredientes.map((i) => `<li>${sanitizeField(i, 100)}</li>`).join("");
-        }
-        if (Array.isArray(r.pasos) && r.pasos.length > 0) {
-          const stepsHtml = r.pasos.map((p, idx) => `<div style="margin-bottom:0.35rem;"><strong>${idx + 1}.</strong> ${sanitizeField(p, 220)}</div>`).join("");
-          const tipHtml = r.truco_ninos ? `<div style="margin-top:0.5rem; color:var(--secondary); font-weight:600;">💡 Truco peques: ${sanitizeField(r.truco_ninos, 200)}</div>` : "";
-          document.getElementById("modalStepsBox").innerHTML = stepsHtml + tipHtml;
-        }
-        btn.textContent = "✅ Receta ampliada con IA";
+        if (!res.ok) throw new Error(data.error || "No se pudo generar el menú con IA.");
+        state.generatedMenu = data.menu;
+        saveState();
+        renderCalendar();
+        renderShoppingList();
+        showToast(data.cached ? "⚡ Menú IA cargado de caché instantánea" : "✨ Menú personalizado con IA listo");
       } catch (err) {
         showToast(`⚠️ ${err.message}`);
-        btn.textContent = "✨ Detallar receta paso a paso con IA (Modo Café / Token)";
+      } finally {
+        btn.textContent = oldTxt;
         btn.disabled = false;
       }
     });
 
-    backdrop.classList.add("open");
-  }
-
-  // Eventos de pestañas (sincroniza pestañas de escritorio y barra inferior móvil)
-  function switchTab(tabId) {
-    document.querySelectorAll(".tab-btn, .bottom-nav-btn").forEach((b) => {
-      b.classList.toggle("active", b.getAttribute("data-tab") === tabId);
+    // Subida de foto del menú escolar para lectura OCR automática con Claude Vision
+    document.getElementById("inpOcrFile").addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      readFormIntoState();
+      if (!state.proCode && !state.byokKey) {
+        e.target.value = "";
+        switchTab("tab-pro");
+        showToast("📸 Para leer fotos con IA activa tu Código de Café (2 €) o tu Token en la pestaña 4");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast("⚠️ La imagen supera los 5 MB. Elige una foto más ligera.");
+        return;
+      }
+      showToast("📸 Leyendo foto del menú escolar con IA...");
+      try {
+        const base64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const resStr = String(reader.result || "");
+            resolve(resStr.includes(",") ? resStr.split(",")[1] : resStr);
+          };
+          reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
+          reader.readAsDataURL(file);
+        });
+        const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/ocr`, {
+          method: "POST",
+          headers: getAiHeaders(),
+          body: JSON.stringify({
+            base64,
+            mimeType: file.type || "image/jpeg",
+            year: state.year,
+            month: state.month
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "No se pudo extraer el menú escolar.");
+        state.schoolMenu = data.schoolMenu || {};
+        saveState();
+        renderSchoolInputs();
+        triggerLocalGeneration();
+        showToast(data.cached ? "⚡ Menú escolar extraído de caché instantánea" : "✅ Menú escolar leído con IA y cenas actualizadas");
+      } catch (err) {
+        showToast(`⚠️ ${err.message}`);
+      } finally {
+        e.target.value = "";
+      }
     });
-    document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
-    const target = document.getElementById(tabId);
-    if (target) target.classList.add("active");
-    if (tabId === "tab-school") renderSchoolInputs();
-    if (tabId === "tab-shopping") renderShoppingList();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
-  document.querySelectorAll(".tab-btn, .bottom-nav-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      switchTab(btn.getAttribute("data-tab"));
-    });
-  });
-
-  // Chips de alérgenos
-  document.querySelectorAll("#allergenChips .chip").forEach((chip) => {
-    chip.addEventListener("click", () => {
-      const al = chip.getAttribute("data-allergen");
-      const idx = state.excludedAllergens.indexOf(al);
-      if (idx >= 0) state.excludedAllergens.splice(idx, 1);
-      else state.excludedAllergens.push(al);
-      chip.classList.toggle("selected", state.excludedAllergens.includes(al));
-      saveState();
-    });
-  });
-
-  function triggerLocalGeneration() {
-    readFormIntoState();
-    state.generatedMenu = generateLocalMonthlyMenu({
-      year: state.year,
-      month: state.month,
-      schoolMenu: state.schoolMenu,
-      variante: state.variante,
-      excludedAllergens: state.excludedAllergens,
-      maxPrepTime: state.maxPrepTime,
-      routinesText: state.routines,
-      preferencesText: state.preferences
-    });
-    saveState();
-    renderCalendar();
-    renderShoppingList();
-    showToast("✅ Menú mensual generado al instante en tu dispositivo");
-  }
-
-  document.getElementById("btnGenLocal").addEventListener("click", triggerLocalGeneration);
-  document.getElementById("quickGenerateBtn").addEventListener("click", triggerLocalGeneration);
-  document.getElementById("btnGoSupport").addEventListener("click", (e) => {
-    e.preventDefault();
-    switchTab("tab-pro");
-  });
-  document.getElementById("headerSponsorBtn").addEventListener("click", () => {
-    switchTab("tab-pro");
-  });
-
-  // Generación con IA (Modo Café / AMPA / BYOK)
-  document.getElementById("btnGenAi").addEventListener("click", async () => {
-    readFormIntoState();
-    if (!state.proCode && !state.byokKey) {
-      switchTab("tab-pro");
-      showToast("☕ Invita a un Ko-fi (mín. 2 €) o configura tu Token de IA en la pestaña 4");
-      return;
-    }
-    const btn = document.getElementById("btnGenAi");
-    const oldTxt = btn.textContent;
-    btn.textContent = "⏳ Generando con IA...";
-    btn.disabled = true;
-    try {
-      const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/menu`, {
-        method: "POST",
-        headers: getAiHeaders(),
-        body: JSON.stringify({
-          year: state.year,
-          month: state.month,
-          variante: state.variante,
-          schoolMenu: state.schoolMenu,
-          preferences: state.preferences,
-          allergens: state.excludedAllergens.join(", "),
-          routines: state.routines
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "No se pudo generar el menú con IA.");
-      state.generatedMenu = data.menu;
-      saveState();
-      renderCalendar();
-      renderShoppingList();
-      showToast(data.cached ? "⚡ Menú IA cargado de caché instantánea" : "✨ Menú personalizado con IA listo");
-    } catch (err) {
-      showToast(`⚠️ ${err.message}`);
-    } finally {
-      btn.textContent = oldTxt;
-      btn.disabled = false;
-    }
-  });
-
-  // Subida de foto del menú escolar para lectura OCR automática con Claude Vision
-  document.getElementById("inpOcrFile").addEventListener("change", async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    readFormIntoState();
-    if (!state.proCode && !state.byokKey) {
-      e.target.value = "";
-      switchTab("tab-pro");
-      showToast("📸 Para leer fotos con IA activa tu Código de Café (2 €) o tu Token en la pestaña 4");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      showToast("⚠️ La imagen supera los 5 MB. Elige una foto más ligera.");
-      return;
-    }
-    showToast("📸 Leyendo foto del menú escolar con IA...");
-    try {
-      const base64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const resStr = String(reader.result || "");
-          resolve(resStr.includes(",") ? resStr.split(",")[1] : resStr);
-        };
-        reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
-        reader.readAsDataURL(file);
-      });
-      const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/ocr`, {
-        method: "POST",
-        headers: getAiHeaders(),
-        body: JSON.stringify({
-          base64,
-          mimeType: file.type || "image/jpeg",
-          year: state.year,
-          month: state.month
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "No se pudo extraer el menú escolar.");
-      state.schoolMenu = data.schoolMenu || {};
+    // Cargar ejemplo de comedor escolar
+    document.getElementById("btnLoadSampleSchool").addEventListener("click", () => {
+      const numDays = new Date(state.year, state.month, 0).getDate();
+      state.schoolMenu = {};
+      for (let day = 1; day <= numDays; day++) {
+        const dt = new Date(Date.UTC(state.year, state.month - 1, day));
+        const dow = dt.getUTCDay();
+        if (dow === 0 || dow === 6) continue;
+        const dateKey = `${state.year}-${String(state.month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        state.schoolMenu[dateKey] = { menu: SCHOOL_LUNCH_PRESETS[(day - 1) % SCHOOL_LUNCH_PRESETS.length] };
+      }
+      if (!state.schoolName) {
+        state.schoolName = "CEIP Ejemplo";
+        document.getElementById("inpSchoolName").value = state.schoolName;
+      }
       saveState();
       renderSchoolInputs();
       triggerLocalGeneration();
-      showToast(data.cached ? "⚡ Menú escolar extraído de caché instantánea" : "✅ Menú escolar leído con IA y cenas actualizadas");
-    } catch (err) {
-      showToast(`⚠️ ${err.message}`);
-    } finally {
-      e.target.value = "";
-    }
-  });
+      showToast("🏫 Menú escolar de ejemplo cargado y cenas actualizadas");
+    });
 
-  // Cargar ejemplo de comedor escolar
-  document.getElementById("btnLoadSampleSchool").addEventListener("click", () => {
-    const numDays = new Date(state.year, state.month, 0).getDate();
-    state.schoolMenu = {};
-    for (let day = 1; day <= numDays; day++) {
-      const dt = new Date(Date.UTC(state.year, state.month - 1, day));
-      const dow = dt.getUTCDay();
-      if (dow === 0 || dow === 6) continue;
-      const dateKey = `${state.year}-${String(state.month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-      state.schoolMenu[dateKey] = { menu: SCHOOL_LUNCH_PRESETS[(day - 1) % SCHOOL_LUNCH_PRESETS.length] };
-    }
-    if (!state.schoolName) {
-      state.schoolName = "CEIP Ejemplo";
-      document.getElementById("inpSchoolName").value = state.schoolName;
-    }
-    saveState();
-    renderSchoolInputs();
-    triggerLocalGeneration();
-    showToast("🏫 Menú escolar de ejemplo cargado y cenas actualizadas");
-  });
+    // Botón de ayuda paso a paso para configurar IA
+    document.getElementById("btnToggleHelp").addEventListener("click", () => {
+      document.getElementById("helpConfigBox").classList.toggle("open");
+    });
 
-  // Botón de ayuda paso a paso para configurar IA
-  document.getElementById("btnToggleHelp").addEventListener("click", () => {
-    document.getElementById("helpConfigBox").classList.toggle("open");
-  });
-
-  // Compartir menú escolar por enlace (WhatsApp)
-  document.getElementById("btnShareSchool").addEventListener("click", async () => {
-    readFormIntoState();
-    const hash = encodeSchoolMenuShare(state.schoolName || "Mi Cole", state.year, state.month, state.schoolMenu);
-    const shareUrl = `${location.origin}${location.pathname}#cole=${hash}`;
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      showToast("📲 Enlace del menú del cole copiado para pegar en WhatsApp");
-    } catch {
-      prompt("Copia este enlace para compartir el menú del cole:", shareUrl);
-    }
-  });
-
-  document.getElementById("btnClearSchool").addEventListener("click", () => {
-    state.schoolMenu = {};
-    saveState();
-    renderSchoolInputs();
-    showToast("🗑️ Menú escolar vaciado");
-  });
-
-  document.getElementById("selShoppingWeek").addEventListener("change", renderShoppingList);
-
-  document.getElementById("btnCopyShopping").addEventListener("click", async () => {
-    const week = Number(document.getElementById("selShoppingWeek").value) || 0;
-    const list = generateShoppingList(state.generatedMenu, week);
-    const txt = `🛒 Lista de la compra DinnerKids (${week ? "Semana " + week : "Mes completo"}):\n` +
-      list.map((i) => `- [ ] ${i.item} (días ${i.days.join(", ")})`).join("\n");
-    try {
-      await navigator.clipboard.writeText(txt);
-      showToast("📋 Lista de la compra copiada al portapapeles");
-    } catch {
-      alert(txt);
-    }
-  });
-
-  document.getElementById("btnSavePro").addEventListener("click", async () => {
-    state.proCode = document.getElementById("inpProCode").value.trim().toUpperCase();
-    state.byokKey = document.getElementById("inpByokKey").value.trim();
-    state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://api.dinnerkids.es";
-    saveState();
-
-    if (state.byokKey && !state.proCode) {
-      showToast("🔑 Token propio de IA guardado en tu navegador");
-      return;
-    }
-
-    if (state.proCode) {
+    // Compartir menú escolar por enlace (WhatsApp)
+    document.getElementById("btnShareSchool").addEventListener("click", async () => {
+      readFormIntoState();
+      const hash = encodeSchoolMenuShare(state.schoolName || "Mi Cole", state.year, state.month, state.schoolMenu);
+      const shareUrl = `${location.origin}${location.pathname}#cole=${hash}`;
       try {
-        const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/verify-code`, {
-          method: "POST",
-          headers: getAiHeaders()
-        });
-        const data = await res.json();
-        if (!res.ok || !data.valid) {
-          showToast(`⚠️ ${data.error || "Código inválido o ya vinculado a otro dispositivo"}`);
-          return;
-        }
-        showToast(`✅ Código activado y vinculado a este dispositivo (${data.tier})`);
+        await navigator.clipboard.writeText(shareUrl);
+        showToast("📲 Enlace del menú del cole copiado para pegar en WhatsApp");
       } catch {
-        showToast("🔑 Código guardado localmente (se verificará al conectar con el servidor IA)");
+        prompt("Copia este enlace para compartir el menú del cole:", shareUrl);
       }
-      return;
+    });
+
+    document.getElementById("btnClearSchool").addEventListener("click", () => {
+      state.schoolMenu = {};
+      saveState();
+      renderSchoolInputs();
+      showToast("🗑️ Menú escolar vaciado");
+    });
+
+    document.getElementById("selShoppingWeek").addEventListener("change", renderShoppingList);
+
+    document.getElementById("btnCopyShopping").addEventListener("click", async () => {
+      const week = Number(document.getElementById("selShoppingWeek").value) || 0;
+      const list = generateShoppingList(state.generatedMenu, week);
+      const txt = `🛒 Lista de la compra DinnerKids (${week ? "Semana " + week : "Mes completo"}):\n` +
+        list.map((i) => `- [ ] ${i.item} (días ${i.days.join(", ")})`).join("\n");
+      try {
+        await navigator.clipboard.writeText(txt);
+        showToast("📋 Lista de la compra copiada al portapapeles");
+      } catch {
+        alert(txt);
+      }
+    });
+
+    document.getElementById("btnSavePro").addEventListener("click", async () => {
+      state.proCode = document.getElementById("inpProCode").value.trim().toUpperCase();
+      state.byokKey = document.getElementById("inpByokKey").value.trim();
+      state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://api.dinnerkids.es";
+      saveState();
+
+      if (state.byokKey && !state.proCode) {
+        showToast("🔑 Token propio de IA guardado en tu navegador");
+        return;
+      }
+
+      if (state.proCode) {
+        try {
+          const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/verify-code`, {
+            method: "POST",
+            headers: getAiHeaders()
+          });
+          const data = await res.json();
+          if (!res.ok || !data.valid) {
+            showToast(`⚠️ ${data.error || "Código inválido o ya vinculado a otro dispositivo"}`);
+            return;
+          }
+          showToast(`✅ Código activado y vinculado a este dispositivo (${data.tier})`);
+        } catch {
+          showToast("🔑 Código guardado localmente (se verificará al conectar con el servidor IA)");
+        }
+        return;
+      }
+
+      showToast("ℹ️ Modo Gratis Local activo");
+    });
+
+    document.getElementById("btnExportData").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `dinnerkids-mis-datos-${state.year}-${state.month}.json`;
+      a.click();
+    });
+
+    document.getElementById("btnWipeData").addEventListener("click", () => {
+      if (confirm("¿Seguro que quieres borrar todos los datos guardados en este navegador?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    });
+
+    document.getElementById("themeBtn").addEventListener("click", () => {
+      state.theme = state.theme === "dark" ? "light" : "dark";
+      localStorage.setItem("dk_theme", state.theme);
+      document.documentElement.setAttribute("data-theme", state.theme);
+    });
+
+    document.getElementById("modalCloseBtn").addEventListener("click", () => {
+      document.getElementById("recipeModalBackdrop").classList.remove("open");
+    });
+    document.getElementById("recipeModalBackdrop").addEventListener("click", (e) => {
+      if (e.target.id === "recipeModalBackdrop") {
+        e.target.classList.remove("open");
+      }
+    });
+
+    // Inicialización
+    loadState();
+    syncFormFromState();
+    renderCalendar();
+    renderShoppingList();
+
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      navigator.serviceWorker.register("./sw.js").catch(() => { });
     }
-
-    showToast("ℹ️ Modo Gratis Local activo");
-  });
-
-  document.getElementById("btnExportData").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `dinnerkids-mis-datos-${state.year}-${state.month}.json`;
-    a.click();
-  });
-
-  document.getElementById("btnWipeData").addEventListener("click", () => {
-    if (confirm("¿Seguro que quieres borrar todos los datos guardados en este navegador?")) {
-      localStorage.removeItem(STORAGE_KEY);
-      location.reload();
-    }
-  });
-
-  document.getElementById("themeBtn").addEventListener("click", () => {
-    state.theme = state.theme === "dark" ? "light" : "dark";
-    localStorage.setItem("dk_theme", state.theme);
-    document.documentElement.setAttribute("data-theme", state.theme);
-  });
-
-  document.getElementById("modalCloseBtn").addEventListener("click", () => {
-    document.getElementById("recipeModalBackdrop").classList.remove("open");
-  });
-  document.getElementById("recipeModalBackdrop").addEventListener("click", (e) => {
-    if (e.target.id === "recipeModalBackdrop") {
-      e.target.classList.remove("open");
-    }
-  });
-
-  // Inicialización
-  loadState();
-  syncFormFromState();
-  renderCalendar();
-  renderShoppingList();
-
-  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
-  }
-</script>
+  </script>
 </body>
+
 </html>
