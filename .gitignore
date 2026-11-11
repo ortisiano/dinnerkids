@@ -1,0 +1,19 @@
+# Dependencias y logs
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Documentación interna y notas privadas de administración
+docs/
+CONTEXTO.md
+
+# Archivos de entorno y claves locales
+.env
+.env.*
+*.local
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
