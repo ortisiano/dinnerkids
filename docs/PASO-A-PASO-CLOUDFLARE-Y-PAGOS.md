@@ -1,6 +1,20 @@
-# Guía Paso a Paso: Qué tienes que hacer tú en GitHub, Cloudflare y Ko-fi / Sponsors
+# Guía Paso a Paso: Checklist de lo que te falta configurar para lanzar DinnerKids
 
-Esta guía resume exactamente los pasos que debes hacer en tus cuentas (tardarás unos **10 minutos en total**) para dejar **DinnerKids** publicado a **coste 0 €/mes**, libre para todo el mundo y listo para recibir donativos de **un café (mínimo 2 €)** o permitir que cada usuario configure su propio token de IA.
+El código del proyecto (`index.html`, `logic.js`, `worker.js`, `sw.js`, `privacidad.html`) **ya está 100 % terminado, adaptado a móvil y con los 11 tests pasando**.
+
+Aquí tienes exactamente lo que te falta hacer en tus cuentas (tardarás unos **10 minutos en total**) para dejar **DinnerKids** publicado a **coste 0 €/mes**, libre para todo el mundo y listo para recibir donativos de **un café (mínimo 2 €)** sin pedir registro al usuario.
+
+---
+
+## Paso 0 · Subir los últimos commits locales a tu repositorio privado de GitHub (1 minuto)
+
+Todos los cambios ya están guardados en tu rama local `edge-pwa`. Para subirlos a tu cuenta de GitHub con tus credenciales de Windows, abre PowerShell en `c:\Users\carlos\Documents\dinnerkids` y ejecuta:
+
+```powershell
+git push origin edge-pwa
+```
+
+*(Si quieres previsualizar antes la web en tu ordenador, ejecuta `npm.cmd run serve` y abre `http://localhost:8000`).*
 
 ---
 
@@ -20,50 +34,57 @@ Como tu repositorio `ortisiano/dinnerkids-private` es **privado**, usar **Cloudf
 
 ---
 
-## Paso 2 · Activar el Cloudflare Worker (`api.dinnerkids.es`) y la caché KV (Sustituto gratuito de Qdrant + bloqueo a 1 usuario)
+## Paso 2 · Activar el Cloudflare Worker (`api.dinnerkids.es`) y la memoria `DK_KV`
+
+Este Worker gestiona tu IA (Claude Haiku), la caché gratuita por hash (para que el segundo padre del mismo cole consuma **0 tokens**) y el **bloqueo de cada código personal a 1 único dispositivo** (`checkAndBindDevice`).
 
 1. En el menú de Cloudflare ve a **Workers & Pages** → **KV** → pulsa **Create a namespace** y llámalo **`DK_KV`**.
-2. Ve a **Workers & Pages** → **Create** → **Create Worker** → llámalo **`dinnerkids-api`** y pega el código de `worker.js` (o conéctalo por Git a la misma rama `edge-pwa`).
+2. Ve a **Workers & Pages** → **Create** → **Create Worker** → llámalo **`dinnerkids-api`** y pega el contenido de `worker.js` (o conéctalo por Git a tu rama `edge-pwa`).
 3. Dentro del Worker, entra en **Settings** → **Bindings** → **Add** → **KV Namespace**:
    - *Variable name*: `DK_KV`
    - *KV namespace*: selecciona el **`DK_KV`** que acabas de crear.
-4. En **Settings** → **Variables and Secrets**, añade estos 2 secretos (*Secret*):
+4. En **Settings** → **Variables and Secrets**, añade estos **2 secretos (*Secret*)**:
    - **`ANTHROPIC_API_KEY`**: tu clave de Anthropic (`sk-ant-...`). *(Truco de seguridad: en la consola de Anthropic ponle un límite mensual de gasto de p. ej. 5 € para dormir 100 % tranquilo).*
-   - **`PRO_CODE_SECRET`**: inventa una frase larga tuya (por ejemplo `MiSecretoDinnerKids_2026_SuperSeguro_99!`). Con esta frase se firman y verifican los Códigos de Café sin necesitar base de datos.
+   - **`PRO_CODE_SECRET`**: inventa una frase larga tuya (por ejemplo `MiSecretoDinnerKids_2026_SuperSeguro_99!`). Con esta frase se firman y verifican matemáticamente los códigos sin necesitar base de datos.
 5. En **Settings** → **Domains & Routes** → **Add** → **Custom Domain**: escribe **`api.dinnerkids.es`**.
 
 ---
 
-## Paso 3 · Configurar el Café Solidario (mínimo 2 €) en Ko-fi y GitHub Sponsors
+## Paso 3 · Configurar el botón de Café / Sponsor (mín. 2 €) SIN pedir cuenta al usuario
 
-En la web ya no aparecen 3 planes comerciales raros: ahora se explica claramente que **DinnerKids es gratis para todo el mundo**, y quien quiera usar tu IA (Claude Haiku) te invita a **un café de mínimo 2 € en Ko-fi** (o configura su propio token `sk-ant-...`).
+> **Importante sobre GitHub Sponsors vs Ko-fi / Stripe:**
+> - **GitHub Sponsors (`github.com/sponsors/ortisiano`)** exige obligatoriamente que la persona que dona tenga cuenta en GitHub e inicie sesión. Está genial dejarlo como enlace secundario para informáticos, pero un padre o madre normal no tendrá cuenta de GitHub.
+> - **Para que cualquier padre o madre te invite a un café de 2 € SIN registrarse en ningún sitio** (pagando en 10 segundos con Apple Pay, Google Pay o tarjeta), usa **Ko-fi** o un **Stripe Payment Link**:
 
-### A) En Ko-fi (Recomendado para familias porque no pide cuenta de GitHub)
-1. Crea tu página gratuita en [ko-fi.com](https://ko-fi.com/) (por ejemplo `ko-fi.com/ortisiano`).
-2. En **Settings → Payment**, conecta tu cuenta de Stripe (y en Stripe mantén activado **Manual Payouts / Retiradas manuales** para que el saldo se quede acumulado sin pasar a tu banco hasta que tramites el alta de autónomo).
+### Opción A (Recomendada): Ko-fi (`ko-fi.com/ortisiano` — Sin cuenta para el donante)
+1. Crea tu página gratuita en [ko-fi.com](https://ko-fi.com/) con el nombre `ortisiano` (`https://ko-fi.com/ortisiano`, que ya está enlazado en `index.html`).
+2. En **Settings → Payment**, conecta tu cuenta de Stripe.
+   - *Nota fiscal/autónomo:* En tu panel de Stripe activa **Manual Payouts (Retiradas manuales)** para que el saldo se quede acumulado sin transferirse a tu cuenta bancaria hasta el momento en que tramites el alta de autónomo.
 3. En **Page Settings**, fija el precio mínimo del café (*Coffee Price*) en **2 €**.
-4. Para entregar un **código único por persona** (ya que el Worker bloquea cada código `DK02` al primer móvil/navegador que lo activa para que no se lo pasen entre varios):
-   - Puedes enviarle su código individual generado en 1 segundo cuando te llegue el aviso del café, o subir una lista de códigos únicos en un producto de **Ko-fi Shop (2 €)** para entrega inmediata.
+4. Cualquier padre o madre podrá pulsar **`☕ Invitar a un Ko-fi (mín. 2 €)`**, pagar con Apple Pay / Google Pay / Tarjeta **sin crearse cuenta** y poner solo su email para recibir su código `DK02-...`.
 
-### B) En GitHub Sponsors (Opcional)
-1. Entra en [github.com/sponsors](https://github.com/sponsors) con tu usuario `ortisiano`.
-2. Configura una aportación desde **2 €** y envía un código `DK02` individual al patrocinador.
+### Opción B (Alternativa directa en Stripe con 0 % comisión extra): Stripe Payment Link
+- Si en algún momento prefieres no pasar ni por Ko-fi, dentro de tu panel de **Stripe → Payment Links** puedes crear un enlace de donación llamado *"❤ Sponsor DinnerKids — Invitar a un café (2 €)"* con Apple Pay y Google Pay activos. No pide cuenta al usuario y va directo a tu saldo de Stripe.
 
 ---
 
-## Paso 4 · Cómo generar códigos individuales (1 solo usuario) en 1 segundo
+## Paso 4 · Cómo generar códigos individuales (bloqueados a 1 usuario) y códigos de Colegio/AMPA
 
-Cada código `DK02` lleva una firma criptográfica (`HMAC-SHA256`) y, en cuanto el usuario pulsa **"Activar y Vincular en este Dispositivo"**, el Cloudflare Worker lo vincula en `DK_KV` a ese dispositivo (`maxDevices: 1`). **Si se lo pasa a otra persona, el Worker lo bloquea automáticamente.**
+Cada código `DK02` lleva firma criptográfica (`HMAC-SHA256`) y cuando el usuario pulsa **"🔑 Activar en este Dispositivo"**, el Worker lo vincula en `DK_KV` a ese móvil/ordenador (`maxDevices: 1`). **Si se lo pasa a otro padre, al segundo dispositivo le saldrá bloqueado automáticamente.**
 
-Para crear **1 código individual** o una **tanda de 10 códigos distintos** válidos hasta **junio de 2027 (`202706`)**, ejecuta:
+Abre PowerShell en la carpeta del proyecto y usa la **misma frase `PRO_CODE_SECRET`** que pusiste en el Paso 2:
 
-```bash
-# Generar 1 código individual de Café Solidario (2 € -> 1 solo usuario/dispositivo)
-PRO_CODE_SECRET="TuFraseSecreta" npm run gen-code -- DK02 202706
+```powershell
+# 1. Definir tu frase secreta en la terminal
+$env:PRO_CODE_SECRET="MiSecretoDinnerKids_2026_SuperSeguro_99!"
 
-# Generar 10 códigos individuales distintos de golpe para tenerlos listos:
-PRO_CODE_SECRET="TuFraseSecreta" npm run gen-code -- DK02 202706 10
+# 2. Generar 1 código individual de Café Solidario (2 € -> bloqueado a 1 solo usuario/dispositivo)
+npm.cmd run gen-code -- DK02 202706
 
-# Generar un código colectivo si algún día un Colegio / AMPA te lo pide:
-PRO_CODE_SECRET="TuFraseSecreta" npm run gen-code -- AMPA 202706
+# 3. Generar 10 códigos individuales distintos de golpe (para tener una lista lista para entregar)
+npm.cmd run gen-code -- DK02 202706 10
+
+# 4. Generar un código colectivo para un Colegio / AMPA cuando te escriban al botón "Solicitar para mi Cole"
+# (Permite hasta 300 familias del mismo colegio y 400 menús IA/mes)
+npm.cmd run gen-code -- AMPA 202706
 ```
