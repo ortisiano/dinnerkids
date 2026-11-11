@@ -937,6 +937,7 @@
     generateShoppingList,
     encodeSchoolMenuShare,
     decodeSchoolMenuShare,
+    searchRecipesByIngredients,
     sanitizeField
   } from "./logic.js";
 
@@ -1291,16 +1292,86 @@
       .join("");
 
     const instructions = item.instrucciones || localRecipe?.instructions || "Cocinar a fuego medio con aceite de oliva virgen extra.";
+    const schoolEntry = state.schoolMenu[dateKey];
+    const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
+      ? (schoolEntry.menu || schoolEntry.primero || "")
+      : String(schoolEntry || item.almuerzoCole || "");
 
     body.innerHTML = `
       <p style="margin-bottom:0.6rem;"><strong>⏱️ Tiempo estimado:</strong> ${sanitizeField(item.tiempo || "15 min", 25)}</p>
       <p style="margin-bottom:0.6rem;"><strong>🥗 Guarnición:</strong> ${sanitizeField(item.guarnicion || "", 80)} · <strong>🍎 Postre:</strong> ${sanitizeField(item.postre || "", 60)}</p>
+      ${lunchTxt ? `<p style="margin-bottom:0.6rem; font-size:0.84rem; color:var(--primary-dark);"><strong>🏫 Comieron en el cole:</strong> ${sanitizeField(lunchTxt, 120)}</p>` : ""}
       <h4 style="margin:0.8rem 0 0.4rem;">🛒 Ingredientes (4 raciones):</h4>
       <ul id="modalIngList" style="margin-left:1.2rem; margin-bottom:0.8rem;">${ingHtml}</ul>
       <h4 style="margin:0.8rem 0 0.4rem;">👩‍🍳 Preparación paso a paso:</h4>
-      <div id="modalStepsBox" style="background:var(--bg); padding:0.75rem; border-radius:10px; border:1px solid var(--border); margin-bottom:0.85rem;">${sanitizeField(instructions, 400)}</div>
+      <div id="modalStepsBox" style="background:var(--bg); padding:0.75rem; border-radius:10px; border:1px solid var(--border); margin-bottom:0.9rem;">${sanitizeField(instructions, 400)}</div>
+
+      <!-- BUSCADOR / GENERADOR LOCAL POR INGREDIENTES DE NEVERA (100% GRATIS SIN IA) -->
+      <div style="background:var(--primary-light); padding:0.85rem; border-radius:12px; border:1px solid var(--border); margin-bottom:0.85rem;">
+        <label for="inpFridgeSearch" style="color:var(--primary-dark); margin-bottom:0.35rem;">🧊 ¿Qué tienes en la nevera o quieres cambiar de cena? (100 % Gratis)</label>
+        <div style="display:flex; gap:0.45rem; margin-bottom:0.55rem;">
+          <input type="text" id="inpFridgeSearch" placeholder="Ej: huevo calabacín, pollo, salmón..." style="background:var(--card);">
+          <button type="button" class="btn btn-primary" id="btnFridgeSearch" style="padding:0.5rem 0.85rem; white-space:nowrap;">🔍 Buscar</button>
+        </div>
+        <div id="fridgeResultsBox" class="chips"></div>
+      </div>
+
       <button class="btn btn-secondary" id="btnAiRecipeModal" style="width:100%;">✨ Detallar receta paso a paso con IA (Modo Café / Token)</button>
     `;
+
+    function renderFridgeSuggestions(queryText) {
+      const box = document.getElementById("fridgeResultsBox");
+      const matches = searchRecipesByIngredients({
+        query: queryText,
+        excludedAllergens: state.excludedAllergens,
+        preferencesText: state.preferences,
+        lunchText: lunchTxt,
+        currentDish: item.cena,
+        limit: 5
+      });
+
+      if (matches.length === 0) {
+        box.innerHTML = `<span style="font-size:0.8rem; color:var(--text-muted);">No hay recetas con esos ingredientes que cumplan tus filtros de alérgenos.</span>`;
+        return;
+      }
+
+      box.innerHTML = matches
+        .map((r) => `<span class="chip fridge-match-chip" data-title="${sanitizeField(r.title, 90)}" title="Toca para cambiar la cena de este día por ${sanitizeField(r.title, 90)}">🔄 ${sanitizeField(r.title, 90)} (${r.prepTimeMin}m)</span>`)
+        .join("");
+
+      box.querySelectorAll(".fridge-match-chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const chosenTitle = chip.getAttribute("data-title");
+          const chosen = RECIPES.find((r) => r.title === chosenTitle);
+          if (!chosen) return;
+          state.generatedMenu[dateKey] = {
+            ...state.generatedMenu[dateKey],
+            cena: chosen.title,
+            guarnicion: chosen.side || "Ensalada suave",
+            tiempo: `${chosen.prepTimeMin} min`,
+            instrucciones: chosen.instructions,
+            ingredientes: chosen.ingredients || [],
+            alergenos: chosen.allergens || []
+          };
+          saveState();
+          renderCalendar();
+          renderShoppingList();
+          openRecipeModal(dateKey, state.generatedMenu[dateKey]);
+          showToast(`✅ Cena cambiada a: ${chosen.title}`);
+        });
+      });
+    }
+
+    // Mostrar por defecto 5 alternativas compatibles con el colegio y alérgenos
+    renderFridgeSuggestions("");
+
+    const inpFridge = document.getElementById("inpFridgeSearch");
+    document.getElementById("btnFridgeSearch").addEventListener("click", () => {
+      renderFridgeSuggestions(inpFridge.value.trim());
+    });
+    inpFridge.addEventListener("input", () => {
+      renderFridgeSuggestions(inpFridge.value.trim());
+    });
 
     document.getElementById("btnAiRecipeModal").addEventListener("click", async () => {
       if (!state.proCode && !state.byokKey) {

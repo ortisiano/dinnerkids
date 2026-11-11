@@ -805,6 +805,92 @@ export function decodeSchoolMenuShare(encoded) {
 }
 
 /**
+ * Busca recetas locales en el catálogo de 100 platos según ingredientes de la nevera o palabras clave,
+ * respetando siempre los alérgenos excluidos, los ingredientes que no les gustan y evitando repetir el almuerzo escolar.
+ * @param {object} params
+ * @param {string} [params.query=""] - Ingredientes o búsqueda (ej: "huevo calabacín", "pollo").
+ * @param {string[]} [params.excludedAllergens=[]] - Alérgenos a evitar.
+ * @param {string} [params.preferencesText=""] - Texto de gustos familiares.
+ * @param {string} [params.lunchText=""] - Qué comieron hoy en el cole.
+ * @param {string} [params.currentDish=""] - Plato actual para no ponerlo primero si buscan cambiar.
+ * @param {number} [params.limit=6] - Número máximo de sugerencias a devolver.
+ */
+export function searchRecipesByIngredients({
+  query = "",
+  excludedAllergens = [],
+  preferencesText = "",
+  lunchText = "",
+  currentDish = "",
+  limit = 6
+} = {}) {
+  const excludedSet = new Set(excludedAllergens.map((a) => String(a).toLowerCase().trim()));
+  const { liked, disliked } = parseLikesAndDislikes(preferencesText);
+  const lunchGroups = classifyLunchGroups(lunchText);
+  const lunchKeywords = extractLunchKeywords(lunchText);
+
+  const tokens = String(query || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w.length >= 3);
+
+  const currentNorm = normalizeDishName(currentDish);
+
+  const candidates = RECIPES.filter((r) => {
+    if (r.category !== "segundo") return false;
+    if (r.allergens.some((a) => excludedSet.has(a.toLowerCase()))) return false;
+    return true;
+  });
+
+  const scored = [];
+  for (const r of candidates) {
+    const fullText = `${r.title} ${(r.ingredients || []).join(" ")} ${r.instructions || ""} ${r.side || ""} ${r.group || ""}`
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    // Excluir si contiene un ingrediente que no les gusta (salvo que el usuario lo haya buscado explícitamente hoy)
+    if (disliked.length > 0 && disliked.some((bad) => fullText.includes(bad) && !tokens.includes(bad))) {
+      continue;
+    }
+
+    let score = 50;
+    let matchedTokens = 0;
+
+    for (const t of tokens) {
+      if (fullText.includes(t)) {
+        matchedTokens += 1;
+        score += 100;
+      }
+    }
+
+    // Si el usuario escribió ingredientes concretos y la receta no coincide con ninguno, descartar
+    if (tokens.length > 0 && matchedTokens === 0) {
+      continue;
+    }
+
+    // Evitar repetir lo del colegio
+    if (lunchGroups.includes(r.group)) score -= 60;
+    if (lunchKeywords.some((kw) => fullText.includes(kw))) score -= 90;
+
+    // Premiar gustos favoritos
+    if (liked.some((good) => fullText.includes(good))) score += 25;
+
+    // Si no puso búsqueda (quiere "otra idea compatible"), evitar devolver el mismo plato que ya tenía
+    if (currentNorm && normalizeDishName(r.title) === currentNorm) {
+      score -= 80;
+    }
+
+    scored.push({ recipe: r, score, matchedTokens });
+  }
+
+  scored.sort((a, b) => b.score - a.score || a.recipe.prepTimeMin - b.recipe.prepTimeMin);
+  return scored.slice(0, limit).map((x) => x.recipe);
+}
+
+/**
  * Construye el par (systemPrompt, userContent) con separación estricta B-02 y anonimización RGPD
  * para cuando el Cloudflare Worker invoca a Claude Haiku en Modo Pro / AMPA.
  */

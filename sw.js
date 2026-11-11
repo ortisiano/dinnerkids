@@ -4,12 +4,13 @@
  * garantizando que cuando hay internet siempre se cargue la última versión publicada.
  */
 
-const CACHE_NAME = "dinnerkids-pwa-v1";
+const CACHE_NAME = "dinnerkids-pwa-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./privacidad.html",
   "./logic.js",
+  "./recetas.json",
   "./manifest.webmanifest",
   "./assets/logo.png"
 ];

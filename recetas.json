@@ -1,0 +1,2679 @@
+{
+  "total": 108,
+  "principales": 100,
+  "postres": 8,
+  "recipes": [
+    {
+      "id": 1,
+      "title": "Tortilla francesa",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Bate 2 huevos con una pizca de sal, cuaja en sartén con unas gotas de aceite, coloca jamón york y queso en el centro y dobla.",
+      "tags": [
+        "rapido",
+        "clasico"
+      ],
+      "allergens": [
+        "huevo",
+        "lactosa"
+      ],
+      "prepTimeMin": 8,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Tomate natural aliñado",
+      "ingredients": [
+        "Huevos",
+        "Jamón york",
+        "Queso en lonchas",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Tortilla de patatas",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Fríe patata cortada fina en aceite suave hasta que esté tierna, mezcla con huevo batido y cuaja por ambos lados en la sartén.",
+      "tags": [
+        "tradicional",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 20,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Ensalada de tomate y lechuga",
+      "ingredients": [
+        "Patatas",
+        "Huevos",
+        "Aceite de oliva",
+        "Sal"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Huevos revueltos con gambas",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Saltea gambas peladas con un toque de ajo, añade huevos batidos y remueve a fuego bajo hasta que queden jugosos.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo",
+        "pescado"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Espárragos o tomate cherry",
+      "ingredients": [
+        "Huevos",
+        "Gambas peladas",
+        "Ajo",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Huevos rellenos de atún",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Cuece los huevos 10 minutos, pélalos, pártelos por la mitad y mezcla las yemas con atún escurrido, tomate frito y mayonesa para rellenarlos.",
+      "tags": [
+        "cena_fria",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo",
+        "pescado"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Hojas de lechuga y maíz",
+      "ingredients": [
+        "Huevos",
+        "Atún al natural",
+        "Tomate frito",
+        "Mayonesa suave"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Tortilla de espinacas",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Saltea espinacas frescas un par de minutos, añade huevo batido y cuaja la tortilla a fuego medio.",
+      "tags": [
+        "verduras",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Tomatitos cherry",
+      "ingredients": [
+        "Huevos",
+        "Espinacas frescas",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Huevos al plato",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Pon una base de tomate frito en una cazuelita de barro, añade guisantes cocidos y jamón, casca un huevo encima y hornea 8 minutos a 180 °C.",
+      "tags": [
+        "horno",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Guisantes tiernos con jamón",
+      "ingredients": [
+        "Huevos",
+        "Salsa de tomate",
+        "Guisantes",
+        "Jamón en taquitos"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Tortilla de atún y maíz dulce",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Mezcla huevos batidos con atún desmigado y maíz escurrido, y cuaja en la sartén vuelta y vuelta.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo",
+        "pescado"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Rodajas de tomate natural",
+      "ingredients": [
+        "Huevos",
+        "Atún al natural",
+        "Maíz dulce",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Huevos poché sobre puré de patata",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Cuece un huevo sin cáscara en agua hirviendo suave con un chorrito de vinagre 3 minutos y sírvelo sobre puré caliente.",
+      "tags": [
+        "suave",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo",
+        "lactosa"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Puré de patata casero",
+      "ingredients": [
+        "Huevos",
+        "Patatas",
+        "Leche",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Tortilla de queso y champiñones",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Saltea champiñones laminados hasta que pierdan el agua, añade huevo batido y queso rallado, y cuaja.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo",
+        "lactosa"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Canónigos aliñados",
+      "ingredients": [
+        "Huevos",
+        "Champiñones laminados",
+        "Queso rallado",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Huevos duros con bechamel suave",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Coloca huevos cocidos partidos por la mitad en una fuente, cubre con bechamel ligera y queso, y gratina 5 minutos.",
+      "tags": [
+        "horno",
+        "tradicional"
+      ],
+      "allergens": [
+        "huevo",
+        "lactosa",
+        "gluten"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Ensalada verde",
+      "ingredients": [
+        "Huevos",
+        "Leche",
+        "Harina de trigo",
+        "Queso para gratinar"
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Tortilla paisana",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Sofríe daditos de patata, pimiento verde, guisantes y jamón; mezcla con huevo batido y cuaja en sartén.",
+      "tags": [
+        "completa",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Tomate natural",
+      "ingredients": [
+        "Huevos",
+        "Patatas",
+        "Pimiento verde",
+        "Guisantes",
+        "Jamón cocido"
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Revuelto de calabacín y queso",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Saltea calabacín en daditos hasta que dore, añade huevo batido y taquitos de queso tierno, y remueve hasta cuajar.",
+      "tags": [
+        "verduras",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo",
+        "lactosa"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Bastones de zanahoria",
+      "ingredients": [
+        "Huevos",
+        "Calabacín",
+        "Queso tierno",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Huevos rotos al horno",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Hornea patatas en gajos con aceite 25 minutos a 200 °C; saca, pon huevos y jamón cocido encima y hornea 5 minutos más.",
+      "tags": [
+        "horno",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 30,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Patatas asadas al horno",
+      "ingredients": [
+        "Huevos",
+        "Patatas",
+        "Jamón cocido",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Tortilla de bacalao desalado",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Saltea migas de bacalao desalado con cebolla pochada, mezcla con huevo batido y cuaja en sartén.",
+      "tags": [
+        "proteina",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo",
+        "pescado"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Pimientos asados o tomate",
+      "ingredients": [
+        "Huevos",
+        "Migas de bacalao desalado",
+        "Cebolla",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Flan salado de huevo y verduras",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Mezcla huevos batidos, nata líquida o leche y verduras cocidas picadas; hornea al baño María 25 minutos a 180 °C.",
+      "tags": [
+        "horno",
+        "verduras",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo",
+        "lactosa"
+      ],
+      "prepTimeMin": 30,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Verduritas tiernas",
+      "ingredients": [
+        "Huevos",
+        "Leche o nata",
+        "Zanahoria y guisantes",
+        "Calabacín"
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Pechuga de pollo a la plancha",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Cocina los filetes salpimentados a fuego medio-alto 3 minutos por lado; sirve con arroz hervido y salsa de tomate.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Arroz blanco y salsa de tomate",
+      "ingredients": [
+        "Pechuga de pollo",
+        "Arroz",
+        "Salsa de tomate natural",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Filetes de lomo adobado",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Haz los filetes a la plancha 2 minutos por lado y acompaña con puré de patata cocida machacada con leche y mantequilla.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Puré de patata casero",
+      "ingredients": [
+        "Lomo de cerdo",
+        "Patatas",
+        "Leche",
+        "Mantequilla"
+      ]
+    },
+    {
+      "id": 18,
+      "title": "Albóndigas en salsa de tomate",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Mezcla carne picada con pan rallado, huevo y ajo; forma bolas, dóralas y cuécelas 15 minutos en salsa de tomate.",
+      "tags": [
+        "tradicional"
+      ],
+      "allergens": [
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Salsa de tomate casera",
+      "ingredients": [
+        "Carne picada",
+        "Pan rallado",
+        "Huevo",
+        "Salsa de tomate"
+      ]
+    },
+    {
+      "id": 19,
+      "title": "Filetes rusos",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Mezcla carne picada con miga de pan remojada en leche y huevo; aplasta en forma de filetes y hazlos a la plancha.",
+      "tags": [
+        "clasico"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa",
+        "huevo"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Ensalada de tomate y maíz",
+      "ingredients": [
+        "Carne picada",
+        "Miga de pan",
+        "Leche",
+        "Huevo"
+      ]
+    },
+    {
+      "id": 20,
+      "title": "Nuggets de pollo caseros",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Tritura pechuga de pollo con queso crema, forma bolitas, pasa por huevo y copos de maíz triturados, y hornea 15 minutos a 200 °C.",
+      "tags": [
+        "horno",
+        "airfryer",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa",
+        "huevo"
+      ],
+      "prepTimeMin": 20,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Bastones de zanahoria y tomate",
+      "ingredients": [
+        "Pechuga de pollo",
+        "Queso crema",
+        "Huevo",
+        "Copos de maíz sin azúcar"
+      ]
+    },
+    {
+      "id": 21,
+      "title": "Pechuga de pavo a la plancha",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Asa gajos de manzana en la sartén o microondas y sirve junto a los filetes de pavo hechos a la plancha.",
+      "tags": [
+        "ligero",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Gajos de manzana asada",
+      "ingredients": [
+        "Filetes de pavo",
+        "Manzanas",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 22,
+      "title": "Brochetas de pollo y verduras",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Ensarta dados de pollo, calabacín y pimiento en palos de brocheta y cocina a la plancha girando cada 2 minutos.",
+      "tags": [
+        "divertido",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Calabacín y pimiento asado",
+      "ingredients": [
+        "Pechuga de pollo",
+        "Calabacín",
+        "Pimiento dulce",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 23,
+      "title": "Hamburguesa casera de ternera",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Amasa carne picada con sal y un toque de ajo en polvo, da forma y cocina a la plancha 3 minutos por lado.",
+      "tags": [
+        "hierro",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Rodajas de tomate y lechuga",
+      "ingredients": [
+        "Carne picada de ternera",
+        "Tomate",
+        "Lechuga",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 24,
+      "title": "Pollo asado desmenuzado",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Aprovecha restos de pollo asado deshilachado y sirve con bastones de boniato horneados 20 minutos a 200 °C.",
+      "tags": [
+        "aprovechamiento",
+        "horno",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 22,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Bastones de boniato al horno",
+      "ingredients": [
+        "Pollo asado",
+        "Boniato",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 25,
+      "title": "San Jacobo casero",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Coloca jamón york y queso entre dos filetes finos de lomo o pollo, pasa por harina, huevo y pan rallado, y dora.",
+      "tags": [
+        "kids_favorite"
+      ],
+      "allergens": [
+        "lactosa",
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Ensalada de lechuga y tomate",
+      "ingredients": [
+        "Filetes finos de lomo o pollo",
+        "Jamón york",
+        "Queso en lonchas",
+        "Huevo y pan rallado"
+      ]
+    },
+    {
+      "id": 26,
+      "title": "Solomillo de cerdo en medallones",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Dora los medallones en sartén y añade puré de manzana asada diluido con un poco de caldo para hacer la salsa.",
+      "tags": [
+        "tierno",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Salsa suave de manzana",
+      "ingredients": [
+        "Solomillo de cerdo",
+        "Manzanas",
+        "Caldo suave",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 27,
+      "title": "Croquetas de pollo o jamón",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Haz una bechamel espesa con pollo o jamón picado, deja enfriar, da forma, empana en huevo y pan rallado, y fríe u hornea.",
+      "tags": [
+        "tradicional",
+        "horno"
+      ],
+      "allergens": [
+        "lactosa",
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Tomatitos cherry y lechuga",
+      "ingredients": [
+        "Pollo o jamón picado",
+        "Leche",
+        "Harina de trigo",
+        "Huevo y pan rallado"
+      ]
+    },
+    {
+      "id": 28,
+      "title": "Salchichas frescas de carnicería",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Pincha ligeramente las salchichas, hazlas a la plancha a fuego medio 8 minutos y acompaña con puré de calabaza cocida.",
+      "tags": [
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Puré de calabaza",
+      "ingredients": [
+        "Salchichas frescas de carnicería",
+        "Calabaza",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 29,
+      "title": "Escalope de ternera empanado",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Salpimienta un filete fino de ternera, pásalo por huevo batido y pan rallado, y fríe en aceite caliente 1 minuto por lado.",
+      "tags": [
+        "rapido",
+        "clasico"
+      ],
+      "allergens": [
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Ensalada verde o patata cocida",
+      "ingredients": [
+        "Filetes de ternera",
+        "Huevo",
+        "Pan rallado",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Tiras de pollo crujientes",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Corta la pechuga en tiras, pasa por yogur natural y luego por pan rallado con pimentón dulce; hornea 15 minutos a 200 °C.",
+      "tags": [
+        "horno",
+        "airfryer"
+      ],
+      "allergens": [
+        "lactosa",
+        "gluten"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Rodajas de pepino y tomate",
+      "ingredients": [
+        "Pechuga de pollo",
+        "Yogur natural",
+        "Pan rallado",
+        "Pimentón dulce"
+      ]
+    },
+    {
+      "id": 31,
+      "title": "Mini hamburguesas de pavo y espinacas",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Mezcla carne picada de pavo con espinacas frescas muy picadas, forma mini hamburguesas y cocina a la plancha.",
+      "tags": [
+        "saludable",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Tomate natural aliñado",
+      "ingredients": [
+        "Carne picada de pavo",
+        "Espinacas frescas",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 32,
+      "title": "Pollo al limón",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Saltea tiras de pollo enharinadas, añade zumo de medio limón y un chorrito de caldo, y deja reducir 3 minutos.",
+      "tags": [
+        "rapido"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Arroz blanco o verduritas",
+      "ingredients": [
+        "Pechuga de pollo",
+        "Limón",
+        "Harina",
+        "Caldo de ave"
+      ]
+    },
+    {
+      "id": 33,
+      "title": "Cinta de lomo con queso fundido",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Haz los filetes a la plancha, coloca una loncha de queso encima y tapa la sartén 1 minuto para que funda.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Pimientos asados o tomate",
+      "ingredients": [
+        "Cinta de lomo",
+        "Queso en lonchas",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 34,
+      "title": "Estofado ligero de pavo con patatas",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Rehoga dados de pavo con zanahoria y patata chascada, cubre con caldo de ave y cuece 20 minutos.",
+      "tags": [
+        "cuchara",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Zanahoria y patata guisada",
+      "ingredients": [
+        "Dados de pavo",
+        "Patatas",
+        "Zanahorias",
+        "Caldo de ave"
+      ]
+    },
+    {
+      "id": 35,
+      "title": "Rollitos de pechuga de pollo",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Unta filetes finos con queso crema y espinacas, enrolla, sujeta con un palillo y cocina a la plancha tapado 8 minutos.",
+      "tags": [
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Ensalada de tomate",
+      "ingredients": [
+        "Filetes finos de pollo",
+        "Queso crema",
+        "Espinacas frescas",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 36,
+      "title": "Merluza a la plancha",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Cocina los lomos 3 minutos por lado con aceite de oliva y sirve con rodajas de patata previamente cocida.",
+      "tags": [
+        "pescado_blanco",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Patata cocida con aceite de oliva",
+      "ingredients": [
+        "Lomos de merluza",
+        "Patatas",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 37,
+      "title": "Lenguado a la menier",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Pasa los filetes de lenguado por harina, dóralos en sartén con un poco de mantequilla y termina con unas gotas de limón.",
+      "tags": [
+        "suave"
+      ],
+      "allergens": [
+        "pescado",
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Judías verdes o patata al vapor",
+      "ingredients": [
+        "Filetes de lenguado",
+        "Harina",
+        "Mantequilla",
+        "Limón"
+      ]
+    },
+    {
+      "id": 38,
+      "title": "Salmón al horno",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Hornea los lomos de salmón junto a ramilletes de brócoli con aceite y sal durante 12 minutos a 190 °C.",
+      "tags": [
+        "omega3",
+        "horno",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Ramilletes de brócoli al horno",
+      "ingredients": [
+        "Lomos de salmón",
+        "Brócoli",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 39,
+      "title": "Varitas de pescado caseras",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Corta lomos de merluza en bastones, pasa por huevo y pan rallado, y hornea 12 minutos a 200 °C.",
+      "tags": [
+        "horno",
+        "airfryer",
+        "kids_favorite"
+      ],
+      "allergens": [
+        "pescado",
+        "huevo",
+        "gluten"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Ensalada de lechuga y tomate",
+      "ingredients": [
+        "Lomos de merluza",
+        "Huevo",
+        "Pan rallado",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 40,
+      "title": "Gallo rebozado",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Pasa los filetes limpios por harina y huevo batido, y fríe en aceite de oliva 2 minutos por lado.",
+      "tags": [
+        "tradicional"
+      ],
+      "allergens": [
+        "pescado",
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Ensalada suave de tomate",
+      "ingredients": [
+        "Filetes de gallo",
+        "Harina",
+        "Huevo",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 41,
+      "title": "Tortillitas de camarones o gambas",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Mezcla harina de trigo y garbanzo con agua fría, perejil y gambitas picadas; fríe cucharadas finas en aceite caliente.",
+      "tags": [
+        "crujiente"
+      ],
+      "allergens": [
+        "pescado",
+        "gluten"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": false,
+      "side": "Tomate picado aliñado",
+      "ingredients": [
+        "Gambas peladas",
+        "Harina de trigo",
+        "Harina de garbanzo",
+        "Perejil"
+      ]
+    },
+    {
+      "id": 42,
+      "title": "Merluza en salsa verde",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Sofríe ajo y perejil con una cucharada de harina, añade caldo de pescado, guisantes y lomos de merluza; cuece 8 minutos.",
+      "tags": [
+        "tradicional"
+      ],
+      "allergens": [
+        "pescado",
+        "gluten"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Guisantes tiernos en su salsa",
+      "ingredients": [
+        "Lomos de merluza",
+        "Guisantes",
+        "Caldo de pescado",
+        "Ajo y perejil"
+      ]
+    },
+    {
+      "id": 43,
+      "title": "Atún fresco a la plancha",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Marca taquitos de atún a fuego fuerte 1 minuto por cara para que queden jugosos por dentro y sirve con cebolla pochada.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Cebolla pochada y tomate",
+      "ingredients": [
+        "Atún fresco",
+        "Cebolla",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 44,
+      "title": "Hamburguesa de salmón y merluza",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Pica ambos pescados sin espinas, mezcla con pan rallado y perejil, da forma y cocina a la plancha 3 minutos por lado.",
+      "tags": [
+        "pescado_divertido"
+      ],
+      "allergens": [
+        "pescado",
+        "gluten"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Rodajas de tomate y aguacate",
+      "ingredients": [
+        "Salmón fresco",
+        "Merluza sin espinas",
+        "Pan rallado",
+        "Perejil"
+      ]
+    },
+    {
+      "id": 45,
+      "title": "Calamares a la plancha",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Limpia los calamares, hazles unos cortes superficiales y cocínalos a fuego fuerte 2 minutos por lado con aceite y ajo.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Ensalada verde con limón",
+      "ingredients": [
+        "Calamares limpios",
+        "Ajo",
+        "Perejil",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 46,
+      "title": "Bacalao con tomate",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Confita lomos o migas de bacalao desalado durante 8 minutos dentro de una sartén con salsa de tomate casera a fuego suave.",
+      "tags": [
+        "tradicional",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Salsa de tomate casera",
+      "ingredients": [
+        "Bacalao desalado",
+        "Salsa de tomate natural",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 47,
+      "title": "Croquetas de merluza o atún",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Prepara una bechamel suave incorporando el pescado desmigado, deja enfriar la masa, forma croquetas, empana y cocina.",
+      "tags": [
+        "kids_favorite"
+      ],
+      "allergens": [
+        "pescado",
+        "lactosa",
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Ensalada de tomate y maíz",
+      "ingredients": [
+        "Merluza o atún",
+        "Leche",
+        "Harina",
+        "Huevo y pan rallado"
+      ]
+    },
+    {
+      "id": 48,
+      "title": "Empanadillas de atún y huevo",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Rellena obleas con atún, huevo duro picado y tomate frito; cierra con un tenedor, pinta con huevo y hornea 12 minutos a 190 °C.",
+      "tags": [
+        "horno",
+        "clasico"
+      ],
+      "allergens": [
+        "pescado",
+        "huevo",
+        "gluten"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Hojas de lechuga y cherry",
+      "ingredients": [
+        "Obleas de empanadilla",
+        "Atún al natural",
+        "Huevos",
+        "Tomate frito"
+      ]
+    },
+    {
+      "id": 49,
+      "title": "Pastel de pescado frío",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Mezcla merluza cocida desmigada con surimi picado, tomate y mayonesa; monta capas alternas con pan de molde sin corteza y refrigera.",
+      "tags": [
+        "cena_fria"
+      ],
+      "allergens": [
+        "pescado",
+        "huevo",
+        "gluten"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Lechuga en juliana",
+      "ingredients": [
+        "Merluza cocida",
+        "Pan de molde",
+        "Tomate frito",
+        "Mayonesa suave"
+      ]
+    },
+    {
+      "id": 50,
+      "title": "Sepia a la plancha",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Corta la sepia limpia en tiras finas, saltéala a fuego vivo 3 minutos y añade un majado de ajo, perejil y aceite.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Patata cocida o ensalada",
+      "ingredients": [
+        "Sepia limpia",
+        "Ajo",
+        "Perejil",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 51,
+      "title": "Lubina al horno",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Hornea rodajas finas de patata 15 minutos a 190 °C; coloca los lomos de lubina encima y hornea 10 minutos más.",
+      "tags": [
+        "horno",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Panadera de patata al horno",
+      "ingredients": [
+        "Lomos de lubina",
+        "Patatas",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 52,
+      "title": "Almejas o mejillones al vapor",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Pon el marisco limpio en una olla tapada con un dedo de agua y una hoja de laurel a fuego fuerte hasta que se abran.",
+      "tags": [
+        "hierro",
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Arroz blanco o pan con tomate",
+      "ingredients": [
+        "Mejillones o almejas",
+        "Laurel",
+        "Limón"
+      ]
+    },
+    {
+      "id": 53,
+      "title": "Boquerones abiertos y rebozados",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Abre los boquerones limpios en libro sin espina, pásalos por harina y huevo, y fríe 1 minuto en aceite caliente.",
+      "tags": [
+        "pescado_azul"
+      ],
+      "allergens": [
+        "pescado",
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Pimientos asados o tomate",
+      "ingredients": [
+        "Boquerones limpios",
+        "Harina",
+        "Huevo",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 54,
+      "title": "Brochetas de rape y langostinos",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Alterna dados de rape y langostinos pelados en palos de brocheta y cocina a la plancha 2 minutos por lado.",
+      "tags": [
+        "sin_espinas",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Calabacín a la plancha",
+      "ingredients": [
+        "Rape sin espinas",
+        "Langostinos pelados",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 55,
+      "title": "Pescadilla frita o al horno",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Sazona supremas limpias de pescadilla, pincela con aceite de oliva y hornea 10 minutos a 190 °C.",
+      "tags": [
+        "horno",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "pescado"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Ensalada de lechuga y zanahoria",
+      "ingredients": [
+        "Supremas de pescadilla",
+        "Aceite de oliva",
+        "Limón"
+      ]
+    },
+    {
+      "id": 56,
+      "title": "Espaguetis a la boloñesa",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Sofríe zanahoria y cebolla trituradas con carne picada, añade tomate triturado, cuece 15 minutos y mezcla con la pasta hervida.",
+      "tags": [
+        "kids_favorite"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "prepTimeMin": 20,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Salsa boloñesa casera con verduras",
+      "ingredients": [
+        "Espaguetis",
+        "Carne picada",
+        "Tomate triturado",
+        "Zanahoria y cebolla"
+      ]
+    },
+    {
+      "id": 57,
+      "title": "Macarrones con atún y tomate",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Mezcla macarrones cocidos con salsa de tomate y atún escurrido, cubre con queso rallado y gratina 5 minutos.",
+      "tags": [
+        "rapido",
+        "clasico"
+      ],
+      "allergens": [
+        "gluten",
+        "pescado",
+        "lactosa"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Queso gratinado suave",
+      "ingredients": [
+        "Macarrones",
+        "Atún al natural",
+        "Salsa de tomate",
+        "Queso rallado"
+      ]
+    },
+    {
+      "id": 58,
+      "title": "Arroz a la cubana",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Cuece arroz blanco, sírvelo moldeado en el plato con salsa de tomate caliente por encima y un huevo a la plancha al lado.",
+      "tags": [
+        "sin_gluten",
+        "clasico"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Huevo a la plancha y tomate",
+      "ingredients": [
+        "Arroz redondo",
+        "Huevos",
+        "Salsa de tomate natural",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 59,
+      "title": "Fideuá rápida de pescado",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Sofríe gambas y fideos finos en aceite, cubre con caldo de pescado caliente y cuece 8 minutos hasta que absorba el líquido.",
+      "tags": [
+        "rapido"
+      ],
+      "allergens": [
+        "gluten",
+        "pescado"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Gambitas peladas",
+      "ingredients": [
+        "Fideos para fideuá",
+        "Gambas peladas",
+        "Caldo de pescado",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 60,
+      "title": "Arroz tres delicias casero",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Saltea arroz cocido frío con guisantes, zanahoria en daditos, jamón york picado y tiras de tortilla francesa.",
+      "tags": [
+        "sin_gluten",
+        "aprovechamiento"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Guisantes y zanahoria salteados",
+      "ingredients": [
+        "Arroz",
+        "Guisantes",
+        "Zanahorias",
+        "Jamón cocido",
+        "Huevos"
+      ]
+    },
+    {
+      "id": 61,
+      "title": "Espaguetis con mantequilla y queso parmesano",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Escurre la pasta recién cocida y mézclala en caliente con una nuez de mantequilla y queso rallado.",
+      "tags": [
+        "rapido",
+        "suave"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Tomatitos cherry",
+      "ingredients": [
+        "Espaguetis",
+        "Mantequilla",
+        "Queso parmesano rallado"
+      ]
+    },
+    {
+      "id": 62,
+      "title": "Lasaña de carne y verduras",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Alterna placas de lasaña hidratadas con boloñesa de verduras y carne, cubre con bechamel y queso, y hornea 20 minutos a 190 °C.",
+      "tags": [
+        "horno",
+        "completa"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 30,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Ensalada verde",
+      "ingredients": [
+        "Placas de lasaña",
+        "Carne picada",
+        "Verduras variadas",
+        "Leche y queso"
+      ]
+    },
+    {
+      "id": 63,
+      "title": "Canelones de pollo",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Rellena placas de pasta cocida con pollo desmenuzado y paté suave o bechamel, enrolla, cubre con más bechamel y gratina.",
+      "tags": [
+        "horno",
+        "aprovechamiento"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Ensalada de tomate",
+      "ingredients": [
+        "Placas de canelones",
+        "Pollo desmenuzado",
+        "Leche",
+        "Queso rallado"
+      ]
+    },
+    {
+      "id": 64,
+      "title": "Pasta con salsa pesto suave",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Tritura hojas de albahaca, piñones o nueces, queso parmesano y aceite de oliva; mezcla con pasta recién hervida.",
+      "tags": [
+        "rapido",
+        "vegetariano"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Tomates cherry partidos",
+      "ingredients": [
+        "Pasta corta",
+        "Albahaca fresca",
+        "Queso parmesano",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 65,
+      "title": "Arroz blanco con pollo salteado",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Saltea daditos de pechuga de pollo con un toque de salsa de soja suave o ajo y sirve junto a arroz blanco cocido.",
+      "tags": [
+        "sin_gluten",
+        "sin_lactosa"
+      ],
+      "allergens": [],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Tiras de zanahoria salteada",
+      "ingredients": [
+        "Arroz blanco",
+        "Pechuga de pollo",
+        "Ajo",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 66,
+      "title": "Ensalada de pasta fría",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Mezcla espirales de pasta cocida y fría con dados de queso fresco, maíz, taquitos de pavo, tomates cherry y aceite de oliva.",
+      "tags": [
+        "cena_fria",
+        "rapido"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Tomates cherry y maíz",
+      "ingredients": [
+        "Espirales de pasta",
+        "Queso fresco",
+        "Taquitos de pavo",
+        "Maíz dulce",
+        "Tomates cherry"
+      ]
+    },
+    {
+      "id": 67,
+      "title": "Cuscús con verduras y pollo",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Hidrata el cuscús con el mismo volumen de caldo caliente 5 minutos; suelta con un tenedor y mezcla con pollo y verduras salteadas.",
+      "tags": [
+        "rapido",
+        "verduras"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Verduritas salteadas",
+      "ingredients": [
+        "Cuscús",
+        "Pechuga de pollo",
+        "Calabacín y zanahoria",
+        "Caldo suave"
+      ]
+    },
+    {
+      "id": 68,
+      "title": "Hummus con palitos de pan y zanahoria",
+      "category": "segundo",
+      "group": "legumbres",
+      "instructions": "Tritura garbanzos cocidos con aceite de oliva, limón y una pizca de comino; sirve con bastones de zanahoria cruda y picos.",
+      "tags": [
+        "cena_fria",
+        "vegano"
+      ],
+      "allergens": [
+        "gluten",
+        "sesamo"
+      ],
+      "prepTimeMin": 8,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Bastones de zanahoria y picos",
+      "ingredients": [
+        "Garbanzos cocidos",
+        "Zanahorias",
+        "Picos de pan",
+        "Aceite de oliva y limón"
+      ]
+    },
+    {
+      "id": 69,
+      "title": "Ensalada de garbanzos templada",
+      "category": "segundo",
+      "group": "legumbres",
+      "instructions": "Saltea garbanzos cocidos un par de minutos, mezcla con atún, huevo duro picado y pimiento rojo, y aliña.",
+      "tags": [
+        "sin_gluten",
+        "legumbres"
+      ],
+      "allergens": [
+        "pescado",
+        "huevo"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Huevo duro y pimiento dulce",
+      "ingredients": [
+        "Garbanzos cocidos",
+        "Atún al natural",
+        "Huevos",
+        "Pimiento rojo"
+      ]
+    },
+    {
+      "id": 70,
+      "title": "Lentejas estofadas suaves",
+      "category": "segundo",
+      "group": "legumbres",
+      "instructions": "Cuece lentejas pardinas con zanahoria, patata, cebolla y un chorrito de aceite de oliva durante 35 minutos a fuego suave.",
+      "tags": [
+        "cuchara",
+        "sin_gluten",
+        "vegano"
+      ],
+      "allergens": [],
+      "prepTimeMin": 30,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Zanahoria y patata cocida",
+      "ingredients": [
+        "Lentejas pardinas",
+        "Zanahorias",
+        "Patatas",
+        "Cebolla",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 71,
+      "title": "Sopa de fideos finos (estrellitas)",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Hierve caldo de pollo casero, añade los fideos 5 minutos y sirve con huevo duro picado por encima.",
+      "tags": [
+        "cuchara",
+        "reconfortante"
+      ],
+      "allergens": [
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Huevo duro picado",
+      "ingredients": [
+        "Caldo de pollo casero",
+        "Pasta de estrellitas o fideos",
+        "Huevos"
+      ]
+    },
+    {
+      "id": 72,
+      "title": "Crema de calabacín y quesitos",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Cuece calabacín, puerro y patata en agua 20 minutos; tritura con 3 quesitos en porciones hasta dejar muy fino.",
+      "tags": [
+        "crema",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa"
+      ],
+      "prepTimeMin": 22,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Taquitos de jamón o picatostes",
+      "ingredients": [
+        "Calabacines",
+        "Puerro",
+        "Patata",
+        "Quesitos en porciones"
+      ]
+    },
+    {
+      "id": 73,
+      "title": "Puré de calabaza y zanahoria",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Hierve calabaza y zanahoria troceadas con un poco de cebolla 20 minutos; tritura con un chorrito de aceite de oliva.",
+      "tags": [
+        "crema",
+        "sin_gluten",
+        "vegano"
+      ],
+      "allergens": [],
+      "prepTimeMin": 22,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Huevo duro o semillas",
+      "ingredients": [
+        "Calabaza",
+        "Zanahorias",
+        "Cebolla",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 74,
+      "title": "Judías verdes con patata",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Cuece judías verdes limpias y patata chascada 15 minutos; escurre y rehoga en sartén con ajo y taquitos de jamón.",
+      "tags": [
+        "verduras",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Taquitos de jamón serrano",
+      "ingredients": [
+        "Judías verdes",
+        "Patatas",
+        "Jamón en taquitos",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 75,
+      "title": "Crema de puerros (vichyssoise)",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Rehoga la parte blanca del puerro con patata, cubre con caldo, cuece 20 minutos y tritura con un chorrito de leche o nata.",
+      "tags": [
+        "crema",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa"
+      ],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Taquitos de pavo",
+      "ingredients": [
+        "Puerros",
+        "Patatas",
+        "Caldo de verduras",
+        "Leche"
+      ]
+    },
+    {
+      "id": 76,
+      "title": "Guisantes con jamón",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Saltea cebolla muy picada con taquitos de jamón, añade guisantes cocidos 3 minutos y corona con un huevo escalfado.",
+      "tags": [
+        "rapido",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Huevo escalfado",
+      "ingredients": [
+        "Guisantes tiernos",
+        "Jamón en taquitos",
+        "Huevos",
+        "Cebolla"
+      ]
+    },
+    {
+      "id": 77,
+      "title": "Calabacines rellenos de carne o atún",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Vacía medios calabacines cocidos, mezcla la pulpa con carne sofrita o atún y tomate, rellena, pon queso y gratina.",
+      "tags": [
+        "horno",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa",
+        "pescado"
+      ],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Queso gratinado",
+      "ingredients": [
+        "Calabacines",
+        "Atún o carne picada",
+        "Salsa de tomate",
+        "Queso rallado"
+      ]
+    },
+    {
+      "id": 78,
+      "title": "Berenjenas rellenas suaves",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Asa medias berenjenas 20 minutos, saca la pulpa, mezcla con pollo picado y tomate, rellena y gratina con queso.",
+      "tags": [
+        "horno",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa"
+      ],
+      "prepTimeMin": 28,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Ensalada fresca",
+      "ingredients": [
+        "Berenjenas",
+        "Pollo picado",
+        "Salsa de tomate",
+        "Queso para gratinar"
+      ]
+    },
+    {
+      "id": 79,
+      "title": "Crema de verduras variadas",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Cuece calabacín, zanahoria, judía verde y patata; tritura hasta que no queden grumos y sirve con daditos de pavo.",
+      "tags": [
+        "crema",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 22,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Daditos de pavo",
+      "ingredients": [
+        "Calabacín",
+        "Zanahorias",
+        "Judías verdes",
+        "Patata",
+        "Taquitos de pavo"
+      ]
+    },
+    {
+      "id": 80,
+      "title": "Brócoli gratinado con queso",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Cuece ramilletes de brócoli al vapor 6 minutos, pon en una fuente con bechamel ligera y queso rallado, y gratina.",
+      "tags": [
+        "horno",
+        "verduras"
+      ],
+      "allergens": [
+        "lactosa",
+        "gluten"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Bechamel suave y queso",
+      "ingredients": [
+        "Brócoli",
+        "Leche",
+        "Harina",
+        "Queso rallado"
+      ]
+    },
+    {
+      "id": 81,
+      "title": "Sopa de arroz con pollo desmenuzado",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Cuece arroz en caldo de pollo durante 15 minutos y añade pollo cocido deshilachado en los últimos minutos.",
+      "tags": [
+        "cuchara",
+        "sin_gluten",
+        "suave"
+      ],
+      "allergens": [],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Hebras de pollo tierno",
+      "ingredients": [
+        "Caldo de pollo",
+        "Arroz redondo",
+        "Pollo cocido desmenuzado",
+        "Zanahoria"
+      ]
+    },
+    {
+      "id": 82,
+      "title": "Menestra de verduras tiernas",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Cuece guisantes, zanahoria, alcachofas y judías; saltea todo junto con taquitos de jamón cocido.",
+      "tags": [
+        "verduras",
+        "sin_gluten"
+      ],
+      "allergens": [],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Jamón cocido salteado",
+      "ingredients": [
+        "Guisantes",
+        "Zanahorias",
+        "Judías verdes",
+        "Jamón cocido"
+      ]
+    },
+    {
+      "id": 83,
+      "title": "Pisto manchego con huevo",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Pocha a fuego lento calabacín, pimiento y cebolla en daditos, añade tomate triturado 15 minutos y sirve con huevo cuajado.",
+      "tags": [
+        "tradicional",
+        "sin_gluten"
+      ],
+      "allergens": [
+        "huevo"
+      ],
+      "prepTimeMin": 25,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Huevo cuajado a la plancha",
+      "ingredients": [
+        "Calabacín",
+        "Pimiento",
+        "Cebolla",
+        "Tomate triturado",
+        "Huevos"
+      ]
+    },
+    {
+      "id": 84,
+      "title": "Zanahorias baby glaseadas",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Cuece zanahorias baby 10 minutos y saltéalas 3 minutos en sartén con una cucharadita de mantequilla y una pizca de miel o azúcar.",
+      "tags": [
+        "sin_gluten"
+      ],
+      "allergens": [
+        "lactosa"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Filete de pavo o huevo a la plancha",
+      "ingredients": [
+        "Zanahorias baby",
+        "Mantequilla",
+        "Pechuga de pavo"
+      ]
+    },
+    {
+      "id": 85,
+      "title": "Sopa juliana",
+      "category": "segundo",
+      "group": "verdura",
+      "instructions": "Rehoga zanahoria, puerro, apio y repollo cortados en tiras muy finas; cubre con caldo, cuece 15 minutos y añade fideos finos al final.",
+      "tags": [
+        "cuchara",
+        "verduras"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "prepTimeMin": 20,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Fideos finos en caldo",
+      "ingredients": [
+        "Zanahoria",
+        "Puerro",
+        "Repollo",
+        "Caldo de verduras",
+        "Fideos finos"
+      ]
+    },
+    {
+      "id": 86,
+      "title": "Sándwich mixto (bikini)",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Coloca jamón york y queso entre dos rebanadas de pan de molde untadas ligeramente con mantequilla y dora en sartén o sandwichera.",
+      "tags": [
+        "ultra_rapido",
+        "clasico"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 6,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Tomatitos cherry",
+      "ingredients": [
+        "Pan de molde",
+        "Jamón york",
+        "Queso en lonchas",
+        "Mantequilla"
+      ]
+    },
+    {
+      "id": 87,
+      "title": "Fajitas de pollo y pimientos",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Saltea tiras de pollo con pimiento rojo y verde en tiras; rellena tortillas de trigo calientes y enrolla.",
+      "tags": [
+        "rapido",
+        "cena_divertida"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "prepTimeMin": 15,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Tiras de pimiento salteado",
+      "ingredients": [
+        "Tortillas de trigo",
+        "Pechuga de pollo",
+        "Pimiento rojo y verde",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 88,
+      "title": "Pizza casera en pan de pita",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Unta pan de pita con tomate frito, añade mozzarella y champiñones laminados, y hornea 8 minutos a 200 °C.",
+      "tags": [
+        "rapido",
+        "horno",
+        "kids_favorite"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Bastones de zanahoria",
+      "ingredients": [
+        "Pan de pita",
+        "Salsa de tomate",
+        "Mozzarella",
+        "Champiñones"
+      ]
+    },
+    {
+      "id": 89,
+      "title": "Tosta de aguacate y huevo revuelto",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Tuesta pan de hogaza, unta aguacate maduro machacado con unas gotas de limón y corona con huevo revuelto jugoso.",
+      "tags": [
+        "rapido",
+        "grasas_saludables"
+      ],
+      "allergens": [
+        "gluten",
+        "huevo"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Tomate natural en dados",
+      "ingredients": [
+        "Pan de hogaza",
+        "Aguacate",
+        "Huevos",
+        "Limón"
+      ]
+    },
+    {
+      "id": 90,
+      "title": "Quesadillas de jamón y queso",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Pon queso rallado y jamón cocido entre dos tortillas de trigo, dora en sartén sin aceite 2 minutos por lado y corta en triángulos.",
+      "tags": [
+        "ultra_rapido"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 8,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Maíz dulce y tomate",
+      "ingredients": [
+        "Tortillas de trigo",
+        "Queso para fundir",
+        "Jamón cocido"
+      ]
+    },
+    {
+      "id": 91,
+      "title": "Bocadillo caliente de lomo y queso",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Haz filetes de lomo a la plancha, mételos en pan tierno con queso fundido y un poco de tomate natural.",
+      "tags": [
+        "rapido",
+        "clasico"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Rodajas de tomate natural",
+      "ingredients": [
+        "Panecillos tiernos",
+        "Lomo de cerdo",
+        "Queso en lonchas",
+        "Tomate"
+      ]
+    },
+    {
+      "id": 92,
+      "title": "Wrap de pavo, queso crema y lechuga",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Unta una tortilla de trigo con queso crema, cubre con lonchas de pavo y lechuga picada, enrolla apretado y corta en rodajas.",
+      "tags": [
+        "cena_fria",
+        "ultra_rapido"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 6,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Bastones de pepino o zanahoria",
+      "ingredients": [
+        "Tortillas de trigo",
+        "Lonchas de pavo",
+        "Queso crema",
+        "Lechuga"
+      ]
+    },
+    {
+      "id": 93,
+      "title": "Tosta de tomate triturado y jamón serrano",
+      "category": "segundo",
+      "group": "carne",
+      "instructions": "Tuesta pan rústico, riega con tomate natural rallado y aceite de oliva, y coloca jamón serrano por encima.",
+      "tags": [
+        "ultra_rapido",
+        "mediterraneo"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "prepTimeMin": 6,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Aceitunas o queso fresco",
+      "ingredients": [
+        "Pan rústico",
+        "Tomate maduro",
+        "Jamón serrano",
+        "Aceite de oliva virgen extra"
+      ]
+    },
+    {
+      "id": 94,
+      "title": "Perrito caliente casero",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Cocina salchichas frescas de pollo a la plancha e introdúcelas en pan tierno de perrito con cebolla crujiente o un hilo de salsa suave.",
+      "tags": [
+        "rapido",
+        "viernes"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Ensalada de col o tomate",
+      "ingredients": [
+        "Salchichas frescas de pollo",
+        "Pan de perrito",
+        "Salsa de tomate suave"
+      ]
+    },
+    {
+      "id": 95,
+      "title": "Sándwich de pollo desmenuzado",
+      "category": "segundo",
+      "group": "ave",
+      "instructions": "Mezcla pollo asado deshilachado con yogur natural, una pizca de sal y lechuga picada; rellena dos rebanadas de pan integral.",
+      "tags": [
+        "cena_fria",
+        "aprovechamiento"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa"
+      ],
+      "prepTimeMin": 8,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Hojas de lechuga y tomate",
+      "ingredients": [
+        "Pollo asado desmenuzado",
+        "Yogur natural",
+        "Pan integral de molde",
+        "Lechuga"
+      ]
+    },
+    {
+      "id": 96,
+      "title": "Tosta de atún con pimientos asados",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Coloca sobre pan tostado una base de pimientos rojos asados en tiras, atún escurrido y un chorrito de aceite.",
+      "tags": [
+        "cena_fria",
+        "rapido"
+      ],
+      "allergens": [
+        "gluten",
+        "pescado"
+      ],
+      "prepTimeMin": 8,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Tiras de pimiento rojo asado",
+      "ingredients": [
+        "Pan rústico",
+        "Atún al natural",
+        "Pimientos rojos asados",
+        "Aceite de oliva"
+      ]
+    },
+    {
+      "id": 97,
+      "title": "Paninis caseros",
+      "category": "segundo",
+      "group": "hidratos",
+      "instructions": "Abre una barra de pan por la mitad a lo largo, cubre con tomate, queso y jamón york o atún, y hornea 10 minutos a 200 °C.",
+      "tags": [
+        "horno",
+        "airfryer",
+        "kids_favorite"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa",
+        "pescado"
+      ],
+      "prepTimeMin": 12,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": true,
+      "side": "Ensalada verde",
+      "ingredients": [
+        "Barra de pan",
+        "Salsa de tomate",
+        "Queso mozzarella",
+        "Jamón york o atún"
+      ]
+    },
+    {
+      "id": 98,
+      "title": "Crepes salados",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Bate 1 huevo, 125 ml de leche y 60 g de harina; haz láminas finas en sartén engrasada y rellena con jamón, queso y champiñones.",
+      "tags": [
+        "cena_divertida"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa",
+        "huevo"
+      ],
+      "prepTimeMin": 18,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "Champiñones salteados",
+      "ingredients": [
+        "Huevos",
+        "Leche",
+        "Harina",
+        "Jamón cocido",
+        "Queso",
+        "Champiñones"
+      ]
+    },
+    {
+      "id": 99,
+      "title": "Sándwich vegetal",
+      "category": "segundo",
+      "group": "pescado",
+      "instructions": "Rellena pan de molde con lechuga picada, rodajas de tomate, huevo duro laminado, atún y una capa fina de mayonesa.",
+      "tags": [
+        "cena_fria",
+        "rapido"
+      ],
+      "allergens": [
+        "gluten",
+        "huevo",
+        "pescado"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "Lechuga y tomate natural",
+      "ingredients": [
+        "Pan de molde integral",
+        "Atún al natural",
+        "Huevos",
+        "Lechuga y tomate",
+        "Mayonesa suave"
+      ]
+    },
+    {
+      "id": 100,
+      "title": "Tostadas francesas saladas",
+      "category": "segundo",
+      "group": "huevo",
+      "instructions": "Empapa rebanadas de pan en huevo batido con leche y sal, dora en sartén con mantequilla y funda una loncha de queso encima.",
+      "tags": [
+        "rapido",
+        "aprovechamiento"
+      ],
+      "allergens": [
+        "gluten",
+        "lactosa",
+        "huevo"
+      ],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": false,
+      "isClassic": false,
+      "side": "Tomate natural",
+      "ingredients": [
+        "Pan en rebanadas",
+        "Huevos",
+        "Leche",
+        "Queso en lonchas",
+        "Mantequilla"
+      ]
+    },
+    {
+      "title": "Manzana Asada con Canela",
+      "category": "postre",
+      "group": "fruta",
+      "instructions": "Manzana asada al microondas 4 min con pizca de canela.",
+      "tags": [
+        "postre",
+        "microondas"
+      ],
+      "allergens": [],
+      "prepTimeMin": 5,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "",
+      "ingredients": [
+        "Manzanas",
+        "Canela"
+      ]
+    },
+    {
+      "title": "Yogur Natural con Arándanos",
+      "category": "postre",
+      "group": "lacteo",
+      "instructions": "Yogur natural sin azúcar con arándanos frescos.",
+      "tags": [
+        "postre",
+        "saludable"
+      ],
+      "allergens": [
+        "lactosa"
+      ],
+      "prepTimeMin": 2,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "",
+      "ingredients": [
+        "Yogur natural",
+        "Arándanos frescos"
+      ]
+    },
+    {
+      "title": "Brochetas de Fresa y Plátano",
+      "category": "postre",
+      "group": "fruta",
+      "instructions": "Dados de fresa y plátano ensartados.",
+      "tags": [
+        "postre"
+      ],
+      "allergens": [],
+      "prepTimeMin": 5,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "",
+      "ingredients": [
+        "Fresas",
+        "Plátanos"
+      ]
+    },
+    {
+      "title": "Macedonia de Frutas de Temporada",
+      "category": "postre",
+      "group": "fruta",
+      "instructions": "Fruta fresca variada cortada en dados pequeños.",
+      "tags": [
+        "postre"
+      ],
+      "allergens": [],
+      "prepTimeMin": 5,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "",
+      "ingredients": [
+        "Fruta variada de temporada"
+      ]
+    },
+    {
+      "title": "Mandarina Dulce en Gajos",
+      "category": "postre",
+      "group": "fruta",
+      "instructions": "Mandarina pelada en gajos fácil de comer.",
+      "tags": [
+        "postre"
+      ],
+      "allergens": [],
+      "prepTimeMin": 2,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "",
+      "ingredients": [
+        "Mandarinas"
+      ]
+    },
+    {
+      "title": "Compota Casera de Manzana y Pera",
+      "category": "postre",
+      "group": "fruta",
+      "instructions": "Manzana y pera cocidas al vapor y trituradas sin azúcar añadido.",
+      "tags": [
+        "postre"
+      ],
+      "allergens": [],
+      "prepTimeMin": 10,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "",
+      "ingredients": [
+        "Manzanas",
+        "Peras"
+      ]
+    },
+    {
+      "title": "Plátano en Rodajas con Canela",
+      "category": "postre",
+      "group": "fruta",
+      "instructions": "Plátano maduro en rodajas con un toque de canela.",
+      "tags": [
+        "postre"
+      ],
+      "allergens": [],
+      "prepTimeMin": 2,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": true,
+      "side": "",
+      "ingredients": [
+        "Plátanos"
+      ]
+    },
+    {
+      "title": "Kiwi Natural Cortado",
+      "category": "postre",
+      "group": "fruta",
+      "instructions": "Kiwi maduro cortado para tomar con cucharilla.",
+      "tags": [
+        "postre"
+      ],
+      "allergens": [],
+      "prepTimeMin": 2,
+      "servings": 4,
+      "isHealthy": true,
+      "isClassic": false,
+      "side": "",
+      "ingredients": [
+        "Kiwis"
+      ]
+    }
+  ]
+}

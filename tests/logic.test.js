@@ -9,6 +9,7 @@ import {
   extractWeeklyRoutines,
   classifyLunchGroups,
   parseLikesAndDislikes,
+  searchRecipesByIngredients,
   generateLocalMonthlyMenu,
   generateShoppingList,
   encodeSchoolMenuShare,
@@ -126,4 +127,19 @@ test("buildClaudeMenuPrompt separa systemPrompt y userContent con etiquetas XML 
   assert.ok(systemPrompt.includes("[CENA OBLIGATORIA"));
   assert.ok(userContent.includes("<preferencias_usuario>"));
   assert.ok(!userContent.includes("padre@test.com"), "Debe anonimizar el email antes de enviarlo a Claude");
+});
+
+test("searchRecipesByIngredients busca por ingredientes de nevera respetando alergias, gustos y cole", () => {
+  const results = searchRecipesByIngredients({
+    query: "calabacín huevo",
+    excludedAllergens: ["gluten"],
+    preferencesText: "no les gusta el bacalao",
+    lunchText: "Macarrones con tomate / Pollo asado",
+    limit: 5
+  });
+  assert.ok(results.length > 0, "Debe encontrar recetas con calabacín o huevo sin gluten");
+  assert.equal(results[0].title, "Revuelto de calabacín y queso");
+  for (const r of results) {
+    assert.ok(!r.allergens.includes("gluten"));
+  }
 });
