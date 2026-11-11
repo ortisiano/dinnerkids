@@ -16,16 +16,18 @@ Gratis · Sin registro · Sin anuncios · Sin cookies · Tus datos no salen de t
    - Genera un enlace directo (`#cole=...`) sin datos personales para que todas las familias de la clase tengan el menú cargado en un toque.
 3. **🛒 Lista de la compra semanal automática:**
    - Agrupa los ingredientes por semana o mes completo, permite ir tachándolos en el supermercado y copiarlos para WhatsApp.
-4. **⭐ Modo IA Pro / Colegios (Cloudflare Worker + Claude Haiku):**
-   - Quien apoya el proyecto con **2 € (Café)**, **5 € (Trimestre)** o **10 € (Curso Escolar)** en Ko-fi o GitHub Sponsors recibe un **Código Pro** (`DK02-...`, `DK05-...`, `DK10-...`).
-   - Desbloquea la lectura automática de fotos del menú del cole con **Claude Vision (OCR)** y la generación de menús y recetas a medida con **Claude Haiku**, respaldado por caché inteligente en **Cloudflare KV** (si otro padre del mismo cole sube la misma foto, consume **0 tokens**).
+4. **☕ Café Solidario (IA con Claude Haiku) o tu propio Token (BYOK):**
+   - DinnerKids es libre y gratuito para todo el mundo. Si además quieres usar la IA del proyecto (lectura automática de fotos del menú del cole con Claude Vision + menús y recetas a medida con Claude Haiku), puedes invitar a **un café de mínimo 2 € en Ko-fi** (`DK02-...`) para cubrir el gasto de la IA.
+   - **Código individual (bloqueado a 1 usuario/dispositivo):** cada código personal se vincula en Cloudflare KV al primer dispositivo que lo activa para que no se pueda compartir entre varios usuarios.
+   - **O usa tu propio Token de IA:** cualquier usuario que tenga su propia clave de Anthropic (`sk-ant-...`) puede configurarla directamente en su navegador sin coste.
 
 ---
 
 ## 🛠️ Comandos de desarrollo
 
 ```bash
-npm run check                                                # Comprobar sintaxis JS
-npm test                                                     # Ejecutar tests automatizados (node:test)
-PRO_CODE_SECRET="tu_secreto" npm run gen-code -- DK10 202706 # Generar un Código Pro firmado
+npm run check                                                   # Comprobar sintaxis JS
+npm test                                                        # Ejecutar tests automatizados (node:test)
+PRO_CODE_SECRET="tu_secreto" npm run gen-code -- DK02 202706    # Generar 1 código individual de Café (1 usuario)
+PRO_CODE_SECRET="tu_secreto" npm run gen-code -- DK02 202706 10 # Generar 10 códigos individuales distintos
 ```

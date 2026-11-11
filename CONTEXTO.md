@@ -31,12 +31,12 @@ Inspirado en la filosofía de aplicaciones web ultraligeras sin servidores pesad
 
 El modelo configurado en el Worker es **Claude Haiku 4.5** (`claude-haiku-4-5`), donde cada menú mensual cuesta ~0,004 € y cada lectura OCR con Vision cuesta ~0,003 €:
 
-| Nivel | Precio Aportación (Ko-fi / GitHub Sponsors) | Prefijo Código | Cuota Mensual en `worker.js` | Coste IA Máx. Real | Margen Neto |
-|---|---|---|---|---|---|
-| **Café Solidario** | **2 €** | `DK02` | 3 menús IA · 1 OCR · 10 recetas | ~0,03 € | **~98,5 %** |
-| **Pase Trimestral** | **5 €** | `DK05` | 10 menús IA · 4 OCR · 35 recetas | ~0,09 € | **~98,2 %** |
-| **Pase Curso Escolar** | **10 € / año** | `DK10` | 25 menús IA · 12 OCR · 80 recetas | ~0,24 € | **~97,6 %** |
-| **Colegio / AMPA** | **49 € / mes** | `AMPA` | 400 menús IA · 20 OCR · 1000 recetas | ~1,80 € | **~96,3 %** |
+| Nivel | Precio Aportación (Ko-fi / GitHub Sponsors) | Prefijo Código | Dispositivos Máx. (`checkAndBindDevice`) | Cuota Mensual en `worker.js` | Coste IA Máx. Real | Margen Neto |
+|---|---|---|---|---|---|---|
+| **Café Solidario** | **Desde 2 €** | `DK02` | **1 usuario/dispositivo** | 8 menús IA · 3 OCR · 25 recetas | ~0,08 € | **~96,0 %** |
+| **Apoyo Familiar Extra** | **5 €** | `DK05` | **1 usuario/dispositivo** | 15 menús IA · 6 OCR · 45 recetas | ~0,14 € | **~97,2 %** |
+| **Mecenas Curso Escolar** | **10 €** | `DK10` | **2 dispositivos (pareja)** | 25 menús IA · 12 OCR · 80 recetas | ~0,24 € | **~97,6 %** |
+| **Colegio / AMPA** | **49 € / mes** | `AMPA` | **300 familias** | 400 menús IA · 20 OCR · 1000 recetas | ~1,80 € | **~96,3 %** |
 
 ---
 

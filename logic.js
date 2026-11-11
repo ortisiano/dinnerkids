@@ -39,44 +39,50 @@ export const MONTH_NAMES_ES = [
 ];
 
 /**
- * Niveles de aportación (GitHub Sponsors / Ko-fi) y cuotas mensuales de IA en el Worker.
+ * Niveles de aportación (Ko-fi / GitHub Sponsors) y cuotas mensuales de IA en el Worker.
  * Coste real estimado en Claude Haiku 4.5: ~0,004 € por menú mensual y ~0,003 € por OCR.
+ * Además cada código personal (DK02, DK05, DK10) queda vinculado al dispositivo que lo activa
+ * (máximo maxDevices dispositivos en Cloudflare KV) para evitar que se comparta públicamente.
  */
 export const TIER_LIMITS = {
   DK02: {
     codePrefix: "DK02",
-    name: "Café Solidario (2 €)",
+    name: "Café Solidario (desde 2 €)",
     priceEur: 2,
-    menusPerMonth: 3,
-    ocrPerMonth: 1,
-    recipesPerMonth: 10,
-    estimatedAiCostEur: 0.03
+    menusPerMonth: 8,
+    ocrPerMonth: 3,
+    recipesPerMonth: 25,
+    maxDevices: 1,
+    estimatedAiCostEur: 0.08
   },
   DK05: {
     codePrefix: "DK05",
-    name: "Pase Trimestral (5 €)",
+    name: "Apoyo Familiar Extra",
     priceEur: 5,
-    menusPerMonth: 10,
-    ocrPerMonth: 4,
-    recipesPerMonth: 35,
-    estimatedAiCostEur: 0.09
+    menusPerMonth: 15,
+    ocrPerMonth: 6,
+    recipesPerMonth: 45,
+    maxDevices: 1,
+    estimatedAiCostEur: 0.14
   },
   DK10: {
     codePrefix: "DK10",
-    name: "Pase Curso Escolar (10 €/año)",
+    name: "Mecenas Curso Escolar",
     priceEur: 10,
     menusPerMonth: 25,
     ocrPerMonth: 12,
     recipesPerMonth: 80,
+    maxDevices: 2,
     estimatedAiCostEur: 0.24
   },
   AMPA: {
     codePrefix: "AMPA",
-    name: "Plan Colegio / AMPA",
+    name: "Código Colectivo AMPA / Colegio",
     priceEur: 49,
     menusPerMonth: 400,
     ocrPerMonth: 20,
     recipesPerMonth: 1000,
+    maxDevices: 300,
     estimatedAiCostEur: 1.80
   }
 };

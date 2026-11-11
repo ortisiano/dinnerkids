@@ -301,6 +301,44 @@
       font-weight: 800;
       color: var(--primary);
     }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+    .info-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .info-box h3 {
+      font-size: 0.96rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .info-box p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+    .donation-banner {
+      background: linear-gradient(135deg, var(--primary-light), var(--card));
+      border: 2px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      margin: 1rem 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      align-items: center;
+    }
     .shopping-list {
       list-style: none;
       display: grid;
@@ -382,18 +420,35 @@
   <section class="hero-banner">
     <div>
       <h1>🍽️ ¿Qué cenan hoy los peques según el menú del cole?</h1>
-      <p>Gratis · Sin registro · Sin anuncios · Sin cookies · Tus datos no salen de tu móvil.</p>
+      <p>100 % Gratis para todo el mundo · Sin registro · Sin anuncios · Sin cookies · Tus datos no salen de tu móvil.</p>
     </div>
-    <div>
+    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
       <button class="btn btn-primary" id="quickGenerateBtn">⚡ Generar Cenas Ahora</button>
+      <a href="#como-funciona" class="btn btn-outline" id="btnGoSupport">☕ Apoyar / Modo IA</a>
     </div>
+  </section>
+
+  <!-- BLOQUE INFORMATIVO DEL PROYECTO (VISIBLE EN EL FRONTAL) -->
+  <section class="info-grid" aria-label="Cómo funciona DinnerKids">
+    <article class="info-box">
+      <h3>🎁 1. Libre y Gratis para todos</h3>
+      <p>Planifica el mes entero cruzando lo que comen en el colegio con nuestro recetario infantil equilibrado. Incluye control de alérgenos, recetas paso a paso y lista de la compra semanal a coste 0 €.</p>
+    </article>
+    <article class="info-box">
+      <h3>☕ 2. Invítame a un Ko-fi (mín. 2 €) y usa mi IA</h3>
+      <p>Si el proyecto te ayuda y haces un donativo de un café (mínimo 2 € para cubrir el gasto de mi IA Claude Haiku), desbloqueas la lectura automática de fotos del menú del cole y menús a medida con IA.</p>
+    </article>
+    <article class="info-box">
+      <h3>🔑 3. O configura tu propio Token de IA</h3>
+      <p>¿Tienes tu propia clave API de Anthropic Claude? Puedes configurarla directamente en la pestaña 4 para usar todas las funciones de IA por tu cuenta sin límites.</p>
+    </article>
   </section>
 
   <nav class="tabs" role="tablist">
     <button class="tab-btn active" data-tab="tab-menu">📅 1. Mi Menú de Cenas</button>
     <button class="tab-btn" data-tab="tab-school">🏫 2. Menú del Cole</button>
     <button class="tab-btn" data-tab="tab-shopping">🛒 3. Lista de la Compra</button>
-    <button class="tab-btn" data-tab="tab-pro">⭐ 4. Modo IA Pro y Privacidad</button>
+    <button class="tab-btn" data-tab="tab-pro">☕ 4. Café Solidario (IA) y Privacidad</button>
   </nav>
 
   <!-- TAB 1: MENÚ DE CENAS -->
@@ -527,78 +582,60 @@
     </div>
   </section>
 
-  <!-- TAB 4: MODO PRO Y PRIVACIDAD -->
+  <!-- TAB 4: CAFÉ SOLIDARIO (IA), TOKEN PROPIO Y PRIVACIDAD -->
   <section id="tab-pro" class="panel">
     <div class="card">
-      <h2>⭐ Activar Modo IA Pro / Código de AMPA</h2>
-      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
-        El modo gratuito con el recetario oficial de DinnerKids funciona 100 % en tu navegador y es gratis para siempre.
-        Si quieres que la <strong>Inteligencia Artificial</strong> lea la foto del menú del cole sola y cree menús y recetas personalizadas para tu familia, apoya el proyecto para cubrir el coste de la IA:
+      <h2>☕ Apoya el proyecto con un Café (mín. 2 €) o usa tu propio Token de IA</h2>
+      <p style="font-size:0.92rem; color:var(--text-muted); margin-bottom:1rem;">
+        <strong>DinnerKids es un proyecto libre y gratuito para todas las familias.</strong>
+        El planificador de cenas, las recetas infantiles, el control de alérgenos y la lista de la compra funcionan 100 % gratis en tu navegador.
+        Además, si quieres desbloquear la <strong>Inteligencia Artificial (Claude Haiku)</strong> para leer fotos del menú escolar automáticamente y generar menús y recetas a medida, tienes dos opciones:
       </p>
 
-      <div class="tier-grid">
-        <div class="tier-card">
-          <div>
-            <strong>☕ Café Solidario</strong>
-            <div class="tier-price">2 €</div>
-            <p style="font-size:0.84rem; color:var(--text-muted);">Ideal para probar el Modo IA todo un mes.</p>
-            <ul style="font-size:0.84rem; margin:0.6rem 0 0 1.1rem;">
-              <li>3 menús mensuales con IA</li>
-              <li>1 lectura de foto del menú del cole</li>
-              <li>10 recetas paso a paso a medida</li>
-            </ul>
+      <div class="donation-banner">
+        <div>
+          <span class="badge-status" style="display:inline-block; margin-bottom:0.5rem;">Opción A · Donativo para cubrir el gasto de mi IA</span>
+          <h3 style="font-size:1.25rem; color:var(--dark); margin-bottom:0.35rem;">☕ Invítame a un Ko-fi (mínimo 2 €)</h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.75rem;">
+            Con un simple café de <strong>mínimo 2 €</strong> ayudas a mantener el proyecto y cubres el coste de mi servidor de IA (Claude Haiku) para tu familia:
+          </p>
+          <ul style="font-size:0.86rem; margin:0 0 0.85rem 1.2rem; color:var(--text);">
+            <li>✨ <strong>Menús mensuales a medida con IA</strong> adaptados a los gustos de tus peques</li>
+            <li>📸 <strong>Lectura automática de la foto del menú del cole</strong> (OCR con IA Vision)</li>
+            <li>👩‍🍳 <strong>Recetas paso a paso personalizadas</strong> con IA en cualquier plato</li>
+            <li>🔒 <strong>Código personal de uso único (1 usuario/dispositivo):</strong> tu código queda vinculado a tu dispositivo al activarlo para que nadie más consuma tu cuota.</li>
+          </ul>
+          <div style="display:flex; flex-wrap:wrap; gap:0.6rem;">
+            <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" class="btn btn-primary">☕ Invitar a un Ko-fi (mín. 2 €)</a>
+            <a href="https://github.com/sponsors/ortisiano" target="_blank" rel="noopener" class="btn btn-outline">💖 GitHub Sponsors</a>
           </div>
-          <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" class="btn btn-outline">Apoyar con 2 € en Ko-fi</a>
         </div>
 
-        <div class="tier-card">
-          <div>
-            <strong>🚀 Pase Trimestral</strong>
-            <div class="tier-price">5 €</div>
-            <p style="font-size:0.84rem; color:var(--text-muted);">Cubre todo un trimestre escolar con IA.</p>
-            <ul style="font-size:0.84rem; margin:0.6rem 0 0 1.1rem;">
-              <li>10 menús mensuales con IA</li>
-              <li>4 lecturas de foto del menú escolar</li>
-              <li>35 recetas paso a paso a medida</li>
-            </ul>
-          </div>
-          <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" class="btn btn-outline">Apoyar con 5 € en Ko-fi</a>
-        </div>
-
-        <div class="tier-card featured">
-          <div>
-            <strong>🏆 Curso Escolar Completo</strong>
-            <div class="tier-price">10 € / año</div>
-            <p style="font-size:0.84rem; color:var(--text-muted);">Olvídate de pensar cenas en todo el curso.</p>
-            <ul style="font-size:0.84rem; margin:0.6rem 0 0 1.1rem;">
-              <li>25 menús mensuales con IA</li>
-              <li>12 lecturas de foto del menú escolar</li>
-              <li>80 recetas paso a paso a medida</li>
-            </ul>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:0.4rem;">
-            <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" class="btn btn-primary">Conseguir Pase 10 € (Ko-fi)</a>
-            <a href="https://github.com/sponsors/ortisiano" target="_blank" rel="noopener" class="btn btn-outline">GitHub Sponsors</a>
-          </div>
+        <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.1rem;">
+          <span class="badge-status" style="display:inline-block; margin-bottom:0.5rem; background:var(--primary-light); color:var(--primary-dark);">Opción B · Tu propia clave (BYOK)</span>
+          <h3 style="font-size:1.05rem; color:var(--dark); margin-bottom:0.35rem;">🔑 Usa tu propio Token de IA</h3>
+          <p style="font-size:0.84rem; color:var(--text-muted);">
+            Si ya tienes cuenta en Anthropic Claude, puedes pegar tu propio token (<code>sk-ant-...</code>) aquí abajo. Tu clave se guarda exclusivamente en la memoria de tu navegador y usa tu propia cuenta sin límites.
+          </p>
         </div>
       </div>
 
       <div class="grid-form" style="margin-top:1.25rem;">
         <div>
-          <label for="inpProCode">Código Pro o Código de tu AMPA</label>
-          <input type="text" id="inpProCode" placeholder="Ej: DK10-202706-A1B2-9F8E7D6C5B">
+          <label for="inpProCode">Código Personal de Café (1 usuario) o Código AMPA</label>
+          <input type="text" id="inpProCode" placeholder="Ej: DK02-202706-A1B2-9F8E7D6C5B">
+        </div>
+        <div>
+          <label for="inpByokKey">O tu propio Token de IA de Claude (Opcional · BYOK)</label>
+          <input type="password" id="inpByokKey" placeholder="sk-ant-api03-...">
         </div>
         <div>
           <label for="inpWorkerUrl">Servidor IA (Cloudflare Worker)</label>
           <input type="url" id="inpWorkerUrl" value="https://api.dinnerkids.es">
         </div>
-        <div>
-          <label for="inpByokKey">O usa tu propia API Key de Claude (Opcional · BYOK)</label>
-          <input type="password" id="inpByokKey" placeholder="sk-ant-api03-...">
-        </div>
       </div>
       <div class="btn-row">
-        <button class="btn btn-secondary" id="btnSavePro">🔑 Guardar y Verificar Código</button>
+        <button class="btn btn-secondary" id="btnSavePro">🔑 Activar y Vincular en este Dispositivo</button>
       </div>
     </div>
 
@@ -653,6 +690,11 @@
 
   const STORAGE_KEY = "dinnerkids_state_v1";
 
+  function generateDeviceId() {
+    if (crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "dkdev-" + Math.random().toString(36).slice(2, 12) + Date.now().toString(36);
+  }
+
   const now = new Date();
   const state = {
     year: now.getFullYear(),
@@ -667,6 +709,7 @@
     generatedMenu: {},
     checkedShopping: {},
     proCode: "",
+    deviceId: generateDeviceId(),
     byokKey: "",
     workerUrl: "https://api.dinnerkids.es",
     theme: localStorage.getItem("dk_theme") || "light"
@@ -686,6 +729,9 @@
       if (raw) {
         const parsed = JSON.parse(raw);
         Object.assign(state, parsed);
+      }
+      if (!state.deviceId) {
+        state.deviceId = generateDeviceId();
       }
     } catch {
       // Ignorar almacenamiento corrupto
@@ -880,6 +926,15 @@
     }
   }
 
+  function getAiHeaders() {
+    return {
+      "Content-Type": "application/json",
+      "X-DK-Code": state.proCode || "",
+      "X-DK-Device": state.deviceId || "",
+      "X-BYOK-Key": state.byokKey || ""
+    };
+  }
+
   function openRecipeModal(dateKey, item) {
     const backdrop = document.getElementById("recipeModalBackdrop");
     const title = document.getElementById("modalTitle");
@@ -898,10 +953,51 @@
       <p style="margin-bottom:0.6rem;"><strong>⏱️ Tiempo estimado:</strong> ${sanitizeField(item.tiempo || "15 min", 25)}</p>
       <p style="margin-bottom:0.6rem;"><strong>🥗 Guarnición:</strong> ${sanitizeField(item.guarnicion || "", 80)} · <strong>🍎 Postre:</strong> ${sanitizeField(item.postre || "", 60)}</p>
       <h4 style="margin:0.8rem 0 0.4rem;">🛒 Ingredientes (4 raciones):</h4>
-      <ul style="margin-left:1.2rem; margin-bottom:0.8rem;">${ingHtml}</ul>
+      <ul id="modalIngList" style="margin-left:1.2rem; margin-bottom:0.8rem;">${ingHtml}</ul>
       <h4 style="margin:0.8rem 0 0.4rem;">👩‍🍳 Preparación paso a paso:</h4>
-      <p style="background:var(--bg); padding:0.75rem; border-radius:10px; border:1px solid var(--border);">${sanitizeField(instructions, 400)}</p>
+      <div id="modalStepsBox" style="background:var(--bg); padding:0.75rem; border-radius:10px; border:1px solid var(--border); margin-bottom:0.85rem;">${sanitizeField(instructions, 400)}</div>
+      <button class="btn btn-secondary" id="btnAiRecipeModal" style="width:100%;">✨ Detallar receta paso a paso con IA (Modo Café / Token)</button>
     `;
+
+    document.getElementById("btnAiRecipeModal").addEventListener("click", async () => {
+      if (!state.proCode && !state.byokKey) {
+        backdrop.classList.remove("open");
+        document.querySelector('[data-tab="tab-pro"]').click();
+        showToast("☕ Activa tu Código de Café (desde 2 €) o tu propio Token en la pestaña 4");
+        return;
+      }
+      const btn = document.getElementById("btnAiRecipeModal");
+      btn.textContent = "⏳ Consultando al chef IA...";
+      btn.disabled = true;
+      try {
+        const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/recipe`, {
+          method: "POST",
+          headers: getAiHeaders(),
+          body: JSON.stringify({
+            plato: item.cena,
+            guarnicion: item.guarnicion || "",
+            allergens: state.excludedAllergens.join(", ")
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "No se pudo obtener la receta con IA.");
+        const r = data.recipe || {};
+        if (Array.isArray(r.ingredientes) && r.ingredientes.length > 0) {
+          document.getElementById("modalIngList").innerHTML = r.ingredientes.map((i) => `<li>${sanitizeField(i, 100)}</li>`).join("");
+        }
+        if (Array.isArray(r.pasos) && r.pasos.length > 0) {
+          const stepsHtml = r.pasos.map((p, idx) => `<div style="margin-bottom:0.35rem;"><strong>${idx + 1}.</strong> ${sanitizeField(p, 220)}</div>`).join("");
+          const tipHtml = r.truco_ninos ? `<div style="margin-top:0.5rem; color:var(--secondary); font-weight:600;">💡 Truco peques: ${sanitizeField(r.truco_ninos, 200)}</div>` : "";
+          document.getElementById("modalStepsBox").innerHTML = stepsHtml + tipHtml;
+        }
+        btn.textContent = "✅ Receta ampliada con IA";
+      } catch (err) {
+        showToast(`⚠️ ${err.message}`);
+        btn.textContent = "✨ Detallar receta paso a paso con IA (Modo Café / Token)";
+        btn.disabled = false;
+      }
+    });
+
     backdrop.classList.add("open");
   }
 
@@ -949,13 +1045,17 @@
 
   document.getElementById("btnGenLocal").addEventListener("click", triggerLocalGeneration);
   document.getElementById("quickGenerateBtn").addEventListener("click", triggerLocalGeneration);
+  document.getElementById("btnGoSupport").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelector('[data-tab="tab-pro"]').click();
+  });
 
-  // Generación con IA (Modo Pro / AMPA / BYOK)
+  // Generación con IA (Modo Café / AMPA / BYOK)
   document.getElementById("btnGenAi").addEventListener("click", async () => {
     readFormIntoState();
     if (!state.proCode && !state.byokKey) {
       document.querySelector('[data-tab="tab-pro"]').click();
-      showToast("⭐ Activa tu Código Pro (desde 2 €) o tu clave en la pestaña 4");
+      showToast("☕ Invita a un Ko-fi (mín. 2 €) o configura tu Token de IA en la pestaña 4");
       return;
     }
     const btn = document.getElementById("btnGenAi");
@@ -965,11 +1065,7 @@
     try {
       const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/menu`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-DK-Code": state.proCode || "",
-          "X-BYOK-Key": state.byokKey || ""
-        },
+        headers: getAiHeaders(),
         body: JSON.stringify({
           year: state.year,
           month: state.month,
@@ -992,6 +1088,56 @@
     } finally {
       btn.textContent = oldTxt;
       btn.disabled = false;
+    }
+  });
+
+  // Subida de foto del menú escolar para lectura OCR automática con Claude Vision
+  document.getElementById("inpOcrFile").addEventListener("change", async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    readFormIntoState();
+    if (!state.proCode && !state.byokKey) {
+      e.target.value = "";
+      document.querySelector('[data-tab="tab-pro"]').click();
+      showToast("📸 Para leer fotos con IA activa tu Código de Café (2 €) o tu Token en la pestaña 4");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("⚠️ La imagen supera los 5 MB. Elige una foto más ligera.");
+      return;
+    }
+    showToast("📸 Leyendo foto del menú escolar con IA...");
+    try {
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const resStr = String(reader.result || "");
+          resolve(resStr.includes(",") ? resStr.split(",")[1] : resStr);
+        };
+        reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
+        reader.readAsDataURL(file);
+      });
+      const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/ocr`, {
+        method: "POST",
+        headers: getAiHeaders(),
+        body: JSON.stringify({
+          base64,
+          mimeType: file.type || "image/jpeg",
+          year: state.year,
+          month: state.month
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "No se pudo extraer el menú escolar.");
+      state.schoolMenu = data.schoolMenu || {};
+      saveState();
+      renderSchoolInputs();
+      triggerLocalGeneration();
+      showToast(data.cached ? "⚡ Menú escolar extraído de caché instantánea" : "✅ Menú escolar leído con IA y cenas actualizadas");
+    } catch (err) {
+      showToast(`⚠️ ${err.message}`);
+    } finally {
+      e.target.value = "";
     }
   });
 
@@ -1063,7 +1209,31 @@
     state.byokKey = document.getElementById("inpByokKey").value.trim();
     state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://api.dinnerkids.es";
     saveState();
-    showToast("🔑 Configuración de Modo Pro guardada en tu navegador");
+
+    if (state.byokKey && !state.proCode) {
+      showToast("🔑 Token propio de IA guardado en tu navegador");
+      return;
+    }
+
+    if (state.proCode) {
+      try {
+        const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/verify-code`, {
+          method: "POST",
+          headers: getAiHeaders()
+        });
+        const data = await res.json();
+        if (!res.ok || !data.valid) {
+          showToast(`⚠️ ${data.error || "Código inválido o ya vinculado a otro dispositivo"}`);
+          return;
+        }
+        showToast(`✅ Código activado y vinculado a este dispositivo (${data.tier})`);
+      } catch {
+        showToast("🔑 Código guardado localmente (se verificará al conectar con el servidor IA)");
+      }
+      return;
+    }
+
+    showToast("ℹ️ Modo Gratis Local activo");
   });
 
   document.getElementById("btnExportData").addEventListener("click", () => {

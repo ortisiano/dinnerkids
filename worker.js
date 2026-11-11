@@ -36,7 +36,7 @@ function getCorsHeaders(origin) {
   return {
     "Access-Control-Allow-Origin": allowed,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, X-DK-Code, X-BYOK-Key",
+    "Access-Control-Allow-Headers": "Content-Type, X-DK-Code, X-DK-Device, X-BYOK-Key",
     "Access-Control-Max-Age": "86400",
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
     "X-Content-Type-Options": "nosniff",
@@ -139,6 +139,49 @@ export async function verifyProCode(rawCode, secret, nowDate = new Date()) {
     expiresYm: expYm,
     codeId: codeId.slice(0, 24)
   };
+}
+
+/**
+ * Vincula un Código Pro personal al dispositivo que lo activa por primera vez (Cloudflare KV).
+ * Evita que un mismo código de donativo (DK02, DK05, DK10) se comparta entre varios usuarios,
+ * sin almacenar ningún dato personal (solo un hash anónimo del token de dispositivo).
+ */
+export async function checkAndBindDevice(kv, codeInfo, rawDeviceId, clientIp = "127.0.0.1") {
+  if (!kv) {
+    return { allowed: true };
+  }
+  const maxDevices = codeInfo.tier.maxDevices || 1;
+  // Para códigos colectivos de colegio (AMPA) permitimos hasta maxDevices familias
+  const cleanDevice = String(rawDeviceId || "").trim();
+  const fingerprintSource = cleanDevice.length >= 8 ? `dev:${cleanDevice}` : `ip:${clientIp}`;
+  const deviceHash = (await sha256Hex(fingerprintSource)).slice(0, 20);
+
+  const key = `bind:${codeInfo.codeId}`;
+  let boundDevices = [];
+  try {
+    const stored = await kv.get(key, "json");
+    if (Array.isArray(stored)) {
+      boundDevices = stored;
+    }
+  } catch {
+    boundDevices = [];
+  }
+
+  if (boundDevices.includes(deviceHash)) {
+    return { allowed: true, deviceHash, boundCount: boundDevices.length, maxDevices };
+  }
+
+  if (boundDevices.length >= maxDevices) {
+    return {
+      allowed: false,
+      reason: "Este código personal ya está activado en otro dispositivo y es de uso individual (1 usuario). Si quieres usar la IA en tu dispositivo, apoya el proyecto con un café (2 €) o configura tu propio token de IA."
+    };
+  }
+
+  boundDevices.push(deviceHash);
+  // Guardar vinculación durante 400 días
+  await kv.put(key, JSON.stringify(boundDevices), { expirationTtl: 60 * 60 * 24 * 400 });
+  return { allowed: true, deviceHash, boundCount: boundDevices.length, maxDevices };
 }
 
 /**
@@ -252,18 +295,24 @@ export default {
     }
 
     const proCode = request.headers.get("X-DK-Code") || "";
+    const deviceId = request.headers.get("X-DK-Device") || "";
     const byokKey = request.headers.get("X-BYOK-Key") || "";
 
-    // Ruta 1: Verificar estado de un Código Pro / AMPA
+    // Ruta 1: Verificar y vincular estado de un Código Pro / AMPA al dispositivo actual
     if (url.pathname === "/api/verify-code" && request.method === "POST") {
       const check = await verifyProCode(proCode, env.PRO_CODE_SECRET);
       if (!check.valid) {
         return jsonResponse({ valid: false, error: check.reason }, 401, origin);
       }
+      const binding = await checkAndBindDevice(env.DK_KV, check, deviceId, clientIp);
+      if (!binding.allowed) {
+        return jsonResponse({ valid: false, error: binding.reason }, 403, origin);
+      }
       return jsonResponse({
         valid: true,
         tier: check.tier.name,
         expiresYm: check.expiresYm,
+        maxDevices: check.tier.maxDevices || 1,
         limits: {
           menusPerMonth: check.tier.menusPerMonth,
           ocrPerMonth: check.tier.ocrPerMonth,
@@ -272,7 +321,7 @@ export default {
       }, 200, origin);
     }
 
-    // Autenticación para endpoints IA: o bien Código Pro válido o bien BYOK del propio usuario
+    // Autenticación para endpoints IA: o bien Código Pro válido (vinculado a este dispositivo) o bien BYOK del propio usuario
     let activeApiKey = "";
     let codeInfo = null;
 
@@ -282,8 +331,12 @@ export default {
       const check = await verifyProCode(proCode, env.PRO_CODE_SECRET);
       if (!check.valid) {
         return jsonResponse({
-          error: "Necesitas un Código Pro activo (desde 2 € en GitHub Sponsors / Ko-fi) o configurar tu propia clave en Ajustes."
+          error: "Para usar la IA necesitas un Código de Café activo (donativo desde 2 € en Ko-fi) o configurar tu propio token de IA (sk-ant-...) en Ajustes."
         }, 401, origin);
+      }
+      const binding = await checkAndBindDevice(env.DK_KV, check, deviceId, clientIp);
+      if (!binding.allowed) {
+        return jsonResponse({ error: binding.reason }, 403, origin);
       }
       codeInfo = check;
       activeApiKey = env.ANTHROPIC_API_KEY;
