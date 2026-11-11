@@ -1,13 +1,15 @@
-name = "dinnerkids-api"
+name = "dinnerkids"
 main = "worker.js"
 compatibility_date = "2026-11-01"
 
+# Servir la web estática (PWA, index.html, recetas.json, sw.js) directamente desde el CDN de Cloudflare
+[assets]
+directory = "."
+
 # Espacio de claves gratuito en Cloudflare KV (sustituye a Qdrant + guarda cuotas mensuales)
-# Al crear el KV en Cloudflare (Workers & Pages -> KV -> Create namespace "DK_KV"),
-# pega aquí debajo el id que te dé Cloudflare:
-# [[kv_namespaces]]
-# binding = "DK_KV"
-# id = "PEGA_AQUI_EL_ID_DE_TU_KV"
+[[kv_namespaces]]
+binding = "DK_KV"
+id = "f7df8b5580d6489894db3014e0a96278"
 
 # Secretos que se configuran en el panel de Cloudflare (Workers -> Settings -> Variables and Secrets):
 # - ANTHROPIC_API_KEY : Tu clave de Claude Haiku (sk-ant-...)

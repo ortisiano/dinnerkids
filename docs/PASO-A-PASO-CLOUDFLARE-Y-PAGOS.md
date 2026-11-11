@@ -18,19 +18,22 @@ git push origin edge-pwa
 
 ---
 
-## Paso 1 · Publicar la Web gratis en Cloudflare Pages (con tu repositorio PRIVADO)
+## Paso 1 · Publicar la Web gratis en Cloudflare Pages
 
-Como tu repositorio `ortisiano/dinnerkids-private` es **privado**, usar **Cloudflare Pages** te permite publicar la web gratis sin hacer público tu código:
+Tu repositorio público **`ortisiano/dinnerkids`** ya tiene la versión definitiva en la rama **`main`**:
 
 1. Entra en tu panel de [Cloudflare Dashboard](https://dash.cloudflare.com/) → menú izquierdo **Workers & Pages**.
 2. Pulsa **Create** → pestaña **Pages** → **Connect to Git**.
-3. Elige tu repositorio **`ortisiano/dinnerkids-private`** y selecciona la rama **`edge-pwa`**.
+3. Elige tu repositorio **`ortisiano/dinnerkids`** y selecciona la rama de producción **`main`**.
 4. En **Build settings**:
    - *Framework preset*: `None`
    - *Build command*: *(déjalo vacío)*
-   - *Build output directory*: `/`
-5. Pulsa **Save and Deploy**.
-6. En la pestaña **Custom domains** de ese proyecto Pages, añade `dinnerkids.es` y `www.dinnerkids.es`. Cloudflare creará el registro DNS y el certificado SSL automáticamente.
+   - *Build output directory*: `/` (o `.`)
+5. Pulsa **Save and Deploy**. En unos 15 segundos verás el check verde y tu enlace temporal `https://dinnerkids.pages.dev`.
+6. En la pestaña **Custom domains** de ese proyecto Pages, añade:
+   - `dinnerkids.es`
+   - `www.dinnerkids.es`
+   Cloudflare creará los registros DNS y el certificado SSL gratis automáticamente.
 
 ---
 
