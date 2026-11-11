@@ -54,37 +54,56 @@
       z-index: 50;
       background: var(--card);
       border-bottom: 1px solid var(--border);
-      padding: 0.75rem 1.25rem;
+      padding: 0.65rem 1.25rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
       box-shadow: var(--shadow);
     }
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.6rem;
       font-weight: 800;
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       color: var(--primary);
       text-decoration: none;
     }
     .brand img {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
       object-fit: cover;
     }
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
+    }
+    .btn-sponsor {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border: 1px solid var(--primary);
+      border-radius: 99px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: transform 0.15s;
+    }
+    .btn-sponsor:hover {
+      transform: translateY(-1px);
     }
     .badge-status {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
-      padding: 0.3rem 0.7rem;
+      padding: 0.28rem 0.65rem;
       border-radius: 99px;
       background: var(--secondary-light);
       color: var(--secondary);
@@ -94,7 +113,7 @@
       border: 1px solid var(--border);
       color: var(--text);
       border-radius: 10px;
-      padding: 0.45rem 0.7rem;
+      padding: 0.4rem 0.65rem;
       cursor: pointer;
       font-size: 0.9rem;
     }
@@ -126,28 +145,43 @@
     }
     .tabs {
       display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.25rem;
-    }
-    .tab-btn {
-      flex: 1;
-      min-width: max-content;
-      padding: 0.7rem 1rem;
+      gap: 0.3rem;
+      background: var(--bg);
+      padding: 0.3rem;
       border-radius: 12px;
       border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.92rem;
+    }
+    .tab-btn {
+      padding: 0.45rem 0.85rem;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.86rem;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      color: var(--text);
     }
     .tab-btn.active {
       background: var(--primary);
       color: #fff;
-      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(255, 107, 53, 0.28);
+    }
+    .legal-banner {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.79rem;
+      color: var(--text-muted);
+      margin-top: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     .panel { display: none; }
     .panel.active { display: block; }
@@ -440,9 +474,19 @@
       .hero-banner .btn {
         width: 100%;
       }
-      /* En móvil ocultamos las pestañas superiores y activamos la barra fija inferior */
+      /* En móvil mantenemos también visible la barra de botones superior de un vistazo */
       .tabs {
-        display: none;
+        width: 100%;
+        order: 3;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.25rem;
+      }
+      .tab-btn {
+        min-width: 0;
+        padding: 0.45rem 0.25rem;
+        font-size: 0.76rem;
+        text-align: center;
       }
       .bottom-nav {
         position: fixed;
@@ -541,8 +585,15 @@
     <img src="assets/logo.png" alt="Logo DinnerKids" onerror="this.style.display='none'">
     <span>DinnerKids</span>
   </a>
+  <nav class="tabs" role="tablist" aria-label="Secciones principales">
+    <button class="tab-btn active" data-tab="tab-menu">📅 Cenas</button>
+    <button class="tab-btn" data-tab="tab-school">🏫 Cole</button>
+    <button class="tab-btn" data-tab="tab-shopping">🛒 Compra</button>
+    <button class="tab-btn" data-tab="tab-pro">✨ IA y Datos</button>
+  </nav>
   <div class="header-actions">
-    <span id="proBadge" class="badge-status">Modo Gratis · Local</span>
+    <span id="proBadge" class="badge-status">Gratis · Local</span>
+    <button id="headerSponsorBtn" class="btn-sponsor" title="Invitar a un café o configurar IA">❤ Apoyar</button>
     <button id="themeBtn" class="btn-icon" title="Cambiar tema claro/oscuro">🌓</button>
   </div>
 </header>
@@ -551,36 +602,29 @@
   <section class="hero-banner">
     <div>
       <h1>🍽️ ¿Qué cenan hoy los peques según el menú del cole?</h1>
-      <p>100 % Gratis para todo el mundo · Sin registro · Sin anuncios · Sin cookies · Tus datos no salen de tu móvil.</p>
+      <p>Proyecto ciudadano gratuito · Sin registro · Sin anuncios · Sin cookies · Tus datos no salen de tu dispositivo.</p>
     </div>
     <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
       <button class="btn btn-primary" id="quickGenerateBtn">⚡ Generar Cenas Ahora</button>
-      <a href="#como-funciona" class="btn btn-outline" id="btnGoSupport">☕ Apoyar / Modo IA</a>
+      <a href="#como-funciona" class="btn btn-outline" id="btnGoSupport">✨ Modo IA / Apoyar</a>
     </div>
   </section>
 
   <!-- BLOQUE INFORMATIVO DEL PROYECTO (VISIBLE EN EL FRONTAL) -->
   <section class="info-grid" aria-label="Cómo funciona DinnerKids">
     <article class="info-box">
-      <h3>🎁 1. Libre y Gratis para todos</h3>
+      <h3>🎁 Libre y Gratis para todos</h3>
       <p>Planifica el mes entero cruzando lo que comen en el colegio con nuestro recetario infantil equilibrado. Incluye control de alérgenos, recetas paso a paso y lista de la compra semanal a coste 0 €.</p>
     </article>
     <article class="info-box">
-      <h3>☕ 2. Invítame a un Ko-fi (mín. 2 €) y usa mi IA</h3>
-      <p>Si el proyecto te ayuda y haces un donativo de un café (mínimo 2 € para cubrir el gasto de mi IA Claude Haiku), desbloqueas la lectura automática de fotos del menú del cole y menús a medida con IA.</p>
+      <h3>☕ Invítame a un Ko-fi (mín. 2 €) y usa mi IA</h3>
+      <p>Si el proyecto te ayuda y haces un donativo voluntario de un café (mínimo 2 € para cubrir el gasto de mi IA Claude Haiku), activas la lectura automática de fotos del menú del cole y menús a medida con IA.</p>
     </article>
     <article class="info-box">
-      <h3>🔑 3. O configura tu propio Token de IA</h3>
-      <p>¿Tienes tu propia clave API de Anthropic Claude? Puedes configurarla directamente en la pestaña 4 para usar todas las funciones de IA por tu cuenta sin límites.</p>
+      <h3>🔑 O configura tu propio Token de IA</h3>
+      <p>¿Tienes tu propia clave API de Anthropic Claude? Puedes configurarla directamente en <strong>✨ IA y Datos</strong> para usar todas las funciones de IA por tu cuenta sin límites.</p>
     </article>
   </section>
-
-  <nav class="tabs" role="tablist">
-    <button class="tab-btn active" data-tab="tab-menu">📅 1. Mi Menú de Cenas</button>
-    <button class="tab-btn" data-tab="tab-school">🏫 2. Menú del Cole</button>
-    <button class="tab-btn" data-tab="tab-shopping">🛒 3. Lista de la Compra</button>
-    <button class="tab-btn" data-tab="tab-pro">☕ 4. Café Solidario (IA) y Privacidad</button>
-  </nav>
 
   <!-- TAB 1: MENÚ DE CENAS -->
   <section id="tab-menu" class="panel active">
@@ -659,6 +703,10 @@
         <span style="font-size:0.82rem; color:var(--text-muted);">Toca cualquier cena para ver la receta paso a paso</span>
       </div>
       <div id="calendarGrid" class="calendar-grid"></div>
+      <div class="legal-banner">
+        <span>ℹ️</span>
+        <span><strong>Aviso orientativo:</strong> Las sugerencias de cenas y alérgenos se generan de forma automática como ayuda de organización familiar y no sustituyen el consejo pediátrico ni la revisión del etiquetado real de cada producto (<a href="privacidad.html" style="color:var(--primary);">ver aviso legal</a>).</span>
+      </div>
     </div>
   </section>
 
@@ -800,10 +848,14 @@
 <div id="toast" class="toast"></div>
 
 <footer>
+  <p style="margin-bottom:0.35rem;">
+    <strong>DinnerKids</strong> · Herramienta abierta de organización familiar · Sin cookies · Sin rastreo · Datos 100 % en tu navegador
+  </p>
   <p>
-    <strong>DinnerKids</strong> · Planificador familiar de cenas escolares ·
-    <a href="privacidad.html">Privacidad y Aviso Legal (RGPD)</a> ·
-    <a href="https://github.com/sponsors/ortisiano" target="_blank" rel="noopener">Apoyar el proyecto</a>
+    Proyecto independiente sin ánimo comercial directo ·
+    <a href="privacidad.html">Privacidad RGPD y Exención de Responsabilidad</a> ·
+    <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener">❤ Invitar a un café (Ko-fi)</a> ·
+    <a href="https://github.com/sponsors/ortisiano" target="_blank" rel="noopener">GitHub Sponsors</a>
   </p>
 </footer>
 
@@ -815,15 +867,15 @@
   </button>
   <button class="bottom-nav-btn" data-tab="tab-school">
     <span class="nav-icon">🏫</span>
-    <span>Mi Cole</span>
+    <span>Cole</span>
   </button>
   <button class="bottom-nav-btn" data-tab="tab-shopping">
     <span class="nav-icon">🛒</span>
     <span>Compra</span>
   </button>
   <button class="bottom-nav-btn" data-tab="tab-pro">
-    <span class="nav-icon">☕</span>
-    <span>Café IA</span>
+    <span class="nav-icon">✨</span>
+    <span>IA y Datos</span>
   </button>
 </nav>
 
@@ -1204,6 +1256,9 @@
   document.getElementById("quickGenerateBtn").addEventListener("click", triggerLocalGeneration);
   document.getElementById("btnGoSupport").addEventListener("click", (e) => {
     e.preventDefault();
+    switchTab("tab-pro");
+  });
+  document.getElementById("headerSponsorBtn").addEventListener("click", () => {
     switchTab("tab-pro");
   });
 
