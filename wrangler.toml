@@ -6,11 +6,5 @@ compatibility_date = "2026-11-01"
 [assets]
 directory = "."
 
-# Espacio de claves gratuito en Cloudflare KV (sustituye a Qdrant + guarda cuotas mensuales)
-[[kv_namespaces]]
-binding = "DK_KV"
-id = "f7df8b5580d6489894db3014e0a96278"
-
-# Secretos que se configuran en el panel de Cloudflare (Workers -> Settings -> Variables and Secrets):
-# - ANTHROPIC_API_KEY : Tu clave de Claude Haiku (sk-ant-...)
-# - PRO_CODE_SECRET   : Una frase secreta larga tuya para firmar los códigos Pro (ej: DK10-...)
+# La memoria KV (DK_KV) y los secretos (ANTHROPIC_API_KEY, PRO_CODE_SECRET)
+# se configuran de forma segura y privada desde el panel de Cloudflare (Settings -> Bindings / Variables).
