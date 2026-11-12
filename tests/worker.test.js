@@ -229,6 +229,48 @@ test("Worker /api/recipe valida la entrada, genera y cachea la receta", async (t
   assert.equal(stub.calls, 1);
 });
 
+test("Worker /api/menu repara el mojibake de la respuesta de la IA (y también al servir desde caché)", async (t) => {
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () =>
+    // Simula a Claude reproduciendo la capa de texto mal codificada del PDF escolar:
+    // "limÃ³n" y "niÃ±o" llegan como escapes Unicode reales.
+    claudeJsonResponse({ "2026-11-03": { cena: "Pollo al lim\u00C3\u00B3n", guarnicion: "Pur\u00C3\u00A9 de calabac\u00C3\u00ADn", postre: "Yogur", tiempo: "15 min", nota: "Para el ni\u00C3\u00B1o" } })
+  );
+  t.after(() => stub.restore());
+  const { code } = await makeAiCode("DK02", "202812", "MOJI");
+  const env = aiEnv(kv);
+  const body = { year: 2026, month: 11, schoolMenu: {}, preferences: "" };
+
+  const res1 = await worker.fetch(aiRequest("/api/menu", code, body), env);
+  assert.equal(res1.status, 200);
+  const data1 = await res1.json();
+  assert.equal(data1.menu["2026-11-03"].cena, "Pollo al limón");
+  assert.equal(data1.menu["2026-11-03"].guarnicion, "Puré de calabacín");
+  assert.equal(data1.menu["2026-11-03"].nota, "Para el niño");
+  assert.ok(!JSON.stringify(data1).includes("\u00C3"), "La respuesta fresca no debe contener bytes de mojibake");
+
+  const res2 = await worker.fetch(aiRequest("/api/menu", code, body), env);
+  const data2 = await res2.json();
+  assert.equal(data2.cached, true);
+  assert.equal(data2.menu["2026-11-03"].cena, "Pollo al limón", "La caché también debe servir el texto reparado");
+});
+
+test("Worker /api/recipe repara el mojibake de la receta generada por la IA", async (t) => {
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () =>
+    claudeJsonResponse({ titulo: "Jud\u00C3\u00ADas verdes salteadas", tiempo: "12 min", ingredientes: ["Jud\u00C3\u00ADas", "Ajo"], pasos: ["Saltear"], truco_ninos: "Con jam\u00C3\u00B3n" })
+  );
+  t.after(() => stub.restore());
+  const { code } = await makeAiCode("DK02", "202812", "MOJR");
+
+  const res = await worker.fetch(aiRequest("/api/recipe", code, { plato: "Judías verdes", guarnicion: "", allergens: "" }), aiEnv(kv));
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.recipe.titulo, "Judías verdes salteadas");
+  assert.equal(data.recipe.truco_ninos, "Con jamón");
+  assert.ok(!JSON.stringify(data).includes("\u00C3"), "La receta no debe contener bytes de mojibake");
+});
+
 test("Worker /api/ocr normaliza el menú extraído con alérgenos detectados y rechaza imágenes enormes", async (t) => {
   const kv = createMockKv();
   const stub = stubClaudeFetch(async () =>

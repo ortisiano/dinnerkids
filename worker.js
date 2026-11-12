@@ -16,7 +16,8 @@ import {
   sanitizeField,
   sanitizePreferences,
   detectAllergensInText,
-  buildClaudeMenuPrompt
+  buildClaudeMenuPrompt,
+  fixMojibake
 } from "./logic.js";
 
 const ALLOWED_ORIGINS = new Set([
@@ -27,6 +28,27 @@ const ALLOWED_ORIGINS = new Set([
 
 const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5";
 const FALLBACK_CLAUDE_MODEL = "claude-3-5-haiku-20241022";
+
+/**
+ * Repara mojibake (Ã³, Ã±, limÃ³n...) en TODAS las cadenas de un JSON,
+ * sea cual sea su profundidad. Claude a veces reproduce la capa de texto
+ * mal codificada de los PDFs escolares aunque el prompt vaya limpio,
+ * así que el saneamiento se aplica también a la SALIDA de la IA.
+ * @param {*} value - Valor JSON (objeto, array, string o primitivo).
+ * @returns {*} - Misma estructura con las cadenas reparadas.
+ */
+function fixMojibakeDeep(value) {
+  if (typeof value === "string") return fixMojibake(value);
+  if (Array.isArray(value)) return value.map(fixMojibakeDeep);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const key of Object.keys(value)) {
+      out[key] = fixMojibakeDeep(value[key]);
+    }
+    return out;
+  }
+  return value;
+}
 
 function isAllowedOrigin(origin) {
   if (!origin) return false;
@@ -461,7 +483,7 @@ async function handleRequest(request, env) {
       if (env.DK_KV) {
         const cached = await env.DK_KV.get(cacheKey, "json");
         if (cached) {
-          return jsonResponse({ menu: cached, cached: true }, 200, origin);
+          return jsonResponse({ menu: fixMojibakeDeep(cached), cached: true }, 200, origin);
         }
       }
 
@@ -507,6 +529,8 @@ async function handleRequest(request, env) {
         return jsonResponse({ error: errMsg }, err.status === 401 ? 401 : 502, origin);
       }
 
+      menuData = fixMojibakeDeep(menuData);
+
       if (env.DK_KV && menuData && typeof menuData === "object") {
         await env.DK_KV.put(cacheKey, JSON.stringify(menuData), { expirationTtl: 60 * 60 * 24 * 35 });
       }
@@ -532,7 +556,7 @@ async function handleRequest(request, env) {
       const cacheKey = `cache:recipe:${await sha256Hex(`${plato}|${guarnicion}|${allergens}`)}`;
       if (env.DK_KV) {
         const cached = await env.DK_KV.get(cacheKey, "json");
-        if (cached) return jsonResponse({ recipe: cached, cached: true }, 200, origin);
+        if (cached) return jsonResponse({ recipe: fixMojibakeDeep(cached), cached: true }, 200, origin);
       }
 
       if (codeInfo) {
@@ -566,6 +590,8 @@ async function handleRequest(request, env) {
         }
         return jsonResponse({ error: errMsg }, err.status === 401 ? 401 : 502, origin);
       }
+
+      recipe = fixMojibakeDeep(recipe);
 
       if (env.DK_KV && recipe) {
         await env.DK_KV.put(cacheKey, JSON.stringify(recipe), { expirationTtl: 60 * 60 * 24 * 60 });
