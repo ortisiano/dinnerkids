@@ -280,3 +280,63 @@ test("Worker nunca filtra el secreto ni la clave en errores: /api/menu sin códi
   assert.ok(!body.includes(TEST_SECRET), "Nunca debe filtrar PRO_CODE_SECRET");
   assert.ok(!body.includes("sk-ant-api03-clave_de_pruebas"), "Nunca debe filtrar ANTHROPIC_API_KEY");
 });
+
+test("Worker gestiona CORS dinámico para cualquier puerto local y rechaza orígenes sospechosos", async () => {
+  const env = { PRO_CODE_SECRET: TEST_SECRET, DK_KV: createMockKv() };
+
+  // Puerto 5500 (Live Server)
+  const res5500 = await worker.fetch(new Request("https://api.dinnerkids.es/api/health", {
+    method: "OPTIONS",
+    headers: { Origin: "http://localhost:5500" }
+  }), env);
+  assert.equal(res5500.headers.get("Access-Control-Allow-Origin"), "http://localhost:5500");
+
+  // 127.0.0.1:3000
+  const res127 = await worker.fetch(new Request("https://api.dinnerkids.es/api/health", {
+    method: "OPTIONS",
+    headers: { Origin: "http://127.0.0.1:3000" }
+  }), env);
+  assert.equal(res127.headers.get("Access-Control-Allow-Origin"), "http://127.0.0.1:3000");
+
+  // file:// (Origin: null)
+  const resNull = await worker.fetch(new Request("https://api.dinnerkids.es/api/health", {
+    method: "OPTIONS",
+    headers: { Origin: "null" }
+  }), env);
+  assert.equal(resNull.headers.get("Access-Control-Allow-Origin"), "null");
+
+  // Origen no autorizado -> cae a dinnerkids.es
+  const resBad = await worker.fetch(new Request("https://api.dinnerkids.es/api/health", {
+    method: "OPTIONS",
+    headers: { Origin: "https://sitio-malicioso.com" }
+  }), env);
+  assert.equal(resBad.headers.get("Access-Control-Allow-Origin"), "https://dinnerkids.es");
+});
+
+test("Worker acepta token BYOK X-BYOK-Key para /api/menu sin necesitar código de pago", async (t) => {
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () => ({
+    ok: true,
+    status: 200,
+    json: async () => ({
+      content: [{ text: JSON.stringify({ "2026-11-01": { cena: "Tortilla francesa", guarnicion: "Tomate" } }) }]
+    })
+  }));
+  t.after(() => stub.restore());
+
+  const req = new Request("https://api.dinnerkids.es/api/menu", {
+    method: "POST",
+    headers: {
+      Origin: "http://localhost:5500",
+      "Content-Type": "application/json",
+      "X-BYOK-Key": "sk-ant-api03-usuario-token-propio-12345"
+    },
+    body: JSON.stringify({ year: 2026, month: 11, schoolMenu: {} })
+  });
+
+  const res = await worker.fetch(req, { PRO_CODE_SECRET: TEST_SECRET, DK_KV: kv });
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get("Access-Control-Allow-Origin"), "http://localhost:5500");
+  const data = await res.json();
+  assert.ok(data.menu["2026-11-01"], "Debe generar menú usando la clave BYOK sin requerir pago");
+});

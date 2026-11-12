@@ -22,15 +22,22 @@ import {
 const ALLOWED_ORIGINS = new Set([
   "https://dinnerkids.es",
   "https://www.dinnerkids.es",
-  "https://dinnerkids.pages.dev",
-  "http://localhost:8000",
-  "http://127.0.0.1:8000"
+  "https://dinnerkids.pages.dev"
 ]);
 
-const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5";
+const DEFAULT_CLAUDE_MODEL = "claude-3-5-haiku-20241022";
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (origin === "null") return true;
+  if (ALLOWED_ORIGINS.has(origin)) return true;
+  if (origin.endsWith(".dinnerkids.pages.dev") || origin.endsWith(".workers.dev")) return true;
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  return false;
+}
 
 function getCorsHeaders(origin) {
-  const allowed = ALLOWED_ORIGINS.has(origin) || (origin && origin.endsWith(".dinnerkids.pages.dev"))
+  const allowed = isAllowedOrigin(origin)
     ? origin
     : "https://dinnerkids.es";
   return {
@@ -265,6 +272,7 @@ async function checkIpRateLimit(kv, ip) {
  * Llama a la API de Anthropic Claude Haiku con protección RGPD.
  */
 async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096 }) {
+  const chosenModel = model || DEFAULT_CLAUDE_MODEL;
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -273,7 +281,7 @@ async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096
       "anthropic-version": "2023-06-01"
     },
     body: JSON.stringify({
-      model: model || DEFAULT_CLAUDE_MODEL,
+      model: chosenModel,
       max_tokens: maxTokens,
       system,
       messages
@@ -281,8 +289,17 @@ async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096
   });
 
   if (!res.ok) {
-    // No propagar el cuerpo del error del proveedor: puede filtrar detalles internos al cliente.
-    throw new Error(`Error del proveedor IA (HTTP ${res.status})`);
+    let errDetail = "";
+    try {
+      const errJson = await res.json();
+      errDetail = errJson?.error?.message || "";
+    } catch {
+      // ignore
+    }
+    const err = new Error(`Error del proveedor IA (HTTP ${res.status}): ${errDetail}`);
+    err.status = res.status;
+    err.detail = errDetail;
+    throw err;
   }
 
   const data = await res.json();
@@ -317,8 +334,41 @@ async function handleRequest(request, env) {
     const deviceId = request.headers.get("X-DK-Device") || "";
     const byokKey = request.headers.get("X-BYOK-Key") || "";
 
-    // Ruta 1: Verificar y vincular estado de un Código Pro / AMPA al dispositivo actual
+    // Ruta 1: Verificar y vincular estado de un Código Pro / AMPA al dispositivo actual (o validar token BYOK)
     if (url.pathname === "/api/verify-code" && request.method === "POST") {
+      if (byokKey && byokKey.startsWith("sk-ant-")) {
+        try {
+          const testRes = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": byokKey.trim(),
+              "anthropic-version": "2023-06-01"
+            },
+            body: JSON.stringify({
+              model: DEFAULT_CLAUDE_MODEL,
+              max_tokens: 10,
+              messages: [{ role: "user", content: "ping" }]
+            })
+          });
+          if (!testRes.ok) {
+            const errData = await testRes.json().catch(() => ({}));
+            const msg = errData?.error?.message || `HTTP ${testRes.status}`;
+            return jsonResponse({ valid: false, error: `Anthropic rechazó la clave: ${msg}` }, 401, origin);
+          }
+          return jsonResponse({
+            valid: true,
+            tier: "BYOK (Tu propio Token de Claude)",
+            byok: true,
+            expiresYm: "Sin caducidad",
+            maxDevices: 999,
+            limits: { menusPerMonth: 999, ocrPerMonth: 999, recipesPerMonth: 999 }
+          }, 200, origin);
+        } catch {
+          return jsonResponse({ valid: false, error: "No se pudo conectar con los servidores de Anthropic." }, 502, origin);
+        }
+      }
+
       const check = await verifyProCode(proCode, env.PRO_CODE_SECRET);
       if (!check.valid) {
         return jsonResponse({ valid: false, error: check.reason }, 401, origin);
@@ -418,9 +468,19 @@ async function handleRequest(request, env) {
           messages: [{ role: "user", content: userContent }],
           maxTokens: 4096
         });
-      } catch {
+      } catch (err) {
         await refundQuota(env.DK_KV, codeInfo, "menus");
-        return jsonResponse({ error: "La IA no respondió correctamente. Inténtalo de nuevo en unos segundos." }, 502, origin);
+        let errMsg = "La IA no respondió correctamente. Inténtalo de nuevo en unos segundos.";
+        if (!codeInfo && byokKey) {
+          if (err.status === 401) {
+            errMsg = "Tu clave de Anthropic (sk-ant-...) no es válida o ha sido revocada.";
+          } else if (err.status === 400 && (err.detail || "").toLowerCase().includes("credit")) {
+            errMsg = "Tu cuenta de Anthropic no tiene saldo suficiente en console.anthropic.com.";
+          } else if (err.detail) {
+            errMsg = `Error de Anthropic: ${sanitizeField(err.detail, 150)}`;
+          }
+        }
+        return jsonResponse({ error: errMsg }, err.status === 401 ? 401 : 502, origin);
       }
 
       if (env.DK_KV && menuData && typeof menuData === "object") {
@@ -468,9 +528,19 @@ async function handleRequest(request, env) {
           messages: [{ role: "user", content: user }],
           maxTokens: 1024
         });
-      } catch {
+      } catch (err) {
         await refundQuota(env.DK_KV, codeInfo, "recipes");
-        return jsonResponse({ error: "La IA no respondió correctamente. Inténtalo de nuevo en unos segundos." }, 502, origin);
+        let errMsg = "La IA no respondió correctamente. Inténtalo de nuevo en unos segundos.";
+        if (!codeInfo && byokKey) {
+          if (err.status === 401) {
+            errMsg = "Tu clave de Anthropic (sk-ant-...) no es válida o ha sido revocada.";
+          } else if (err.status === 400 && (err.detail || "").toLowerCase().includes("credit")) {
+            errMsg = "Tu cuenta de Anthropic no tiene saldo suficiente en console.anthropic.com.";
+          } else if (err.detail) {
+            errMsg = `Error de Anthropic: ${sanitizeField(err.detail, 150)}`;
+          }
+        }
+        return jsonResponse({ error: errMsg }, err.status === 401 ? 401 : 502, origin);
       }
 
       if (env.DK_KV && recipe) {
@@ -539,9 +609,19 @@ async function handleRequest(request, env) {
           ],
           maxTokens: 4096
         });
-      } catch {
+      } catch (err) {
         await refundQuota(env.DK_KV, codeInfo, "ocr");
-        return jsonResponse({ error: "La IA no pudo leer la imagen. Inténtalo de nuevo con una foto más nítida." }, 502, origin);
+        let errMsg = "La IA no pudo leer la imagen. Inténtalo de nuevo con una foto más nítida.";
+        if (!codeInfo && byokKey) {
+          if (err.status === 401) {
+            errMsg = "Tu clave de Anthropic (sk-ant-...) no es válida o ha sido revocada.";
+          } else if (err.status === 400 && (err.detail || "").toLowerCase().includes("credit")) {
+            errMsg = "Tu cuenta de Anthropic no tiene saldo suficiente en console.anthropic.com.";
+          } else if (err.detail) {
+            errMsg = `Error de Anthropic: ${sanitizeField(err.detail, 150)}`;
+          }
+        }
+        return jsonResponse({ error: errMsg }, err.status === 401 ? 401 : 502, origin);
       }
 
       const normalized = {};

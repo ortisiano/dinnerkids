@@ -62,3 +62,4 @@ Antes de abrir una Pull Request, asegúrate de que tu código cumple estas 4 reg
 2. **Doble filtro antes de la IA (`anonymizePII` + `B-02`):** Cualquier texto libre debe pasar por los sanitizadores de `logic.js`.
 3. **Cero dependencias externas en tiempo de ejecución:** No añadir librerías pesadas al frontend ni al Worker.
 4. **Tests en verde:** GitHub Actions ejecutará automáticamente `npm run check` y `npm test` en cada Pull Request.
+

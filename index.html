@@ -1788,17 +1788,28 @@
     });
 
     document.getElementById("btnSavePro").addEventListener("click", async () => {
-      state.proCode = document.getElementById("inpProCode").value.trim().toUpperCase();
-      state.byokKey = document.getElementById("inpByokKey").value.trim();
-      state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://api.dinnerkids.es";
-      saveState();
+      let codeVal = document.getElementById("inpProCode").value.trim();
+      let keyVal = document.getElementById("inpByokKey").value.trim();
 
-      if (state.byokKey && !state.proCode) {
-        showToast("🔑 Token propio de IA guardado en tu navegador");
-        return;
+      // Si el usuario pegó su token sk-ant en la casilla del código:
+      if (codeVal.toLowerCase().startsWith("sk-ant-")) {
+        keyVal = codeVal;
+        codeVal = "";
+        document.getElementById("inpProCode").value = "";
+        document.getElementById("inpByokKey").value = keyVal;
       }
 
-      if (state.proCode) {
+      state.proCode = codeVal.toUpperCase();
+      state.byokKey = keyVal;
+      state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://api.dinnerkids.es";
+      saveState();
+      updateProBadge();
+
+      if (state.byokKey || state.proCode) {
+        const btn = document.getElementById("btnSavePro");
+        const oldTxt = btn.textContent;
+        btn.textContent = "⏳ Verificando...";
+        btn.disabled = true;
         try {
           const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/verify-code`, {
             method: "POST",
@@ -1806,12 +1817,23 @@
           });
           const data = await res.json();
           if (!res.ok || !data.valid) {
-            showToast(`⚠️ ${data.error || "Código inválido o ya vinculado a otro dispositivo"}`);
+            showToast(`⚠️ ${data.error || "Código o clave inválida"}`);
             return;
           }
-          showToast(`✅ Código activado y vinculado a este dispositivo (${data.tier})`);
+          if (data.byok) {
+            showToast("✅ Token de Claude verificado con éxito");
+          } else {
+            showToast(`✅ Código activado y vinculado a este dispositivo (${data.tier})`);
+          }
         } catch {
-          showToast("🔑 Código guardado localmente (se verificará al conectar con el servidor IA)");
+          if (state.byokKey) {
+            showToast("🔑 Token guardado en tu navegador (se verificará al generar menú)");
+          } else {
+            showToast("🔑 Código guardado localmente (se verificará al conectar con el servidor IA)");
+          }
+        } finally {
+          btn.textContent = oldTxt;
+          btn.disabled = false;
         }
         return;
       }
