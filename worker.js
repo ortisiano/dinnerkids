@@ -204,7 +204,7 @@ export async function checkAndBindDevice(kv, codeInfo, rawDeviceId, clientIp = "
   if (boundDevices.length >= maxDevices) {
     return {
       allowed: false,
-      reason: "Este código personal ya está activado en otro dispositivo y es de uso individual (1 usuario). Si quieres usar la IA en tu dispositivo, apoya el proyecto con un café (2 €) o configura tu propio token de IA."
+      reason: "Este código personal ya está activado en otro dispositivo y es de uso individual (1 usuario). Si quieres usar la IA en tu dispositivo, apoya el proyecto con un café o configura tu propio token de IA."
     };
   }
 
@@ -446,7 +446,7 @@ async function handleRequest(request, env) {
       const check = await verifyProCode(proCode, env.PRO_CODE_SECRET);
       if (!check.valid) {
         return jsonResponse({
-          error: "Para usar la IA necesitas un Código de Café activo (donativo desde 2 € en Ko-fi) o configurar tu propio token de IA (sk-ant-...) en Ajustes."
+          error: "Para usar la IA necesitas un Código de Café activo (donativo en Ko-fi) o configurar tu propio token de IA (sk-ant-...) en Ajustes."
         }, 401, origin);
       }
       const binding = await checkAndBindDevice(env.DK_KV, check, deviceId, clientIp);

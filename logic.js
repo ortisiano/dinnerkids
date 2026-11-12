@@ -47,7 +47,7 @@ export const MONTH_NAMES_ES = [
 export const TIER_LIMITS = {
   DK02: {
     codePrefix: "DK02",
-    name: "Café Solidario (desde 2 €)",
+    name: "Café Solidario",
     priceEur: 2,
     menusPerMonth: 8,
     ocrPerMonth: 3,
