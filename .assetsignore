@@ -18,7 +18,9 @@ README.md
 tests/
 tools/
 package.json
+package-lock.json
 wrangler.toml
+CONTRIBUTING.md
 
 # Entorno local y dependencias
 node_modules/

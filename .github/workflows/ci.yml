@@ -1,0 +1,29 @@
+name: CI · Check & Tests
+
+on:
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Sintaxis y Tests (Node 20)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Comprobar sintaxis JS (npm run check)
+        run: npm run check
+
+      - name: Ejecutar tests automatizados (npm test)
+        run: npm test

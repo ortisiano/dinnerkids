@@ -23,7 +23,10 @@ Aplicación web progresiva (PWA) en HTML + JavaScript puro (`index.html`, `logic
 2. **Privacidad RGPD por diseño:** Nunca almacenar nombres de niños, correos ni alergias en bases de datos del servidor. Todo el estado familiar vive en el `localStorage` del dispositivo del usuario.
 3. **Doble filtro antes de la IA (`anonymizePII` + `B-02`):** Todo texto libre debe pasar por `sanitizePreferences()` / `sanitizeField()` antes de enviarse a Anthropic Claude, eliminando emails, teléfonos, DNI/NIE, IBAN, direcciones y patrones de *Prompt Injection*.
 4. **Cero dependencias externas en producción:** No añadir paquetes `npm` en tiempo de ejecución.
-5. **Verificación obligatoria antes de cada commit:**
+5. **Flujo de ramas obligatorio (`development` → PR → `main`):**
+   - Todo el trabajo y commits diarios se realizan en la rama **`development`**.
+   - La rama **`main`** es exclusivamente para producción (`dinnerkids.es`) y solo se actualiza mediante **Pull Request (PR)** desde `development` con la aprobación explícita del usuario (`@ortisiano`).
+6. **Verificación obligatoria antes de cada commit / PR:**
    ```bash
    npm run check
    npm test
