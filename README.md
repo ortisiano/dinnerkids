@@ -36,7 +36,7 @@
 - **📲 Compartir el menú del cole por WhatsApp:** un padre o madre lo carga y el enlace `#cole=...` (sin datos personales) lo tiene listo en un toque para toda la clase.
 - **📸 Lectura automática del menú con IA (foto o PDF):** sube la foto o el PDF que manda el AMPA y Claude Vision lo convierte en menú cargado, con alérgenos detectados.
 - **🛒 Lista de la compra semanal automática:** agrupada por semana o mes, para tachar en el supermercado y copiar a WhatsApp.
-- **☕ Modo IA Pro opcional o tu propio Token (BYOK):** DinnerKids es libre y gratuito para todo el mundo. La IA integrada (menús a medida, recetas personalizadas y lectura del menú) se financia con [Ko-fi](https://ko-fi.com/ortisiano) o con tu propia clave `sk-ant-...` guardada solo en tu navegador.
+- **☕ Modo IA Pro opcional o tu propio Token (BYOK):** DinnerKids es libre y gratuito para todo el mundo. La IA integrada (menús a medida, recetas personalizadas y lectura del menú) se financia con [Ko-fi](https://ko-fi.com/dinnerkids) o con tu propia clave `sk-ant-...` guardada solo en tu navegador.
 
 ---
 
@@ -74,7 +74,7 @@ PRO_CODE_SECRET="tu_secreto" npm run gen-code -- DK02 202706    # Generar 1 cód
 Es gratuito y abierto. Si te ayuda en tu día a día y quieres apoyar que siga activo:
 
 <p>
-  <a href="https://ko-fi.com/ortisiano"><img src="https://img.shields.io/badge/Ko--fi-Invitar_a_un_caf%C3%A9-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi"></a>&nbsp;&nbsp;
+  <a href="https://ko-fi.com/dinnerkids"><img src="https://img.shields.io/badge/Ko--fi-Invitar_a_un_caf%C3%A9-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi"></a>&nbsp;&nbsp;
 </p>
 
 <sub>Hecho con ♥ por <a href="https://github.com/ortisiano">@ortisiano</a> · Sin registros · Sin rastreadores · Tus datos se quedan en tu dispositivo</sub>
