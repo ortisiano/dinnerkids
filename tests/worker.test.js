@@ -255,6 +255,33 @@ test("Worker /api/ocr normaliza el menú extraído con alérgenos detectados y r
   assert.equal(bigRes.status, 400);
 });
 
+test("Worker /api/ocr acepta PDF del menú (bloque document) y rechaza formatos no soportados", async (t) => {
+  const kv = createMockKv();
+  let seenBody = null;
+  const stub = stubClaudeFetch(async (url, opts) => {
+    if (String(url).includes("anthropic.com")) seenBody = JSON.parse(opts.body);
+    return claudeJsonResponse({ "2026-11-03": { primero: "Lentejas", segundo: "Pollo al horno", postre: "Yogur" } });
+  });
+  t.after(() => stub.restore());
+  const { code } = await makeAiCode("DK02", "202812", "PDFX");
+  const env = aiEnv(kv);
+
+  // PDF válido: Claude recibe un bloque `document`, no `image`
+  const pdfRes = await worker.fetch(aiRequest("/api/ocr", code, { base64: "JVBERi0=", mimeType: "application/pdf", year: 2026, month: 11 }), env);
+  assert.equal(pdfRes.status, 200);
+  const block = seenBody.messages[0].content[0];
+  assert.equal(block.type, "document", "Los PDF deben enviarse a Claude como bloque document");
+  assert.equal(block.source.media_type, "application/pdf");
+  const pdfData = await pdfRes.json();
+  assert.ok(pdfData.schoolMenu["2026-11-03"], "Debe extraer el menú del PDF");
+
+  // Formato no soportado: 400 sin llamar a la IA
+  const callsAntes = stub.calls;
+  const badRes = await worker.fetch(aiRequest("/api/ocr", code, { base64: "aGk=", mimeType: "application/x-msdownload", year: 2026, month: 11 }), env);
+  assert.equal(badRes.status, 400);
+  assert.equal(stub.calls, callsAntes, "Un formato rechazado no debe consumir llamada a la IA ni cuota");
+});
+
 test("Worker aplica rate limit por IP: la petición 21 en un minuto recibe 429", async () => {
   const kv = createMockKv();
   const env = { PRO_CODE_SECRET: TEST_SECRET, DK_KV: kv };

@@ -578,8 +578,15 @@ async function handleRequest(request, env) {
       const year = Number(body.year) || new Date().getUTCFullYear();
       const month = Number(body.month) || (new Date().getUTCMonth() + 1);
 
+      // Formatos aceptados: fotos (las que soporta Claude Vision) y PDF del menú que suben los AMPAs.
+      const IMAGE_MIMES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+      const isPdf = mimeType === "application/pdf";
+      if (!IMAGE_MIMES.has(mimeType) && !isPdf) {
+        return jsonResponse({ error: "Formato no soportado. Sube una foto (JPG, PNG o WebP) o el PDF del menú." }, 400, origin);
+      }
+
       if (!base64Data || base64Data.length > 7_000_000) {
-        return jsonResponse({ error: "Imagen vacía o superior a 5 MB." }, 400, origin);
+        return jsonResponse({ error: "Archivo vacío o superior a 5 MB. Reduce el tamaño e inténtalo de nuevo." }, 400, origin);
       }
 
       const imgHash = await sha256Hex(`${year}-${month}:${base64Data}`);
@@ -596,7 +603,11 @@ async function handleRequest(request, env) {
         if (!quota.allowed) return jsonResponse({ error: quota.reason }, 429, origin);
       }
 
-      const system = "Extrae el menú escolar mensual de la imagen y devuelve ÚNICAMENTE un JSON válido con formato: {\"YYYY-MM-DD\": {\"primero\":\"...\",\"segundo\":\"...\",\"postre\":\"...\",\"menu\":\"...\"}}. No incluyas ningún nombre propio ni dato personal.";
+      const system = `Extrae el menú escolar mensual del ${isPdf ? "PDF" : "imagen"} y devuelve ÚNICAMENTE un JSON válido con formato: {"YYYY-MM-DD": {"primero":"...","segundo":"...","postre":"...","menu":"..."}}. No incluyas ningún nombre propio ni dato personal.`;
+      // Claude Vision acepta imágenes (bloque `image`) y PDFs de forma nativa (bloque `document`).
+      const visionBlock = isPdf
+        ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: base64Data } }
+        : { type: "image", source: { type: "base64", media_type: mimeType, data: base64Data } };
       let rawExtracted;
       try {
         rawExtracted = await callClaudeApi({
@@ -607,14 +618,7 @@ async function handleRequest(request, env) {
             {
               role: "user",
               content: [
-                {
-                  type: "image",
-                  source: {
-                    type: "base64",
-                    media_type: mimeType,
-                    data: base64Data
-                  }
-                },
+                visionBlock,
                 {
                   type: "text",
                   text: `Extrae los almuerzos de los días lectivos del mes ${month}/${year} en JSON.`
@@ -626,7 +630,7 @@ async function handleRequest(request, env) {
         });
       } catch (err) {
         await refundQuota(env.DK_KV, codeInfo, "ocr");
-        let errMsg = "La IA no pudo leer la imagen. Inténtalo de nuevo con una foto más nítida.";
+        let errMsg = `La IA no pudo leer el ${isPdf ? "PDF" : "imagen"}. Inténtalo de nuevo con un archivo más nítido.`;
         if (!codeInfo && byokKey) {
           if (err.status === 401) {
             errMsg = "Tu clave de Anthropic (sk-ant-...) no es válida o ha sido revocada.";

@@ -878,8 +878,8 @@
             <input type="text" id="inpSchoolName" placeholder="Ej: CEIP San Isidro">
           </div>
           <div>
-            <label for="inpOcrFile">📸 O sube una foto del menú escolar (Lectura automática con IA)</label>
-            <input type="file" id="inpOcrFile" accept="image/png,image/jpeg,image/webp">
+            <label for="inpOcrFile">📸 O sube una foto o el PDF del menú escolar (Lectura automática con IA)</label>
+            <input type="file" id="inpOcrFile" accept="image/png,image/jpeg,image/webp,application/pdf">
           </div>
         </div>
 
@@ -943,7 +943,7 @@
             </p>
             <ul style="font-size:0.86rem; margin:0 0 0.85rem 1.2rem; color:var(--text);">
               <li>✨ <strong>Menús mensuales a medida con IA</strong> adaptados a los gustos de tus peques</li>
-              <li>📸 <strong>Lectura automática de la foto del menú del cole</strong> (OCR con IA Vision)</li>
+              <li>📸 <strong>Lectura automática de la foto o PDF del menú del cole</strong> (OCR con IA Vision)</li>
               <li>👩‍🍳 <strong>Recetas paso a paso personalizadas</strong> con IA en cualquier plato</li>
               <li>🔒 <strong>Código personal de uso único (1 usuario/dispositivo):</strong> tu código queda vinculado a
                 tu dispositivo al activarlo para que nadie más consuma tu cuota.</li>
@@ -1688,10 +1688,10 @@
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        showToast("⚠️ La imagen supera los 5 MB. Elige una foto más ligera.");
+        showToast("⚠️ El archivo supera los 5 MB. Elige una foto o PDF más ligero.");
         return;
       }
-      showToast("📸 Leyendo foto del menú escolar con IA...");
+      showToast("📸 Leyendo menú escolar con IA...");
       try {
         const base64 = await new Promise((resolve, reject) => {
           const reader = new FileReader();
