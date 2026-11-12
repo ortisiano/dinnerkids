@@ -1,0 +1,37 @@
+name: Deploy a producción (release)
+
+# Producción SOLO se despliega al publicar una Release en GitHub,
+# nunca por push directo (ver AGENTS.md: main solo vía PR + release).
+# Requisito: el workflow debe existir en la rama por defecto (main) para
+# que el evento `release` lo dispare; llega a main mediante la PR desde development.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Verificar y desplegar Worker a Cloudflare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del tag de la release
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Comprobar sintaxis y tests antes de desplegar
+        run: |
+          npm run check
+          npm test
+
+      - name: Desplegar Worker y assets con wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ba8eb7650cbe11e4011cbbaedb208c8e
