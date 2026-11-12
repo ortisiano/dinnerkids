@@ -25,7 +25,8 @@ const ALLOWED_ORIGINS = new Set([
   "https://dinnerkids.pages.dev"
 ]);
 
-const DEFAULT_CLAUDE_MODEL = "claude-3-5-haiku-20241022";
+const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5";
+const FALLBACK_CLAUDE_MODEL = "claude-3-5-haiku-20241022";
 
 function isAllowedOrigin(origin) {
   if (!origin) return false;
@@ -272,21 +273,35 @@ async function checkIpRateLimit(kv, ip) {
  * Llama a la API de Anthropic Claude Haiku con protección RGPD.
  */
 async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096 }) {
-  const chosenModel = model || DEFAULT_CLAUDE_MODEL;
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01"
-    },
-    body: JSON.stringify({
-      model: chosenModel,
-      max_tokens: maxTokens,
-      system,
-      messages
-    })
-  });
+  const primaryModel = model || DEFAULT_CLAUDE_MODEL;
+
+  async function postMessages(selectedModel) {
+    return await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01"
+      },
+      body: JSON.stringify({
+        model: selectedModel,
+        max_tokens: maxTokens,
+        system,
+        messages
+      })
+    });
+  }
+
+  let res = await postMessages(primaryModel);
+
+  // Si la cuenta de Anthropic no tiene acceso al modelo 4.5, reintentar con el fallback 3.5
+  if (!res.ok && (res.status === 400 || res.status === 404) && primaryModel === DEFAULT_CLAUDE_MODEL) {
+    const checkErr = await res.clone().json().catch(() => ({}));
+    const msg = (checkErr?.error?.message || "").toLowerCase();
+    if (msg.includes("model") || msg.includes("not found")) {
+      res = await postMessages(FALLBACK_CLAUDE_MODEL);
+    }
+  }
 
   if (!res.ok) {
     let errDetail = "";
