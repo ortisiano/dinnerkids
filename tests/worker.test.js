@@ -425,6 +425,46 @@ test("Worker /api/ocr normaliza el menú extraído con alérgenos detectados y r
   assert.equal(bigRes.status, 400);
 });
 
+test("Worker /api/ocr: la nota de guarnición en 'menu' no pisa el menú completo", async (t) => {
+  // Caso real del PDF de Salvador Dalí: Claude devuelve los platos en
+  // primero/segundo/postre y la guarnición/pan en "menu". El campo "menu"
+  // normalizado debe ser el join de platos; si un día solo trae "menu"
+  // (sin platos sueltos), se conserva tal cual.
+  const kv = createMockKv();
+  const stub = stubClaudeFetch(async () =>
+    claudeJsonResponse({
+      "2026-11-03": {
+        primero: "Arroz a la milanesa",
+        segundo: "Huevos cocidos con bechamel",
+        postre: "Fruta",
+        menu: "Con lechuga y zanahoria rallada, pan integral"
+      },
+      "2026-11-04": { menu: "Lentejas estofadas con chorizo / Naranja" }
+    })
+  );
+  t.after(() => stub.restore());
+  const { code } = await makeAiCode("DK02", "202812", "GUAR");
+  const env = aiEnv(kv);
+
+  const res = await worker.fetch(aiRequest("/api/ocr", code, { base64: "aGk=", mimeType: "application/pdf", year: 2026, month: 11 }), env);
+  assert.equal(res.status, 200);
+  const data = await res.json();
+
+  const conPlatos = data.schoolMenu["2026-11-03"];
+  assert.ok(conPlatos, "Debe normalizar el día con platos");
+  assert.equal(conPlatos.menu, "Arroz a la milanesa - Huevos cocidos con bechamel - Fruta",
+    "menu debe ser el join de platos, no la nota de guarnición");
+  assert.equal(conPlatos.primero, "Arroz a la milanesa");
+  assert.ok(!conPlatos.menu.includes("zanahoria"), "La guarnición no debe ocupar el campo menu");
+
+  const soloMenu = data.schoolMenu["2026-11-04"];
+  assert.ok(soloMenu, "Debe normalizar el día que solo trae menu");
+  // El sanitizador B-02 no admite "/", así que la barra de la IA se pierde por diseño;
+  // lo importante es que el menú completo se conserva y no queda vacío.
+  assert.equal(soloMenu.menu, "Lentejas estofadas con chorizo Naranja",
+    "Sin platos sueltos, menu se conserva saneado tal como lo devolvió la IA");
+});
+
 test("Worker /api/ocr acepta PDF del menú (bloque document) y rechaza formatos no soportados", async (t) => {
   const kv = createMockKv();
   let seenBody = null;

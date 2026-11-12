@@ -782,7 +782,10 @@ async function handleRequest(request, env) {
         const primero = sanitizeField(val?.primero || "", 120);
         const segundo = sanitizeField(val?.segundo || "", 120);
         const postre = sanitizeField(val?.postre || "", 80);
-        const menuTxt = sanitizeField(val?.menu || [primero, segundo, postre].filter(Boolean).join(" / "), 220);
+        // El campo "menu" que devuelve la IA suele ser la nota de guarnición/pan del PDF,
+        // no el menú completo: solo lo usamos como fallback si no hay platos sueltos.
+        const platosJoin = [primero, segundo, postre].filter(Boolean).join(" - ");
+        const menuTxt = sanitizeField((primero || segundo || postre) ? platosJoin : (val?.menu || platosJoin), 220);
         const alergenos = detectAllergensInText(`${primero} ${segundo} ${postre} ${menuTxt}`);
         normalized[coercedKey] = { primero, segundo, postre, menu: menuTxt, alergenos };
       }

@@ -1259,7 +1259,7 @@
 
         const schoolEntry = state.schoolMenu[dateKey];
         const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
-          ? (schoolEntry.menu || schoolEntry.primero || "")
+          ? ([schoolEntry.primero, schoolEntry.segundo, schoolEntry.postre].filter(Boolean).join(" · ") || schoolEntry.menu || "")
           : String(schoolEntry || item.almuerzoCole || "");
 
         if (lunchTxt) {
@@ -1309,7 +1309,7 @@
 
       const existing = state.schoolMenu[dateKey];
       const currentVal = typeof existing === "object" && existing !== null
-        ? (existing.menu || [existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / "))
+        ? ([existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / ") || existing.menu)
         : String(existing || "");
 
       title.textContent = `🏫 Menú del Cole · ${dayLabel}`;
@@ -1385,7 +1385,7 @@
         const dateKey = `${state.year}-${String(state.month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         const existing = state.schoolMenu[dateKey];
         const val = typeof existing === "object" && existing !== null
-          ? (existing.menu || [existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / "))
+          ? ([existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / ") || existing.menu)
           : String(existing || "");
         const dayLabel = `${WEEKDAY_NAMES_ES[dow]} ${day}/${state.month}`;
 
@@ -1459,7 +1459,7 @@
       const instructions = item.instrucciones || localRecipe?.instructions || "Cocinar a fuego medio con aceite de oliva virgen extra.";
       const schoolEntry = state.schoolMenu[dateKey];
       const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
-        ? (schoolEntry.menu || schoolEntry.primero || "")
+        ? ([schoolEntry.primero, schoolEntry.segundo, schoolEntry.postre].filter(Boolean).join(" · ") || schoolEntry.menu || "")
         : String(schoolEntry || item.almuerzoCole || "");
 
       body.innerHTML = `
