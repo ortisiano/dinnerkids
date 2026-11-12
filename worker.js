@@ -275,14 +275,23 @@ async function checkIpRateLimit(kv, ip) {
 async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096 }) {
   const primaryModel = model || DEFAULT_CLAUDE_MODEL;
 
+  const hasDocument = messages?.some((m) =>
+    Array.isArray(m?.content) && m.content.some((c) => c?.type === "document")
+  );
+
   async function postMessages(selectedModel) {
+    const headers = {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01"
+    };
+    if (hasDocument) {
+      headers["anthropic-beta"] = "pdfs-2024-09-25";
+    }
+
     return await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01"
-      },
+      headers,
       body: JSON.stringify({
         model: selectedModel,
         max_tokens: maxTokens,
@@ -646,12 +655,20 @@ async function handleRequest(request, env) {
       const normalized = {};
       for (const [dateKey, val] of Object.entries(rawExtracted || {})) {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) continue;
+        // Coerción al mes solicitado: los PDF del cole no siempre indican el año y la IA
+        // puede alucinarlo (visto en producción: menú nov-2026 extraído como 2024). Nos
+        // quedamos con el DÍA que vio la IA dentro del mes/año que pidió la app, validando
+        // que el día exista en ese mes (descarta claves absurdas como 30 de febrero).
+        const day = Number(dateKey.slice(8, 10));
+        const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+        if (!Number.isInteger(day) || day < 1 || day > daysInMonth) continue;
+        const coercedKey = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         const primero = sanitizeField(val?.primero || "", 120);
         const segundo = sanitizeField(val?.segundo || "", 120);
         const postre = sanitizeField(val?.postre || "", 80);
         const menuTxt = sanitizeField(val?.menu || [primero, segundo, postre].filter(Boolean).join(" / "), 220);
         const alergenos = detectAllergensInText(`${primero} ${segundo} ${postre} ${menuTxt}`);
-        normalized[dateKey] = { primero, segundo, postre, menu: menuTxt, alergenos };
+        normalized[coercedKey] = { primero, segundo, postre, menu: menuTxt, alergenos };
       }
 
       if (env.DK_KV && Object.keys(normalized).length > 0) {

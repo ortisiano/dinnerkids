@@ -24,7 +24,9 @@ CONTRIBUTING.md
 
 # Entorno local y dependencias
 node_modules/
+.wrangler/
 .env
 .env.*
 .dev.vars
+.dev.vars.*
 *.local

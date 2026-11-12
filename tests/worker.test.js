@@ -68,7 +68,7 @@ test("checkAndBindDevice bloquea un código personal DK02 al primer dispositivo 
 test("Worker responde /api/health y verifica /api/verify-code vinculando dispositivo", async () => {
   const kv = createMockKv();
   const env = { PRO_CODE_SECRET: TEST_SECRET, DK_KV: kv };
-  const healthReq = new Request("https://api.dinnerkids.es/api/health", {
+  const healthReq = new Request("https://dinnerkids.es/api/health", {
     method: "GET",
     headers: { Origin: "https://dinnerkids.es" }
   });
@@ -78,7 +78,7 @@ test("Worker responde /api/health y verifica /api/verify-code vinculando disposi
   assert.equal(healthRes.headers.get("X-Frame-Options"), "DENY");
 
   const code = await makeTestCode("DK02", "202812", "F00D");
-  const verifyReq1 = new Request("https://api.dinnerkids.es/api/verify-code", {
+  const verifyReq1 = new Request("https://dinnerkids.es/api/verify-code", {
     method: "POST",
     headers: {
       Origin: "https://dinnerkids.es",
@@ -93,7 +93,7 @@ test("Worker responde /api/health y verifica /api/verify-code vinculando disposi
   assert.equal(body1.limits.menusPerMonth, 8);
 
   // Si se pasa el código a un segundo móvil distinto, el Worker responde 403
-  const verifyReq2 = new Request("https://api.dinnerkids.es/api/verify-code", {
+  const verifyReq2 = new Request("https://dinnerkids.es/api/verify-code", {
     method: "POST",
     headers: {
       Origin: "https://dinnerkids.es",
@@ -136,7 +136,7 @@ function aiEnv(kv) {
 }
 
 function aiRequest(path, code, body, device = "device-test-ia") {
-  return new Request(`https://api.dinnerkids.es${path}`, {
+  return new Request(`https://dinnerkids.es${path}`, {
     method: "POST",
     headers: {
       Origin: "https://dinnerkids.es",
@@ -258,9 +258,16 @@ test("Worker /api/ocr normaliza el menú extraído con alérgenos detectados y r
 test("Worker /api/ocr acepta PDF del menú (bloque document) y rechaza formatos no soportados", async (t) => {
   const kv = createMockKv();
   let seenBody = null;
+  let seenHeaders = null;
   const stub = stubClaudeFetch(async (url, opts) => {
-    if (String(url).includes("anthropic.com")) seenBody = JSON.parse(opts.body);
-    return claudeJsonResponse({ "2026-11-03": { primero: "Lentejas", segundo: "Pollo al horno", postre: "Yogur" } });
+    if (String(url).includes("anthropic.com")) {
+      seenBody = JSON.parse(opts.body);
+      seenHeaders = opts.headers;
+    }
+    return claudeJsonResponse({
+      "2024-11-03": { primero: "Lentejas con maÃ­z", segundo: "Pollo al horno", postre: "Yogur" },
+      "2026-11-31": { primero: "Día imposible", segundo: "", postre: "" }
+    });
   });
   t.after(() => stub.restore());
   const { code } = await makeAiCode("DK02", "202812", "PDFX");
@@ -269,11 +276,16 @@ test("Worker /api/ocr acepta PDF del menú (bloque document) y rechaza formatos 
   // PDF válido: Claude recibe un bloque `document`, no `image`
   const pdfRes = await worker.fetch(aiRequest("/api/ocr", code, { base64: "JVBERi0=", mimeType: "application/pdf", year: 2026, month: 11 }), env);
   assert.equal(pdfRes.status, 200);
+  assert.equal(seenHeaders["anthropic-beta"], "pdfs-2024-09-25", "Debe incluir cabecera beta para documentos PDF en Anthropic");
   const block = seenBody.messages[0].content[0];
   assert.equal(block.type, "document", "Los PDF deben enviarse a Claude como bloque document");
   assert.equal(block.source.media_type, "application/pdf");
   const pdfData = await pdfRes.json();
-  assert.ok(pdfData.schoolMenu["2026-11-03"], "Debe extraer el menú del PDF");
+  const coercedDay = pdfData.schoolMenu["2026-11-03"];
+  assert.ok(coercedDay, "Debe extraer el menú del PDF coercido al mes/año solicitado");
+  assert.ok(!pdfData.schoolMenu["2024-11-03"], "No debe conservar el año alucinado por la IA");
+  assert.ok(!pdfData.schoolMenu["2026-11-31"], "Debe descartar días que no existen en el mes");
+  assert.match(coercedDay.menu, /maíz/, "Debe reparar mojibake típico de PDFs (maÃ­z → maíz)");
 
   // Formato no soportado: 400 sin llamar a la IA
   const callsAntes = stub.calls;
@@ -287,7 +299,7 @@ test("Worker aplica rate limit por IP: la petición 21 en un minuto recibe 429",
   const env = { PRO_CODE_SECRET: TEST_SECRET, DK_KV: kv };
   let lastStatus = 0;
   for (let i = 0; i < 21; i++) {
-    const res = await worker.fetch(new Request("https://api.dinnerkids.es/api/menu", {
+    const res = await worker.fetch(new Request("https://dinnerkids.es/api/menu", {
       method: "POST",
       headers: { Origin: "https://dinnerkids.es", "Content-Type": "application/json" },
       body: "{}"
@@ -312,28 +324,28 @@ test("Worker gestiona CORS dinámico para cualquier puerto local y rechaza oríg
   const env = { PRO_CODE_SECRET: TEST_SECRET, DK_KV: createMockKv() };
 
   // Puerto 5500 (Live Server)
-  const res5500 = await worker.fetch(new Request("https://api.dinnerkids.es/api/health", {
+  const res5500 = await worker.fetch(new Request("https://dinnerkids.es/api/health", {
     method: "OPTIONS",
     headers: { Origin: "http://localhost:5500" }
   }), env);
   assert.equal(res5500.headers.get("Access-Control-Allow-Origin"), "http://localhost:5500");
 
   // 127.0.0.1:3000
-  const res127 = await worker.fetch(new Request("https://api.dinnerkids.es/api/health", {
+  const res127 = await worker.fetch(new Request("https://dinnerkids.es/api/health", {
     method: "OPTIONS",
     headers: { Origin: "http://127.0.0.1:3000" }
   }), env);
   assert.equal(res127.headers.get("Access-Control-Allow-Origin"), "http://127.0.0.1:3000");
 
   // file:// (Origin: null)
-  const resNull = await worker.fetch(new Request("https://api.dinnerkids.es/api/health", {
+  const resNull = await worker.fetch(new Request("https://dinnerkids.es/api/health", {
     method: "OPTIONS",
     headers: { Origin: "null" }
   }), env);
   assert.equal(resNull.headers.get("Access-Control-Allow-Origin"), "null");
 
   // Origen no autorizado -> cae a dinnerkids.es
-  const resBad = await worker.fetch(new Request("https://api.dinnerkids.es/api/health", {
+  const resBad = await worker.fetch(new Request("https://dinnerkids.es/api/health", {
     method: "OPTIONS",
     headers: { Origin: "https://sitio-malicioso.com" }
   }), env);
@@ -351,7 +363,7 @@ test("Worker acepta token BYOK X-BYOK-Key para /api/menu sin necesitar código d
   }));
   t.after(() => stub.restore());
 
-  const req = new Request("https://api.dinnerkids.es/api/menu", {
+  const req = new Request("https://dinnerkids.es/api/menu", {
     method: "POST",
     headers: {
       Origin: "http://localhost:5500",

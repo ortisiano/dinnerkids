@@ -337,6 +337,22 @@ export function sanitizePreferences(preferences) {
 }
 
 /**
+ * Repara mojibake típico de PDFs con codificación rota: texto UTF-8 leído como Latin-1
+ * (ej. "maÃ­z" → "maíz", "muslito Ã¡ la plancha" → "muslito a la plancha").
+ * Solo toca secuencias imposibles en español correcto ("Ã" seguida de vocal tilde/ñ/ü
+ * o signos de apertura), nunca texto sano: "camión", "niña" o "guion" quedan intactos.
+ */
+export function fixMojibake(text) {
+  if (!text) return "";
+  return String(text)
+    .replace(/Â¿/g, "¿").replace(/Â¡/g, "¡")
+    .replace(/Ã¡/g, "á").replace(/Ã©/g, "é").replace(/Ã\xad/g, "í").replace(/Ã­/g, "í")
+    .replace(/Ã³/g, "ó").replace(/Ãº/g, "ú").replace(/Ã±/g, "ñ").replace(/Ã¼/g, "ü")
+    .replace(/Ã\x81/g, "Á").replace(/Ã\x89/g, "É").replace(/Ã\x8d/g, "Í")
+    .replace(/Ã\x93/g, "Ó").replace(/Ã\x9a/g, "Ú").replace(/Ã\x91/g, "Ñ");
+}
+
+/**
  * Sanitiza un campo corto controlado por el usuario (plato, ingrediente, almuerzo).
  * @param {string} text - Texto corto.
  * @param {number} maxLen - Longitud máxima permitida.
@@ -344,7 +360,7 @@ export function sanitizePreferences(preferences) {
  */
 export function sanitizeField(text, maxLen = 250) {
   if (!text || !String(text).trim()) return "";
-  let t = anonymizePII(String(text).normalize("NFKC").trim()).slice(0, maxLen);
+  let t = anonymizePII(fixMojibake(String(text)).normalize("NFKC").trim()).slice(0, maxLen);
   for (const pat of DANGEROUS_PROMPT_PATTERNS) {
     t = t.replace(pat, "");
   }

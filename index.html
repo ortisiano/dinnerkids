@@ -1003,7 +1003,7 @@
             <div style="margin-top:0.4rem;">
               <label for="inpWorkerUrl">URL del proxy Cloudflare Worker (no necesitas tocarlo salvo que alojes tu propio
                 servidor)</label>
-              <input type="url" id="inpWorkerUrl" value="https://api.dinnerkids.es">
+              <input type="url" id="inpWorkerUrl" value="https://dinnerkids.es">
             </div>
           </details>
         </div>
@@ -1125,7 +1125,7 @@
       proCode: "",
       deviceId: generateDeviceId(),
       byokKey: "",
-      workerUrl: "https://api.dinnerkids.es",
+      workerUrl: "https://dinnerkids.es",
       theme: localStorage.getItem("dk_theme") || "light"
     };
 
@@ -1143,6 +1143,12 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           Object.assign(state, parsed);
+        }
+        // Migración: el subdominio api.dinnerkids.es nunca existió en DNS (error 1016 de
+        // Cloudflare). Los usuarios que guardaron la URL antigua en localStorage quedarían
+        // con la IA rota; se corrige automáticamente al arrancar.
+        if (!state.workerUrl || state.workerUrl.includes("api.dinnerkids.es")) {
+          state.workerUrl = "https://dinnerkids.es";
         }
         if (!state.deviceId) {
           state.deviceId = generateDeviceId();
@@ -1196,7 +1202,7 @@
       document.getElementById("inpSchoolName").value = state.schoolName || "";
       document.getElementById("inpProCode").value = state.proCode || "";
       document.getElementById("inpByokKey").value = state.byokKey || "";
-      document.getElementById("inpWorkerUrl").value = state.workerUrl || "https://api.dinnerkids.es";
+      document.getElementById("inpWorkerUrl").value = state.workerUrl || "https://dinnerkids.es";
 
       document.querySelectorAll("#allergenChips .chip").forEach((chip) => {
         const al = chip.getAttribute("data-allergen");
@@ -1702,12 +1708,20 @@
           reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
           reader.readAsDataURL(file);
         });
+        let mimeType = file.type || "";
+        if (!mimeType || mimeType === "application/octet-stream") {
+          const lowerName = (file.name || "").toLowerCase();
+          if (lowerName.endsWith(".pdf")) mimeType = "application/pdf";
+          else if (lowerName.endsWith(".png")) mimeType = "image/png";
+          else if (lowerName.endsWith(".webp")) mimeType = "image/webp";
+          else mimeType = "image/jpeg";
+        }
         const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/ocr`, {
           method: "POST",
           headers: getAiHeaders(),
           body: JSON.stringify({
             base64,
-            mimeType: file.type || "image/jpeg",
+            mimeType,
             year: state.year,
             month: state.month
           })
@@ -1801,7 +1815,7 @@
 
       state.proCode = codeVal.toUpperCase();
       state.byokKey = keyVal;
-      state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://api.dinnerkids.es";
+      state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://dinnerkids.es";
       saveState();
       updateProBadge();
 

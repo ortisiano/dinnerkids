@@ -29,16 +29,23 @@ test("RECIPES contiene catálogo de 100 platos principales y postres con estruct
 });
 
 test("anonymizePII elimina emails, teléfonos, DNI/NIE, IBAN y nombres propios (RGPD)", () => {
-  const dirty = "Hola me llamo Carlos Ortiz, mi email es carlos@ejemplo.es, tel +34 612 345 678, DNI 12345678Z, IBAN ES91 2100 0418 4502 0005 1332 y vivo en Calle Mayor 14.";
+  const dirty = "Hola me llamo Juan Pérez, mi email es juan@ejemplo.es, tel +34 612 345 678, DNI 12345678Z, IBAN ES91 2100 0418 4502 0005 1332 y vivo en Calle Mayor 14.";
   const clean = anonymizePII(dirty);
-  assert.ok(!clean.includes("carlos@ejemplo.es"));
+  assert.ok(!clean.includes("juan@ejemplo.es"));
   assert.ok(!clean.includes("612 345 678"));
   assert.ok(!clean.includes("12345678Z"));
   assert.ok(!clean.includes("ES91"));
-  assert.ok(!clean.includes("Carlos Ortiz"));
+  assert.ok(!clean.includes("Juan Pérez"));
   assert.ok(clean.includes("[EMAIL]"));
   assert.ok(clean.includes("[TEL]"));
   assert.ok(clean.includes("[DOC_ID]"));
+});
+
+test("sanitizeField repara mojibake de PDFs sin tocar texto sano", () => {
+  assert.ok(sanitizeField("Ensalada de maÃ­z").includes("maíz"));
+  assert.ok(sanitizeField("patatas fritas mÃ¡s jamÃ³n").includes("más jamón"));
+  // Texto sano intacto: la Ã de la codificación rota no aparece en español correcto
+  assert.equal(sanitizeField("camión niña guion").replace(/\s+/g, " "), "camión niña guion");
 });
 
 test("anonymizePII cubre nombres al inicio de frase y DNI con espacio (pentest 2026-11-12)", () => {
