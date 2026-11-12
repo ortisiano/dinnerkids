@@ -295,14 +295,15 @@ export function anonymizePII(raw) {
   txt = txt.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[EMAIL]");
   // IBAN español o internacional
   txt = txt.replace(/\b[A-Z]{2}\d{2}[\s-]?(?:\d{4}[\s-]?){4,6}\d{0,4}\b/gi, "[IBAN]");
-  // DNI / NIE / CIF español
-  txt = txt.replace(/\b(?:[XYZxyz]\d{7}[A-Za-z]|\d{8}[A-Za-z]|[ABCDEFGHJNPQRSUVW]\d{7}[0-9A-J])\b/g, "[DOC_ID]");
+  // DNI / NIE / CIF español (admite un espacio opcional antes del dígito de control, ej. "12345678 Z")
+  txt = txt.replace(/\b(?:[XYZxyz]\d{7}\s?[A-Za-z]|\d{8}\s?[A-Za-z]|[ABCDEFGHJNPQRSUVW]\d{7}[0-9A-J])\b/g, "[DOC_ID]");
   // Teléfonos españoles (+34 o 6xx/7xx/9xx de 9 dígitos)
   txt = txt.replace(/(?:\+34[\s-]?)?\b[6789]\d{2}[\s.-]?\d{3}[\s.-]?\d{3}\b/g, "[TEL]");
   // Direcciones postales habituales
   txt = txt.replace(/\b(?:calle|c\/|avda\.?|avenida|paseo|plaza|urbanizaci[oó]n)\s+[a-záéíóúüñ0-9\s,ºª\-]{3,40}/gi, "[DIRECCION]");
-  // Nombres propios tras fórmulas habituales ("me llamo X", "mi hijo X", "soy X")
-  txt = txt.replace(/\b(me llamo|soy|mi hij[oa] se llama|para mi hij[oa])\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*/g, "$1 [FAMILIA]");
+  // Nombres propios tras fórmulas habituales ("me llamo X", "mi hijo X", "soy X").
+  // Flag `i` imprescindible: también captura la fórmula al inicio de frase ("Me llamo X").
+  txt = txt.replace(/\b(me llamo|soy|mi hij[oa] se llama|para mi hij[oa])\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*/gi, "$1 [FAMILIA]");
   return txt;
 }
 
