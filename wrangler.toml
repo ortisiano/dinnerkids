@@ -6,5 +6,11 @@ compatibility_date = "2026-11-01"
 [assets]
 directory = "."
 
-# La memoria KV (DK_KV) y los secretos (ANTHROPIC_API_KEY, PRO_CODE_SECRET)
-# se configuran de forma segura y privada desde el panel de Cloudflare (Settings -> Bindings / Variables).
+# Memoria KV del Worker (rate limit, vinculación de dispositivos, cuotas y caché).
+# Declararla aquí garantiza que NINGÚN despliegue futuro la pierda (pentest 2026-11-12:
+# la binding solo existía en el panel y el Worker quedó sin rate limit ni anti-abuso).
+# Los SECRETOS (ANTHROPIC_API_KEY, PRO_CODE_SECRET) siguen exclusivamente en
+# Variables and Secrets del panel de Cloudflare — NUNCA en este archivo.
+[[kv_namespaces]]
+binding = "DK_KV"
+id = "f7df8b5580d6489894db3014e0a96278"

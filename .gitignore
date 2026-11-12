@@ -11,7 +11,10 @@ CONTEXTO.md
 # Archivos de entorno y claves locales
 .env
 .env.*
+.dev.vars
+.dev.vars.*
 *.local
+.wrangler/
 
 # Archivos del sistema operativo
 .DS_Store

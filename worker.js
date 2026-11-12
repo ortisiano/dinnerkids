@@ -16,21 +16,51 @@ import {
   sanitizeField,
   sanitizePreferences,
   detectAllergensInText,
-  buildClaudeMenuPrompt
+  buildClaudeMenuPrompt,
+  fixMojibake
 } from "./logic.js";
 
 const ALLOWED_ORIGINS = new Set([
   "https://dinnerkids.es",
   "https://www.dinnerkids.es",
-  "https://dinnerkids.pages.dev",
-  "http://localhost:8000",
-  "http://127.0.0.1:8000"
+  "https://dinnerkids.pages.dev"
 ]);
 
 const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5";
+const FALLBACK_CLAUDE_MODEL = "claude-3-5-haiku-20241022";
+
+/**
+ * Repara mojibake (Ã³, Ã±, limÃ³n...) en TODAS las cadenas de un JSON,
+ * sea cual sea su profundidad. Claude a veces reproduce la capa de texto
+ * mal codificada de los PDFs escolares aunque el prompt vaya limpio,
+ * así que el saneamiento se aplica también a la SALIDA de la IA.
+ * @param {*} value - Valor JSON (objeto, array, string o primitivo).
+ * @returns {*} - Misma estructura con las cadenas reparadas.
+ */
+function fixMojibakeDeep(value) {
+  if (typeof value === "string") return fixMojibake(value);
+  if (Array.isArray(value)) return value.map(fixMojibakeDeep);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const key of Object.keys(value)) {
+      out[key] = fixMojibakeDeep(value[key]);
+    }
+    return out;
+  }
+  return value;
+}
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (origin === "null") return true;
+  if (ALLOWED_ORIGINS.has(origin)) return true;
+  if (origin.endsWith(".dinnerkids.pages.dev") || origin.endsWith(".workers.dev")) return true;
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  return false;
+}
 
 function getCorsHeaders(origin) {
-  const allowed = ALLOWED_ORIGINS.has(origin) || (origin && origin.endsWith(".dinnerkids.pages.dev"))
+  const allowed = isAllowedOrigin(origin)
     ? origin
     : "https://dinnerkids.es";
   return {
@@ -228,6 +258,26 @@ async function checkAndConsumeQuota(kv, codeInfo, actionType, nowDate = new Date
 }
 
 /**
+ * Devuelve una unidad de cuota al usuario cuando la llamada a la IA falla después
+ * de haber consumido cuota (para no cobrar menús/recetas/OCR que no se entregaron).
+ * Best-effort: cualquier error de KV se ignora silenciosamente.
+ */
+async function refundQuota(kv, codeInfo, actionType, nowDate = new Date()) {
+  if (!kv || !codeInfo) return;
+  const ym = `${nowDate.getUTCFullYear()}-${String(nowDate.getUTCMonth() + 1).padStart(2, "0")}`;
+  const key = `quota:${codeInfo.codeId}:${ym}`;
+  try {
+    const stored = await kv.get(key, "json");
+    if (stored && typeof stored === "object" && Number(stored[actionType] || 0) > 0) {
+      stored[actionType] = Number(stored[actionType]) - 1;
+      await kv.put(key, JSON.stringify(stored), { expirationTtl: 60 * 60 * 24 * 40 });
+    }
+  } catch {
+    // Reembolso best-effort: no bloquear la respuesta de error si KV falla.
+  }
+}
+
+/**
  * Rate limit por IP real (CF-Connecting-IP) para proteger el Worker frente a abusos.
  */
 async function checkIpRateLimit(kv, ip) {
@@ -245,24 +295,57 @@ async function checkIpRateLimit(kv, ip) {
  * Llama a la API de Anthropic Claude Haiku con protección RGPD.
  */
 async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096 }) {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
+  const primaryModel = model || DEFAULT_CLAUDE_MODEL;
+
+  const hasDocument = messages?.some((m) =>
+    Array.isArray(m?.content) && m.content.some((c) => c?.type === "document")
+  );
+
+  async function postMessages(selectedModel) {
+    const headers = {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
       "anthropic-version": "2023-06-01"
-    },
-    body: JSON.stringify({
-      model: model || DEFAULT_CLAUDE_MODEL,
-      max_tokens: maxTokens,
-      system,
-      messages
-    })
-  });
+    };
+    if (hasDocument) {
+      headers["anthropic-beta"] = "pdfs-2024-09-25";
+    }
+
+    return await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        model: selectedModel,
+        max_tokens: maxTokens,
+        system,
+        messages
+      })
+    });
+  }
+
+  let res = await postMessages(primaryModel);
+
+  // Si la cuenta de Anthropic no tiene acceso al modelo 4.5, reintentar con el fallback 3.5
+  if (!res.ok && (res.status === 400 || res.status === 404) && primaryModel === DEFAULT_CLAUDE_MODEL) {
+    const checkErr = await res.clone().json().catch(() => ({}));
+    const msg = (checkErr?.error?.message || "").toLowerCase();
+    if (msg.includes("model") || msg.includes("not found")) {
+      res = await postMessages(FALLBACK_CLAUDE_MODEL);
+    }
+  }
 
   if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Error de proveedor IA (${res.status}): ${errText.slice(0, 200)}`);
+    let errDetail = "";
+    try {
+      const errJson = await res.json();
+      errDetail = errJson?.error?.message || "";
+    } catch {
+      // ignore
+    }
+    const err = new Error(`Error del proveedor IA (HTTP ${res.status}): ${errDetail}`);
+    err.status = res.status;
+    err.detail = errDetail;
+    throw err;
   }
 
   const data = await res.json();
@@ -274,8 +357,7 @@ async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096
   return JSON.parse(raw.trim());
 }
 
-export default {
-  async fetch(request, env) {
+async function handleRequest(request, env) {
     const origin = request.headers.get("Origin") || "https://dinnerkids.es";
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: getCorsHeaders(origin) });
@@ -298,8 +380,41 @@ export default {
     const deviceId = request.headers.get("X-DK-Device") || "";
     const byokKey = request.headers.get("X-BYOK-Key") || "";
 
-    // Ruta 1: Verificar y vincular estado de un Código Pro / AMPA al dispositivo actual
+    // Ruta 1: Verificar y vincular estado de un Código Pro / AMPA al dispositivo actual (o validar token BYOK)
     if (url.pathname === "/api/verify-code" && request.method === "POST") {
+      if (byokKey && byokKey.startsWith("sk-ant-")) {
+        try {
+          const testRes = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": byokKey.trim(),
+              "anthropic-version": "2023-06-01"
+            },
+            body: JSON.stringify({
+              model: DEFAULT_CLAUDE_MODEL,
+              max_tokens: 10,
+              messages: [{ role: "user", content: "ping" }]
+            })
+          });
+          if (!testRes.ok) {
+            const errData = await testRes.json().catch(() => ({}));
+            const msg = errData?.error?.message || `HTTP ${testRes.status}`;
+            return jsonResponse({ valid: false, error: `Anthropic rechazó la clave: ${msg}` }, 401, origin);
+          }
+          return jsonResponse({
+            valid: true,
+            tier: "BYOK (Tu propio Token de Claude)",
+            byok: true,
+            expiresYm: "Sin caducidad",
+            maxDevices: 999,
+            limits: { menusPerMonth: 999, ocrPerMonth: 999, recipesPerMonth: 999 }
+          }, 200, origin);
+        } catch {
+          return jsonResponse({ valid: false, error: "No se pudo conectar con los servidores de Anthropic." }, 502, origin);
+        }
+      }
+
       const check = await verifyProCode(proCode, env.PRO_CODE_SECRET);
       if (!check.valid) {
         return jsonResponse({ valid: false, error: check.reason }, 401, origin);
@@ -347,7 +462,12 @@ export default {
 
     // Ruta 2: Generación de menú mensual con IA (con caché KV por hash SHA-256)
     if (url.pathname === "/api/menu" && request.method === "POST") {
-      const body = await request.json();
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ error: "Cuerpo de la petición con JSON malformado." }, 400, origin);
+      }
       const year = Number(body.year) || new Date().getUTCFullYear();
       const month = Number(body.month) || (new Date().getUTCMonth() + 1);
       const variante = Number(body.variante) === 2 ? 2 : 1;
@@ -363,7 +483,7 @@ export default {
       if (env.DK_KV) {
         const cached = await env.DK_KV.get(cacheKey, "json");
         if (cached) {
-          return jsonResponse({ menu: cached, cached: true }, 200, origin);
+          return jsonResponse({ menu: fixMojibakeDeep(cached), cached: true }, 200, origin);
         }
       }
 
@@ -385,13 +505,31 @@ export default {
         routines
       });
 
-      const menuData = await callClaudeApi({
-        apiKey: activeApiKey,
-        model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userContent }],
-        maxTokens: 4096
-      });
+      let menuData;
+      try {
+        menuData = await callClaudeApi({
+          apiKey: activeApiKey,
+          model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
+          system: systemPrompt,
+          messages: [{ role: "user", content: userContent }],
+          maxTokens: 4096
+        });
+      } catch (err) {
+        await refundQuota(env.DK_KV, codeInfo, "menus");
+        let errMsg = "La IA no respondió correctamente. Inténtalo de nuevo en unos segundos.";
+        if (!codeInfo && byokKey) {
+          if (err.status === 401) {
+            errMsg = "Tu clave de Anthropic (sk-ant-...) no es válida o ha sido revocada.";
+          } else if (err.status === 400 && (err.detail || "").toLowerCase().includes("credit")) {
+            errMsg = "Tu cuenta de Anthropic no tiene saldo suficiente en console.anthropic.com.";
+          } else if (err.detail) {
+            errMsg = `Error de Anthropic: ${sanitizeField(err.detail, 150)}`;
+          }
+        }
+        return jsonResponse({ error: errMsg }, err.status === 401 ? 401 : 502, origin);
+      }
+
+      menuData = fixMojibakeDeep(menuData);
 
       if (env.DK_KV && menuData && typeof menuData === "object") {
         await env.DK_KV.put(cacheKey, JSON.stringify(menuData), { expirationTtl: 60 * 60 * 24 * 35 });
@@ -402,7 +540,12 @@ export default {
 
     // Ruta 3: Receta detallada con IA para un plato concreto
     if (url.pathname === "/api/recipe" && request.method === "POST") {
-      const body = await request.json();
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ error: "Cuerpo de la petición con JSON malformado." }, 400, origin);
+      }
       const plato = sanitizeField(body.plato || "", 100);
       const guarnicion = sanitizeField(body.guarnicion || "", 100);
       const allergens = sanitizeField(body.allergens || "", 150);
@@ -413,7 +556,7 @@ export default {
       const cacheKey = `cache:recipe:${await sha256Hex(`${plato}|${guarnicion}|${allergens}`)}`;
       if (env.DK_KV) {
         const cached = await env.DK_KV.get(cacheKey, "json");
-        if (cached) return jsonResponse({ recipe: cached, cached: true }, 200, origin);
+        if (cached) return jsonResponse({ recipe: fixMojibakeDeep(cached), cached: true }, 200, origin);
       }
 
       if (codeInfo) {
@@ -424,13 +567,31 @@ export default {
       const system = "Eres un chef familiar infantil. Responde SOLO con un JSON válido: {\"titulo\":\"...\",\"tiempo\":\"15 min\",\"ingredientes\":[\"...\"],\"pasos\":[\"...\"],\"truco_ninos\":\"...\"}";
       const user = `<plato_solicitado>Plato: ${plato}. Guarnición: ${guarnicion}. Alérgenos a evitar: ${allergens || "ninguno"}.</plato_solicitado>`;
 
-      const recipe = await callClaudeApi({
-        apiKey: activeApiKey,
-        model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
-        system,
-        messages: [{ role: "user", content: user }],
-        maxTokens: 1024
-      });
+      let recipe;
+      try {
+        recipe = await callClaudeApi({
+          apiKey: activeApiKey,
+          model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
+          system,
+          messages: [{ role: "user", content: user }],
+          maxTokens: 1024
+        });
+      } catch (err) {
+        await refundQuota(env.DK_KV, codeInfo, "recipes");
+        let errMsg = "La IA no respondió correctamente. Inténtalo de nuevo en unos segundos.";
+        if (!codeInfo && byokKey) {
+          if (err.status === 401) {
+            errMsg = "Tu clave de Anthropic (sk-ant-...) no es válida o ha sido revocada.";
+          } else if (err.status === 400 && (err.detail || "").toLowerCase().includes("credit")) {
+            errMsg = "Tu cuenta de Anthropic no tiene saldo suficiente en console.anthropic.com.";
+          } else if (err.detail) {
+            errMsg = `Error de Anthropic: ${sanitizeField(err.detail, 150)}`;
+          }
+        }
+        return jsonResponse({ error: errMsg }, err.status === 401 ? 401 : 502, origin);
+      }
+
+      recipe = fixMojibakeDeep(recipe);
 
       if (env.DK_KV && recipe) {
         await env.DK_KV.put(cacheKey, JSON.stringify(recipe), { expirationTtl: 60 * 60 * 24 * 60 });
@@ -441,14 +602,26 @@ export default {
 
     // Ruta 4: Extracción OCR del menú escolar con Claude Vision (con caché KV por hash de imagen)
     if (url.pathname === "/api/ocr" && request.method === "POST") {
-      const body = await request.json();
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ error: "Cuerpo de la petición con JSON malformado." }, 400, origin);
+      }
       const base64Data = String(body.base64 || "").trim();
       const mimeType = String(body.mimeType || "image/jpeg").trim();
       const year = Number(body.year) || new Date().getUTCFullYear();
       const month = Number(body.month) || (new Date().getUTCMonth() + 1);
 
+      // Formatos aceptados: fotos (las que soporta Claude Vision) y PDF del menú que suben los AMPAs.
+      const IMAGE_MIMES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+      const isPdf = mimeType === "application/pdf";
+      if (!IMAGE_MIMES.has(mimeType) && !isPdf) {
+        return jsonResponse({ error: "Formato no soportado. Sube una foto (JPG, PNG o WebP) o el PDF del menú." }, 400, origin);
+      }
+
       if (!base64Data || base64Data.length > 7_000_000) {
-        return jsonResponse({ error: "Imagen vacía o superior a 5 MB." }, 400, origin);
+        return jsonResponse({ error: "Archivo vacío o superior a 5 MB. Reduce el tamaño e inténtalo de nuevo." }, 400, origin);
       }
 
       const imgHash = await sha256Hex(`${year}-${month}:${base64Data}`);
@@ -465,42 +638,63 @@ export default {
         if (!quota.allowed) return jsonResponse({ error: quota.reason }, 429, origin);
       }
 
-      const system = "Extrae el menú escolar mensual de la imagen y devuelve ÚNICAMENTE un JSON válido con formato: {\"YYYY-MM-DD\": {\"primero\":\"...\",\"segundo\":\"...\",\"postre\":\"...\",\"menu\":\"...\"}}. No incluyas ningún nombre propio ni dato personal.";
-      const rawExtracted = await callClaudeApi({
-        apiKey: activeApiKey,
-        model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
-        system,
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "image",
-                source: {
-                  type: "base64",
-                  media_type: mimeType,
-                  data: base64Data
+      const system = `Extrae el menú escolar mensual del ${isPdf ? "PDF" : "imagen"} y devuelve ÚNICAMENTE un JSON válido con formato: {"YYYY-MM-DD": {"primero":"...","segundo":"...","postre":"...","menu":"..."}}. No incluyas ningún nombre propio ni dato personal.`;
+      // Claude Vision acepta imágenes (bloque `image`) y PDFs de forma nativa (bloque `document`).
+      const visionBlock = isPdf
+        ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: base64Data } }
+        : { type: "image", source: { type: "base64", media_type: mimeType, data: base64Data } };
+      let rawExtracted;
+      try {
+        rawExtracted = await callClaudeApi({
+          apiKey: activeApiKey,
+          model: env.CLAUDE_MODEL || DEFAULT_CLAUDE_MODEL,
+          system,
+          messages: [
+            {
+              role: "user",
+              content: [
+                visionBlock,
+                {
+                  type: "text",
+                  text: `Extrae los almuerzos de los días lectivos del mes ${month}/${year} en JSON.`
                 }
-              },
-              {
-                type: "text",
-                text: `Extrae los almuerzos de los días lectivos del mes ${month}/${year} en JSON.`
-              }
-            ]
+              ]
+            }
+          ],
+          maxTokens: 4096
+        });
+      } catch (err) {
+        await refundQuota(env.DK_KV, codeInfo, "ocr");
+        let errMsg = `La IA no pudo leer el ${isPdf ? "PDF" : "imagen"}. Inténtalo de nuevo con un archivo más nítido.`;
+        if (!codeInfo && byokKey) {
+          if (err.status === 401) {
+            errMsg = "Tu clave de Anthropic (sk-ant-...) no es válida o ha sido revocada.";
+          } else if (err.status === 400 && (err.detail || "").toLowerCase().includes("credit")) {
+            errMsg = "Tu cuenta de Anthropic no tiene saldo suficiente en console.anthropic.com.";
+          } else if (err.detail) {
+            errMsg = `Error de Anthropic: ${sanitizeField(err.detail, 150)}`;
           }
-        ],
-        maxTokens: 4096
-      });
+        }
+        return jsonResponse({ error: errMsg }, err.status === 401 ? 401 : 502, origin);
+      }
 
       const normalized = {};
       for (const [dateKey, val] of Object.entries(rawExtracted || {})) {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) continue;
+        // Coerción al mes solicitado: los PDF del cole no siempre indican el año y la IA
+        // puede alucinarlo (visto en producción: menú nov-2026 extraído como 2024). Nos
+        // quedamos con el DÍA que vio la IA dentro del mes/año que pidió la app, validando
+        // que el día exista en ese mes (descarta claves absurdas como 30 de febrero).
+        const day = Number(dateKey.slice(8, 10));
+        const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+        if (!Number.isInteger(day) || day < 1 || day > daysInMonth) continue;
+        const coercedKey = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         const primero = sanitizeField(val?.primero || "", 120);
         const segundo = sanitizeField(val?.segundo || "", 120);
         const postre = sanitizeField(val?.postre || "", 80);
         const menuTxt = sanitizeField(val?.menu || [primero, segundo, postre].filter(Boolean).join(" / "), 220);
         const alergenos = detectAllergensInText(`${primero} ${segundo} ${postre} ${menuTxt}`);
-        normalized[dateKey] = { primero, segundo, postre, menu: menuTxt, alergenos };
+        normalized[coercedKey] = { primero, segundo, postre, menu: menuTxt, alergenos };
       }
 
       if (env.DK_KV && Object.keys(normalized).length > 0) {
@@ -511,5 +705,17 @@ export default {
     }
 
     return jsonResponse({ error: "Ruta no encontrada." }, 404, origin);
+}
+
+export default {
+  async fetch(request, env) {
+    try {
+      return await handleRequest(request, env);
+    } catch {
+      // Red de seguridad: cualquier error inesperado (KV, red, parsing interno)
+      // devuelve JSON genérico en lugar de un 500 HTML con detalles internos.
+      const origin = request.headers.get("Origin") || "https://dinnerkids.es";
+      return jsonResponse({ error: "Error interno del servidor. Inténtalo de nuevo en unos segundos." }, 500, origin);
+    }
   }
 };

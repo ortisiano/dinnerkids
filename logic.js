@@ -295,14 +295,15 @@ export function anonymizePII(raw) {
   txt = txt.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[EMAIL]");
   // IBAN español o internacional
   txt = txt.replace(/\b[A-Z]{2}\d{2}[\s-]?(?:\d{4}[\s-]?){4,6}\d{0,4}\b/gi, "[IBAN]");
-  // DNI / NIE / CIF español
-  txt = txt.replace(/\b(?:[XYZxyz]\d{7}[A-Za-z]|\d{8}[A-Za-z]|[ABCDEFGHJNPQRSUVW]\d{7}[0-9A-J])\b/g, "[DOC_ID]");
+  // DNI / NIE / CIF español (admite un espacio opcional antes del dígito de control, ej. "12345678 Z")
+  txt = txt.replace(/\b(?:[XYZxyz]\d{7}\s?[A-Za-z]|\d{8}\s?[A-Za-z]|[ABCDEFGHJNPQRSUVW]\d{7}[0-9A-J])\b/g, "[DOC_ID]");
   // Teléfonos españoles (+34 o 6xx/7xx/9xx de 9 dígitos)
   txt = txt.replace(/(?:\+34[\s-]?)?\b[6789]\d{2}[\s.-]?\d{3}[\s.-]?\d{3}\b/g, "[TEL]");
   // Direcciones postales habituales
   txt = txt.replace(/\b(?:calle|c\/|avda\.?|avenida|paseo|plaza|urbanizaci[oó]n)\s+[a-záéíóúüñ0-9\s,ºª\-]{3,40}/gi, "[DIRECCION]");
-  // Nombres propios tras fórmulas habituales ("me llamo X", "mi hijo X", "soy X")
-  txt = txt.replace(/\b(me llamo|soy|mi hij[oa] se llama|para mi hij[oa])\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*/g, "$1 [FAMILIA]");
+  // Nombres propios tras fórmulas habituales ("me llamo X", "mi hijo X", "soy X").
+  // Flag `i` imprescindible: también captura la fórmula al inicio de frase ("Me llamo X").
+  txt = txt.replace(/\b(me llamo|soy|mi hij[oa] se llama|para mi hij[oa])\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*/gi, "$1 [FAMILIA]");
   return txt;
 }
 
@@ -336,6 +337,22 @@ export function sanitizePreferences(preferences) {
 }
 
 /**
+ * Repara mojibake típico de PDFs con codificación rota: texto UTF-8 leído como Latin-1
+ * (ej. "maÃ­z" → "maíz", "muslito Ã¡ la plancha" → "muslito a la plancha").
+ * Solo toca secuencias imposibles en español correcto ("Ã" seguida de vocal tilde/ñ/ü
+ * o signos de apertura), nunca texto sano: "camión", "niña" o "guion" quedan intactos.
+ */
+export function fixMojibake(text) {
+  if (!text) return "";
+  return String(text)
+    .replace(/Â¿/g, "¿").replace(/Â¡/g, "¡")
+    .replace(/Ã¡/g, "á").replace(/Ã©/g, "é").replace(/Ã\xad/g, "í").replace(/Ã­/g, "í")
+    .replace(/Ã³/g, "ó").replace(/Ãº/g, "ú").replace(/Ã±/g, "ñ").replace(/Ã¼/g, "ü")
+    .replace(/Ã\x81/g, "Á").replace(/Ã\x89/g, "É").replace(/Ã\x8d/g, "Í")
+    .replace(/Ã\x93/g, "Ó").replace(/Ã\x9a/g, "Ú").replace(/Ã\x91/g, "Ñ");
+}
+
+/**
  * Sanitiza un campo corto controlado por el usuario (plato, ingrediente, almuerzo).
  * @param {string} text - Texto corto.
  * @param {number} maxLen - Longitud máxima permitida.
@@ -343,7 +360,7 @@ export function sanitizePreferences(preferences) {
  */
 export function sanitizeField(text, maxLen = 250) {
   if (!text || !String(text).trim()) return "";
-  let t = anonymizePII(String(text).normalize("NFKC").trim()).slice(0, maxLen);
+  let t = anonymizePII(fixMojibake(String(text)).normalize("NFKC").trim()).slice(0, maxLen);
   for (const pat of DANGEROUS_PROMPT_PATTERNS) {
     t = t.replace(pat, "");
   }

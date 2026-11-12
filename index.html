@@ -878,8 +878,8 @@
             <input type="text" id="inpSchoolName" placeholder="Ej: CEIP San Isidro">
           </div>
           <div>
-            <label for="inpOcrFile">📸 O sube una foto del menú escolar (Lectura automática con IA)</label>
-            <input type="file" id="inpOcrFile" accept="image/png,image/jpeg,image/webp">
+            <label for="inpOcrFile">📸 O sube una foto o el PDF del menú escolar (Lectura automática con IA)</label>
+            <input type="file" id="inpOcrFile" accept="image/png,image/jpeg,image/webp,application/pdf">
           </div>
         </div>
 
@@ -943,7 +943,7 @@
             </p>
             <ul style="font-size:0.86rem; margin:0 0 0.85rem 1.2rem; color:var(--text);">
               <li>✨ <strong>Menús mensuales a medida con IA</strong> adaptados a los gustos de tus peques</li>
-              <li>📸 <strong>Lectura automática de la foto del menú del cole</strong> (OCR con IA Vision)</li>
+              <li>📸 <strong>Lectura automática de la foto o PDF del menú del cole</strong> (OCR con IA Vision)</li>
               <li>👩‍🍳 <strong>Recetas paso a paso personalizadas</strong> con IA en cualquier plato</li>
               <li>🔒 <strong>Código personal de uso único (1 usuario/dispositivo):</strong> tu código queda vinculado a
                 tu dispositivo al activarlo para que nadie más consuma tu cuota.</li>
@@ -1003,7 +1003,7 @@
             <div style="margin-top:0.4rem;">
               <label for="inpWorkerUrl">URL del proxy Cloudflare Worker (no necesitas tocarlo salvo que alojes tu propio
                 servidor)</label>
-              <input type="url" id="inpWorkerUrl" value="https://api.dinnerkids.es">
+              <input type="url" id="inpWorkerUrl" value="https://dinnerkids.es">
             </div>
           </details>
         </div>
@@ -1125,7 +1125,7 @@
       proCode: "",
       deviceId: generateDeviceId(),
       byokKey: "",
-      workerUrl: "https://api.dinnerkids.es",
+      workerUrl: "https://dinnerkids.es",
       theme: localStorage.getItem("dk_theme") || "light"
     };
 
@@ -1143,6 +1143,12 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           Object.assign(state, parsed);
+        }
+        // Migración: el subdominio api.dinnerkids.es nunca existió en DNS (error 1016 de
+        // Cloudflare). Los usuarios que guardaron la URL antigua en localStorage quedarían
+        // con la IA rota; se corrige automáticamente al arrancar.
+        if (!state.workerUrl || state.workerUrl.includes("api.dinnerkids.es")) {
+          state.workerUrl = "https://dinnerkids.es";
         }
         if (!state.deviceId) {
           state.deviceId = generateDeviceId();
@@ -1196,7 +1202,7 @@
       document.getElementById("inpSchoolName").value = state.schoolName || "";
       document.getElementById("inpProCode").value = state.proCode || "";
       document.getElementById("inpByokKey").value = state.byokKey || "";
-      document.getElementById("inpWorkerUrl").value = state.workerUrl || "https://api.dinnerkids.es";
+      document.getElementById("inpWorkerUrl").value = state.workerUrl || "https://dinnerkids.es";
 
       document.querySelectorAll("#allergenChips .chip").forEach((chip) => {
         const al = chip.getAttribute("data-allergen");
@@ -1688,10 +1694,10 @@
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        showToast("⚠️ La imagen supera los 5 MB. Elige una foto más ligera.");
+        showToast("⚠️ El archivo supera los 5 MB. Elige una foto o PDF más ligero.");
         return;
       }
-      showToast("📸 Leyendo foto del menú escolar con IA...");
+      showToast("📸 Leyendo menú escolar con IA...");
       try {
         const base64 = await new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -1702,12 +1708,20 @@
           reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
           reader.readAsDataURL(file);
         });
+        let mimeType = file.type || "";
+        if (!mimeType || mimeType === "application/octet-stream") {
+          const lowerName = (file.name || "").toLowerCase();
+          if (lowerName.endsWith(".pdf")) mimeType = "application/pdf";
+          else if (lowerName.endsWith(".png")) mimeType = "image/png";
+          else if (lowerName.endsWith(".webp")) mimeType = "image/webp";
+          else mimeType = "image/jpeg";
+        }
         const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/ocr`, {
           method: "POST",
           headers: getAiHeaders(),
           body: JSON.stringify({
             base64,
-            mimeType: file.type || "image/jpeg",
+            mimeType,
             year: state.year,
             month: state.month
           })
@@ -1788,17 +1802,28 @@
     });
 
     document.getElementById("btnSavePro").addEventListener("click", async () => {
-      state.proCode = document.getElementById("inpProCode").value.trim().toUpperCase();
-      state.byokKey = document.getElementById("inpByokKey").value.trim();
-      state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://api.dinnerkids.es";
-      saveState();
+      let codeVal = document.getElementById("inpProCode").value.trim();
+      let keyVal = document.getElementById("inpByokKey").value.trim();
 
-      if (state.byokKey && !state.proCode) {
-        showToast("🔑 Token propio de IA guardado en tu navegador");
-        return;
+      // Si el usuario pegó su token sk-ant en la casilla del código:
+      if (codeVal.toLowerCase().startsWith("sk-ant-")) {
+        keyVal = codeVal;
+        codeVal = "";
+        document.getElementById("inpProCode").value = "";
+        document.getElementById("inpByokKey").value = keyVal;
       }
 
-      if (state.proCode) {
+      state.proCode = codeVal.toUpperCase();
+      state.byokKey = keyVal;
+      state.workerUrl = document.getElementById("inpWorkerUrl").value.trim() || "https://dinnerkids.es";
+      saveState();
+      updateProBadge();
+
+      if (state.byokKey || state.proCode) {
+        const btn = document.getElementById("btnSavePro");
+        const oldTxt = btn.textContent;
+        btn.textContent = "⏳ Verificando...";
+        btn.disabled = true;
         try {
           const res = await fetch(`${state.workerUrl.replace(/\/$/, "")}/api/verify-code`, {
             method: "POST",
@@ -1806,12 +1831,23 @@
           });
           const data = await res.json();
           if (!res.ok || !data.valid) {
-            showToast(`⚠️ ${data.error || "Código inválido o ya vinculado a otro dispositivo"}`);
+            showToast(`⚠️ ${data.error || "Código o clave inválida"}`);
             return;
           }
-          showToast(`✅ Código activado y vinculado a este dispositivo (${data.tier})`);
+          if (data.byok) {
+            showToast("✅ Token de Claude verificado con éxito");
+          } else {
+            showToast(`✅ Código activado y vinculado a este dispositivo (${data.tier})`);
+          }
         } catch {
-          showToast("🔑 Código guardado localmente (se verificará al conectar con el servidor IA)");
+          if (state.byokKey) {
+            showToast("🔑 Token guardado en tu navegador (se verificará al generar menú)");
+          } else {
+            showToast("🔑 Código guardado localmente (se verificará al conectar con el servidor IA)");
+          }
+        } finally {
+          btn.textContent = oldTxt;
+          btn.disabled = false;
         }
         return;
       }
