@@ -39,7 +39,7 @@ export const MONTH_NAMES_ES = [
 ];
 
 /**
- * Niveles de aportación (Ko-fi / GitHub Sponsors) y cuotas mensuales de IA en el Worker.
+ * Niveles de aportación (Ko-fi) y cuotas mensuales de IA en el Worker.
  * Coste real estimado en Claude Haiku 4.5: ~0,004 € por menú mensual y ~0,003 € por OCR.
  * Además cada código personal (DK02, DK05, DK10) queda vinculado al dispositivo que lo activa
  * (máximo maxDevices dispositivos en Cloudflare KV) para evitar que se comparta públicamente.

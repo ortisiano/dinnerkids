@@ -229,6 +229,134 @@ test("Worker /api/recipe valida la entrada, genera y cachea la receta", async (t
   assert.equal(stub.calls, 1);
 });
 
+// ---------------------------------------------------------------------------
+// Webhook de Ko-fi: donativo → código generado + aviso Telegram al administrador.
+// ---------------------------------------------------------------------------
+
+function kofiEnv(kv) {
+  return {
+    PRO_CODE_SECRET: TEST_SECRET,
+    DK_KV: kv,
+    KOFI_VERIFICATION_TOKEN: "kofi-token-test",
+    TELEGRAM_BOT_TOKEN: "tg-token-test",
+    TELEGRAM_CHAT_ID: "424242"
+  };
+}
+
+function kofiRequest(payload, token = "kofi-token-test") {
+  const body = new URLSearchParams({ data: JSON.stringify({ verification_token: token, ...payload }) });
+  return new Request("https://dinnerkids.es/api/kofi-webhook", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body
+  });
+}
+
+/** Stub de fetch que enruta: api.telegram.org → captura; resto → error. */
+function stubTelegramFetch(captured) {
+  const original = globalThis.fetch;
+  globalThis.fetch = async (url, opts) => {
+    if (String(url).includes("api.telegram.org")) {
+      captured.push(JSON.parse(String(opts.body)));
+      return new Response(JSON.stringify({ ok: true }), { status: 200 });
+    }
+    return new Response("unexpected fetch", { status: 500 });
+  };
+  return { restore() { globalThis.fetch = original; } };
+}
+
+test("Worker /api/kofi-webhook genera código del tier correcto y avisa por Telegram", async (t) => {
+  const kv = createMockKv();
+  const captured = [];
+  const stub = stubTelegramFetch(captured);
+  t.after(() => stub.restore());
+
+  const res = await worker.fetch(kofiRequest({
+    type: "Donation",
+    kofi_transaction_id: "tx-0001",
+    from_name: "María G.",
+    amount: "5.00",
+    currency: "EUR",
+    email: "maria@example.com",
+    message: "gran proyecto"
+  }), kofiEnv(kv));
+
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.tier, "DK05");
+  assert.equal(data.notified, true);
+
+  assert.equal(captured.length, 1);
+  assert.equal(captured[0].chat_id, "424242");
+  assert.match(captured[0].text, /DK05-\d{6}-[A-F0-9]{6}-[A-F0-9]{10}/);
+  assert.match(captured[0].text, /María G\./);
+  assert.match(captured[0].text, /maria@example\.com/);
+
+  // El código generado es válido para el verificador (firma real con TEST_SECRET)
+  const code = captured[0].text.match(/DK05-\d{6}-[A-F0-9]{6}-[A-F0-9]{10}/)[0];
+  const check = await verifyProCode(code, TEST_SECRET, new Date("2026-11-12T12:00:00Z"));
+  assert.equal(check.valid, true, "El código auto-generado debe verificar contra PRO_CODE_SECRET");
+});
+
+test("Worker /api/kofi-webhook rechaza token de verificación inválido y no genera nada", async (t) => {
+  const kv = createMockKv();
+  const captured = [];
+  const stub = stubTelegramFetch(captured);
+  t.after(() => stub.restore());
+
+  const res = await worker.fetch(kofiRequest({
+    type: "Donation",
+    kofi_transaction_id: "tx-0002",
+    from_name: "Faker",
+    amount: "10.00"
+  }, "token-equivocado"), kofiEnv(kv));
+
+  assert.equal(res.status, 401);
+  assert.equal(captured.length, 0, "Con token inválido no debe llamarse a Telegram");
+});
+
+test("Worker /api/kofi-webhook es idempotente por ID de transacción (reintentos de Ko-fi)", async (t) => {
+  const kv = createMockKv();
+  const captured = [];
+  const stub = stubTelegramFetch(captured);
+  t.after(() => stub.restore());
+  const env = kofiEnv(kv);
+  const payload = {
+    type: "Donation",
+    kofi_transaction_id: "tx-0003",
+    from_name: "Pedro",
+    amount: "2.00",
+    email: "pedro@example.com"
+  };
+
+  const first = await (await worker.fetch(kofiRequest(payload), env)).json();
+  assert.equal(first.tier, "DK02");
+  const dup = await (await worker.fetch(kofiRequest(payload), env)).json();
+  assert.equal(dup.duplicate, true);
+  assert.equal(captured.length, 1, "Un solo aviso Telegram aunque Ko-fi reintente el webhook");
+});
+
+test("Worker /api/kofi-webhook avisa sin código si el importe es menor de 2 €", async (t) => {
+  const kv = createMockKv();
+  const captured = [];
+  const stub = stubTelegramFetch(captured);
+  t.after(() => stub.restore());
+
+  const res = await worker.fetch(kofiRequest({
+    type: "Donation",
+    kofi_transaction_id: "tx-0004",
+    from_name: "Tacaño",
+    amount: "1.00"
+  }), kofiEnv(kv));
+
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.tier, "ninguno");
+  assert.equal(captured.length, 1);
+  assert.match(captured[0].text, /sin código/);
+  assert.doesNotMatch(captured[0].text, /DK02/);
+});
+
 test("Worker /api/menu repara el mojibake de la respuesta de la IA (y también al servir desde caché)", async (t) => {
   const kv = createMockKv();
   const stub = stubClaudeFetch(async () =>
