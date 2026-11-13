@@ -26,6 +26,7 @@ jobs:
           ok=false
           for i in 1 2; do
             body=$(curl -fsS --max-time 15 https://dinnerkids.es/api/health 2>/dev/null || true)
+            echo "respuesta del intento $i: ${body:-<vacía>}"
             if printf '%s' "$body" | grep -q '"ok":true'; then
               ok=true
               break
@@ -44,12 +45,23 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -e
+          # Bug corregido: con la búsqueda vacía, '.[0].number' imprime el texto
+          # "null" (no cadena vacía) y el script intentaba cerrar la issue "null".
+          # '// empty' hace que jq no emita nada cuando no hay coincidencias.
           TITLE="🚨 dinnerkids.es caído"
-          number=$(gh issue list --state open --search "\"dinnerkids.es caído\" in:title" --json number --jq '.[0].number')
+          number=$(gh issue list --state open --search "\"dinnerkids.es caído\" in:title" --json number --jq '.[0].number // empty')
 
+          # Los avisos por Telegram son secundarios: un fallo de envío nunca debe
+          # tumbar el monitor; la transición ya queda registrada en la issue.
           tg() {
-            curl -fsS --max-time 15 "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-              -d "chat_id=${TG_CHAT}" -d "text=$1" -d "disable_web_page_preview=true" > /dev/null
+            if [ -z "${TG_TOKEN}" ] || [ -z "${TG_CHAT}" ]; then
+              echo "AVISO: secretos TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID no configurados, se omite el mensaje de Telegram"
+              return 0
+            fi
+            if ! curl -fsS --max-time 15 "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+              -d "chat_id=${TG_CHAT}" -d "text=$1" -d "disable_web_page_preview=true" > /dev/null; then
+              echo "AVISO: falló el envío a Telegram (revisa token y chat_id), la transición queda en la issue"
+            fi
           }
 
           if [ "$OK" = "true" ]; then
