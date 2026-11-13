@@ -39,6 +39,9 @@ jobs:
       - name: Abrir/cerrar issue y avisar por Telegram solo en transiciones
         env:
           GH_TOKEN: ${{ github.token }}
+          # gh necesita un repo git (o GH_REPO); este job no hace checkout,
+          # así que se le indica el repo explícito (evita "not a git repository").
+          GH_REPO: ${{ github.repository }}
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
           OK: ${{ steps.check.outputs.ok }}
