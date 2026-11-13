@@ -19,6 +19,13 @@ En este repositorio seguimos un flujo claro para proteger la versión en producc
 tu-rama (feat/...) ──► Pull Request ──► development (pruebas) ──► Pull Request + Aprobación ──► main (dinnerkids.es)
 ```
 
+> **⚠️ Al mergear, usa "Create a merge commit", NO "Squash and merge".**
+> Con squash, `main` recibe un único commit nuevo y el historial de `development`
+> diverge de la base común: la siguiente PR de `development` a `main` verá los
+> mismos archivos como "creados dos veces" y chocará con conflictos *add/add*
+> aunque el contenido sea correcto (pasó con el uptime monitor). Con merge
+> commit, `main` y `development` comparten historial y las PRs futuras son limpias.
+
 ---
 
 ## 🛠️ Cómo preparar tu entorno local
