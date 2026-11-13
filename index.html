@@ -762,8 +762,8 @@
           Incluye control de alérgenos, recetas paso a paso y lista de la compra semanal a coste 0 €.</p>
       </article>
       <article class="info-box">
-        <h3>☕ Invítame a un Ko-fi (mín. 2 €) y usa mi IA</h3>
-        <p>Si el proyecto te ayuda y haces un donativo voluntario de un café (mínimo 2 € para cubrir el gasto de mi IA
+        <h3>☕ Invítame a un Ko-fi y usa mi IA</h3>
+        <p>Si el proyecto te ayuda y haces un donativo voluntario de un café (para cubrir el gasto de mi IA
           Claude Haiku), activas la lectura automática de fotos del menú del cole y menús a medida con IA.</p>
       </article>
       <article class="info-box">
@@ -935,10 +935,10 @@
           <div>
             <span class="badge-status" style="display:inline-block; margin-bottom:0.5rem;">Opción A · Donativo para
               cubrir el gasto de mi IA</span>
-            <h3 style="font-size:1.25rem; color:var(--dark); margin-bottom:0.35rem;">☕ Invítame a un Ko-fi (mínimo 2 €)
+            <h3 style="font-size:1.25rem; color:var(--dark); margin-bottom:0.35rem;">☕ Invítame a un Ko-fi
             </h3>
             <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.75rem;">
-              Con un simple café de <strong>mínimo 2 €</strong> ayudas a mantener el proyecto y cubres el coste de mi
+              Con un simple café ayudas a mantener el proyecto y cubres el coste de mi
               servidor de IA (Claude Haiku) para tu familia:
             </p>
             <ul style="font-size:0.86rem; margin:0 0 0.85rem 1.2rem; color:var(--text);">
@@ -949,10 +949,8 @@
                 tu dispositivo al activarlo para que nadie más consuma tu cuota.</li>
             </ul>
             <div style="display:flex; flex-wrap:wrap; gap:0.6rem;">
-              <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener" class="btn btn-primary">☕ Invitar a
-                un Ko-fi (mín. 2 €)</a>
-              <a href="https://github.com/sponsors/ortisiano" target="_blank" rel="noopener" class="btn btn-outline">💖
-                GitHub Sponsors</a>
+              <a href="https://ko-fi.com/dinnerkids" target="_blank" rel="noopener" class="btn btn-primary">☕ Invitar a
+                un Ko-fi</a>
             </div>
           </div>
 
@@ -989,7 +987,7 @@
             Artificial?</strong>
           <ol style="margin-left:1.2rem; display:flex; flex-direction:column; gap:0.35rem;">
             <li><strong>Con Código de Café (la forma más sencilla, sin cuentas técnicas):</strong> Haz un donativo de un
-              café (mín. 2 €) en <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener"
+              café en <a href="https://ko-fi.com/dinnerkids" target="_blank" rel="noopener"
                 style="color:var(--primary); font-weight:700;">Ko-fi</a>, pega tu código <code>DK02-...</code> en la
               primera casilla y pulsa <strong>Activar</strong>. Quedará vinculado a tu móvil/ordenador.</li>
             <li><strong>Con tu propio Token de Claude (si eres usuario técnico):</strong> Entra en <a
@@ -1065,7 +1063,7 @@
       Proyecto independiente sin ánimo comercial directo ·
       <a href="privacidad.html">Privacidad RGPD y Exención</a> ·
       <a href="https://github.com/ortisiano/dinnerkids" target="_blank" rel="noopener">💻 Código abierto en GitHub</a> ·
-      <a href="https://ko-fi.com/ortisiano" target="_blank" rel="noopener">☕ Invitar a un café (Ko-fi)</a>
+      <a href="https://ko-fi.com/dinnerkids" target="_blank" rel="noopener">☕ Invitar a un café (Ko-fi)</a>
     </p>
   </footer>
 
@@ -1261,7 +1259,7 @@
 
         const schoolEntry = state.schoolMenu[dateKey];
         const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
-          ? (schoolEntry.menu || schoolEntry.primero || "")
+          ? ([schoolEntry.primero, schoolEntry.segundo, schoolEntry.postre].filter(Boolean).join(" · ") || schoolEntry.menu || "")
           : String(schoolEntry || item.almuerzoCole || "");
 
         if (lunchTxt) {
@@ -1311,7 +1309,7 @@
 
       const existing = state.schoolMenu[dateKey];
       const currentVal = typeof existing === "object" && existing !== null
-        ? (existing.menu || [existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / "))
+        ? ([existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / ") || existing.menu)
         : String(existing || "");
 
       title.textContent = `🏫 Menú del Cole · ${dayLabel}`;
@@ -1387,7 +1385,7 @@
         const dateKey = `${state.year}-${String(state.month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         const existing = state.schoolMenu[dateKey];
         const val = typeof existing === "object" && existing !== null
-          ? (existing.menu || [existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / "))
+          ? ([existing.primero, existing.segundo, existing.postre].filter(Boolean).join(" / ") || existing.menu)
           : String(existing || "");
         const dayLabel = `${WEEKDAY_NAMES_ES[dow]} ${day}/${state.month}`;
 
@@ -1461,7 +1459,7 @@
       const instructions = item.instrucciones || localRecipe?.instructions || "Cocinar a fuego medio con aceite de oliva virgen extra.";
       const schoolEntry = state.schoolMenu[dateKey];
       const lunchTxt = typeof schoolEntry === "object" && schoolEntry !== null
-        ? (schoolEntry.menu || schoolEntry.primero || "")
+        ? ([schoolEntry.primero, schoolEntry.segundo, schoolEntry.postre].filter(Boolean).join(" · ") || schoolEntry.menu || "")
         : String(schoolEntry || item.almuerzoCole || "");
 
       body.innerHTML = `
@@ -1544,7 +1542,7 @@
         if (!state.proCode && !state.byokKey) {
           backdrop.classList.remove("open");
           switchTab("tab-pro");
-          showToast("☕ Activa tu Código de Café (desde 2 €) o tu propio Token en la pestaña 4");
+          showToast("☕ Activa tu Código de Café o tu propio Token en la pestaña 4");
           return;
         }
         const btn = document.getElementById("btnAiRecipeModal");
@@ -1646,7 +1644,7 @@
       readFormIntoState();
       if (!state.proCode && !state.byokKey) {
         switchTab("tab-pro");
-        showToast("☕ Invita a un Ko-fi (mín. 2 €) o configura tu Token de IA en la pestaña 4");
+        showToast("☕ Invita a un Ko-fi o configura tu Token de IA en la pestaña 4");
         return;
       }
       const btn = document.getElementById("btnGenAi");
@@ -1690,7 +1688,7 @@
       if (!state.proCode && !state.byokKey) {
         e.target.value = "";
         switchTab("tab-pro");
-        showToast("📸 Para leer fotos con IA activa tu Código de Café (2 €) o tu Token en la pestaña 4");
+        showToast("📸 Para leer fotos con IA activa tu Código de Café o tu Token en la pestaña 4");
         return;
       }
       if (file.size > 5 * 1024 * 1024) {

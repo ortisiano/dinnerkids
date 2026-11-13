@@ -204,7 +204,7 @@ export async function checkAndBindDevice(kv, codeInfo, rawDeviceId, clientIp = "
   if (boundDevices.length >= maxDevices) {
     return {
       allowed: false,
-      reason: "Este código personal ya está activado en otro dispositivo y es de uso individual (1 usuario). Si quieres usar la IA en tu dispositivo, apoya el proyecto con un café (2 €) o configura tu propio token de IA."
+      reason: "Este código personal ya está activado en otro dispositivo y es de uso individual (1 usuario). Si quieres usar la IA en tu dispositivo, apoya el proyecto con un café o configura tu propio token de IA."
     };
   }
 
@@ -357,6 +357,90 @@ async function callClaudeApi({ apiKey, model, system, messages, maxTokens = 4096
   return JSON.parse(raw.trim());
 }
 
+/**
+ * Webhook de Ko-fi: cada donativo genera el Código Pro correspondiente
+ * (DK02/DK05/DK10 según importe) y avisa al administrador por Telegram para
+ * que reenvíe el código al correo que indique el donante. Sin emails
+ * automáticos ni proveedores externos: Ko-fi notifica, DinnerKids firma el
+ * código con PRO_CODE_SECRET y Telegram avisa.
+ * Documentación: https://help.ko-fi.com/hc/en-us/articles/360004162298
+ */
+async function handleKofiWebhook(request, env) {
+  const ORIGIN = "https://dinnerkids.es";
+  if (!env.KOFI_VERIFICATION_TOKEN) {
+    return jsonResponse({ error: "Webhook no configurado." }, 503, ORIGIN);
+  }
+
+  let data;
+  try {
+    const form = await request.formData();
+    data = JSON.parse(String(form.get("data") || "{}"));
+  } catch {
+    return jsonResponse({ error: "Cuerpo del webhook malformado." }, 400, ORIGIN);
+  }
+
+  if (data.verification_token !== env.KOFI_VERIFICATION_TOKEN) {
+    return jsonResponse({ error: "Token de verificación inválido." }, 401, ORIGIN);
+  }
+  if (data.type !== "Donation") {
+    return jsonResponse({ ok: true, ignored: sanitizeField(String(data.type || "desconocido"), 30) }, 200, ORIGIN);
+  }
+
+  // Idempotencia: Ko-fi reintenta el webhook si no recibe 200; el ID de
+  // transacción en KV garantiza un solo código (y un solo aviso) por donativo.
+  const txId = sanitizeField(String(data.kofi_transaction_id || ""), 64);
+  if (txId && env.DK_KV) {
+    if (await env.DK_KV.get(`kofi:tx:${txId}`)) {
+      return jsonResponse({ ok: true, duplicate: true }, 200, ORIGIN);
+    }
+  }
+
+  const amount = Number(String(data.amount || "0").replace(",", ".")) || 0;
+  const tierKey = amount >= 10 ? "DK10" : amount >= 5 ? "DK05" : amount >= 2 ? "DK02" : "";
+  const tier = tierKey ? TIER_LIMITS[tierKey] : null;
+
+  let code = "";
+  if (tier) {
+    const now = new Date();
+    const exp = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 12, 1));
+    const expYm = `${exp.getUTCFullYear()}${String(exp.getUTCMonth() + 1).padStart(2, "0")}`;
+    const saltBytes = crypto.getRandomValues(new Uint8Array(3));
+    const salt = Array.from(saltBytes).map((b) => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+    code = `${tierKey}-${expYm}-${salt}-${await signCodePayload(`${tierKey}-${expYm}-${salt}`, env.PRO_CODE_SECRET)}`;
+  }
+
+  const donorName = sanitizeField(data.from_name || "Anónimo", 60);
+  // El email del donante NO pasa por sanitizeField (el filtro B-02 lo anonimizaría):
+  // el administrador necesita verlo para reenviar el código. Solo se recorta.
+  const donorEmail = String(data.email || "").trim().slice(0, 120);
+  const message = sanitizeField(data.message || "", 300);
+  const emailTxt = donorEmail || "(no compartido)";
+
+  const text = tier
+    ? `☕ Donativo en DinnerKids\nDe: ${donorName}\nCantidad: ${amount.toFixed(2)} €\nCódigo generado (${tierKey} · ${tier.name}): ${code}\nEmail del donante: ${emailTxt}` +
+      (message ? `\nMensaje: ${message}` : "")
+    : `☕ Donativo en DinnerKids (importe menor de 2 €, sin código)\nDe: ${donorName}\nCantidad: ${amount.toFixed(2)} €\nEmail del donante: ${emailTxt}` +
+      (message ? `\nMensaje: ${message}` : "");
+
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
+    return jsonResponse({ error: "Telegram no configurado en el Worker." }, 503, ORIGIN);
+  }
+  const tgRes = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text })
+  });
+  if (!tgRes.ok) {
+    // 502 para que Ko-fi reintente; la idempotencia evita códigos duplicados.
+    return jsonResponse({ error: "No se pudo notificar por Telegram." }, 502, ORIGIN);
+  }
+
+  if (txId && env.DK_KV) {
+    await env.DK_KV.put(`kofi:tx:${txId}`, "1", { expirationTtl: 60 * 60 * 24 * 90 });
+  }
+  return jsonResponse({ ok: true, tier: tierKey || "ninguno", notified: true }, 200, ORIGIN);
+}
+
 async function handleRequest(request, env) {
     const origin = request.headers.get("Origin") || "https://dinnerkids.es";
     if (request.method === "OPTIONS") {
@@ -368,6 +452,12 @@ async function handleRequest(request, env) {
 
     if (url.pathname === "/api/health" && request.method === "GET") {
       return jsonResponse({ ok: true, service: "dinnerkids-edge-worker" }, 200, origin);
+    }
+
+    // Webhook de Ko-fi (server-to-server, sin Origin): antes del rate limit
+    // para que los reintentos de Ko-fi ante un 5xx no sean bloqueados.
+    if (url.pathname === "/api/kofi-webhook" && request.method === "POST") {
+      return handleKofiWebhook(request, env);
     }
 
     // Rate limiting por IP en todas las rutas de API
@@ -446,7 +536,7 @@ async function handleRequest(request, env) {
       const check = await verifyProCode(proCode, env.PRO_CODE_SECRET);
       if (!check.valid) {
         return jsonResponse({
-          error: "Para usar la IA necesitas un Código de Café activo (donativo desde 2 € en Ko-fi) o configurar tu propio token de IA (sk-ant-...) en Ajustes."
+          error: "Para usar la IA necesitas un Código de Café activo (donativo en Ko-fi) o configurar tu propio token de IA (sk-ant-...) en Ajustes."
         }, 401, origin);
       }
       const binding = await checkAndBindDevice(env.DK_KV, check, deviceId, clientIp);
@@ -692,7 +782,10 @@ async function handleRequest(request, env) {
         const primero = sanitizeField(val?.primero || "", 120);
         const segundo = sanitizeField(val?.segundo || "", 120);
         const postre = sanitizeField(val?.postre || "", 80);
-        const menuTxt = sanitizeField(val?.menu || [primero, segundo, postre].filter(Boolean).join(" / "), 220);
+        // El campo "menu" que devuelve la IA suele ser la nota de guarnición/pan del PDF,
+        // no el menú completo: solo lo usamos como fallback si no hay platos sueltos.
+        const platosJoin = [primero, segundo, postre].filter(Boolean).join(" - ");
+        const menuTxt = sanitizeField((primero || segundo || postre) ? platosJoin : (val?.menu || platosJoin), 220);
         const alergenos = detectAllergensInText(`${primero} ${segundo} ${postre} ${menuTxt}`);
         normalized[coercedKey] = { primero, segundo, postre, menu: menuTxt, alergenos };
       }
